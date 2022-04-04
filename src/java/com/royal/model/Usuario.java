@@ -1,5 +1,7 @@
 package com.royal.model;
 
+import com.royal.Cripto;
+import com.royal.servlet.Sistema;
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -43,8 +45,8 @@ public class Usuario {
 	return sb.toString();
     }
 
-    
-    
-    
+    public String token() {
+	return Sistema.ENCRIPTA.encrypt(email).replace('=', '#') + "@" + Cripto.Encrypter.of(email).encrypt(senha).replace('=', '#');
+    }
     
 }
