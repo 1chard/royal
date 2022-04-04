@@ -1,0 +1,5 @@
+web/WEB-INF/lib/*
+build/
+dist/
+test/
+nbproject/
