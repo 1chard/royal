@@ -65,13 +65,13 @@ public class Cadastro extends HttpServlet {
 		    httpStatus = 200;
 		    status = Status.OK;
 		} else {
-		    status = Status.CAMPOS_INVALIDOS;
+		    status = Status.CAMPO_INVALIDO;
 		    httpStatus = 400;
 		}
 		
 		
 	    } else {
-		status = Status.CAMPOS_INVALIDOS;
+		status = Status.CAMPO_INVALIDO;
 		httpStatus = 400;
 	    }
 	} catch (JsonException e) {

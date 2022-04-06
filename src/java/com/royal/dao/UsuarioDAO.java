@@ -59,4 +59,12 @@ public class UsuarioDAO {
 		    null;
 
     }
+    
+    public static boolean editarSenha(String email, String novaSenha) throws SQLException{
+	Sistema.BANCO.run("UPDATE tblUsuario SET senha=? where email=?;", 
+		    Sistema.ENCRIPTA.encrypt(novaSenha), 
+		    Sistema.ENCRIPTA.encrypt(email)
+	    );
+	    return true; 
+    }
 }

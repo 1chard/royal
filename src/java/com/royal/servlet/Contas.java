@@ -66,7 +66,7 @@ public class Contas extends HttpServlet {
 		status = Status.OK;
 	    } else {
 		httpStatus = 400;
-		status = Status.CAMPOS_INVALIDOS;
+		status = Status.CAMPO_INVALIDO;
 	    }
 	    
 	} catch (JsonException e) {
