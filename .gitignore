@@ -1,5 +1,3 @@
-web/WEB-INF/lib/*
-build/
-dist/
-test/
-nbproject/
+nb-configuration.xml
+target/
+**/.DS_Store
