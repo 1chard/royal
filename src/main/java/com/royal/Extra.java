@@ -26,6 +26,7 @@ public class Extra {
     private Extra(){}
     
     public static void main(String[] args) throws SQLException {
+		com.jsoniter.spi.
 	DespesaUsuarioDAO.gravar(new DespesaUsuario.DespesaUsuarioBuilder(BigDecimal.ZERO, new Date(System.currentTimeMillis()), true, "", true, 0, 0).build());
     }
 }
