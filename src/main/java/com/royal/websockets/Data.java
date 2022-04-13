@@ -10,6 +10,9 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -17,28 +20,39 @@ import java.io.IOException;
  */
 @ServerEndpoint("/data/{token}")
 public class Data {
+    public final static Map<String, Session> SESSOES = Collections.synchronizedMap(new HashMap<>());
+    
 	@OnOpen
 	public void abrir(Session s, @PathParam("token") String token) throws IOException {
-	    var pessoa = Sistema.SESSOES.get(token);
-	    
-	    System.out.println("teste");
+	    var pessoa = Sistema.PESSOAS.get(token);
 	    
 	    if(pessoa == null){
-		
-	    System.out.println("asdf");
 		s.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Não posso permitir seu login"));
 	    }
+	    
+	    SESSOES.put(token, s);
 	}
 	
 	@OnMessage
 	public void mensagem(String mensagem, Session s){
 	    var json = JsonIterator.deserialize(mensagem);
 	    
-	    
+	    switch (json.get("metodo").toString()) {
+		case "despesa":{
+		    
+		}
+		break;
+	    }
 	}
 	
 	@OnClose
 	public void fechar(Session s){
 		
 	}
+}
+
+class DataTratadorDespesa{
+    private DataTratadorDespesa(){}
+    
+    
 }

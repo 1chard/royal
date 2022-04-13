@@ -28,7 +28,7 @@ public class Data extends HttpServlet {
 	
 	String token = req.getParameter("key");
 	
-	if(argumentos.length == 1 && Sistema.SESSOES.containsKey(token)){ 
+	if(argumentos.length == 1 && Sistema.PESSOAS.containsKey(token)){ 
 	    
 	    switch(argumentos[0]){
 		

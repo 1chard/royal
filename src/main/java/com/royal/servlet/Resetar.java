@@ -36,6 +36,7 @@ public class Resetar extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	    throws ServletException, IOException {
+	
 	resp.setContentType("application/json");
 	resp.setHeader("Access-Control-Allow-Origin", "*");
 
@@ -46,6 +47,8 @@ public class Resetar extends HttpServlet {
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 
+	    System.out.println(json);
+	    
 	    var tipo = json.get("tipo");
 
 	    if (tipo.valueType() == ValueType.STRING) {

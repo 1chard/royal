@@ -8,7 +8,8 @@ import java.sql.Timestamp;
  */
 public class Recuperacao {
     public Integer idRecuperacao;
-    public int codigo, idUsuario;
+    public int codigo;
+    public int idUsuario;
     public java.sql.Timestamp data;
 
     public Recuperacao( int codigo, int idUsuario, Timestamp data, Integer idRecuperacao) {

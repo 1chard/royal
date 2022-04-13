@@ -73,7 +73,7 @@ public class Contas extends HttpServlet {
 		    response.put("found", true);
 		    response.put("token", token);
 		    
-		    Sistema.SESSOES.put(token, sessao);
+		    Sistema.PESSOAS.put(token, sessao);
 		    
 		    httpStatus = 200;
 		} else {

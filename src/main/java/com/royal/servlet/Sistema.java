@@ -34,13 +34,14 @@ public class Sistema extends HttpServlet {
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
     public static final SQL BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
-    public static final Map<String, Sessao> SESSOES = new HashMap<>();
+    public static final Map<String, Sessao> PESSOAS = new HashMap<>();
 
     private static final long serialVersionUID = 1L;
 
+    
+    
     @Override
     public void init() throws ServletException {
-
     }
 
     @Override
