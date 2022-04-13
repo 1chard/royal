@@ -3,6 +3,7 @@ package com.royal;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.annotation.JsonCreator;
 import com.jsoniter.output.JsonStream;
+import com.royal.model.ReceitaUsuario;
 import com.royal.model.Usuario;
 import com.royal.servlet.Sistema;
 import java.math.BigDecimal;
@@ -20,11 +21,5 @@ public class Extra {
     private Extra(){}
     
     public static void main(String[] args) {
-	
-		
-	var uuid = UUID.nameUUIDFromBytes("teste".getBytes(StandardCharsets.ISO_8859_1));
-	
-	System.out.println(uuid.version());
-	
     }
 }

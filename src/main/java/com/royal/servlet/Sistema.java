@@ -34,7 +34,7 @@ public class Sistema extends HttpServlet {
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
     public static final SQL BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
-    public static final Map<String, Sessao> sessoes = new HashMap<>();
+    public static final Map<String, Sessao> SESSOES = new HashMap<>();
 
     private static final long serialVersionUID = 1L;
 
@@ -54,9 +54,7 @@ public class Sistema extends HttpServlet {
     }
 
     public static class Sessao {
-
 	public jakarta.servlet.http.HttpSession httpSession;
-	public jakarta.websocket.Session socketSession;
 	public Map<String, Object> objetos = new HashMap<>();
 	public int id;
     }
