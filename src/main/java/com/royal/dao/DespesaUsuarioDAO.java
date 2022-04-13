@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class DespesaUsuarioDAO {
     public static boolean gravar(DespesaUsuario despesaUsuario) throws SQLException{
 	Sistema.BANCO.run("INSERT INTO royal.tblDespesaUsuario (valor, data, pendente, anexo, descricao, observacao, favorito, iniciorepeticao, totalparcelas, parcelaspagas, parcelasfixas, nomeFrequencia, idUsuario, idCategoria)" +
-		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", 
+		" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", 
 		despesaUsuario.valor,
 		despesaUsuario.data,
 		despesaUsuario.pendente,

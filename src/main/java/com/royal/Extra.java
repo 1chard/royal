@@ -3,9 +3,13 @@ package com.royal;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.annotation.JsonCreator;
 import com.jsoniter.output.JsonStream;
+import com.royal.dao.CategoriaDAO;
 import com.royal.dao.DespesaUsuarioDAO;
+import com.royal.dao.UsuarioDAO;
+import com.royal.model.Categoria;
 import com.royal.model.DespesaUsuario;
 import com.royal.model.ReceitaUsuario;
+import com.royal.model.TipoTransferencia;
 import com.royal.model.Usuario;
 import com.royal.servlet.Sistema;
 import java.math.BigDecimal;
@@ -26,7 +30,7 @@ public class Extra {
     private Extra(){}
     
     public static void main(String[] args) throws SQLException {
-		com.jsoniter.spi.
-	DespesaUsuarioDAO.gravar(new DespesaUsuario.DespesaUsuarioBuilder(BigDecimal.ZERO, new Date(System.currentTimeMillis()), true, "", true, 0, 0).build());
+	CategoriaDAO.inserir(new Categoria(null, "teste categoria", "FFFFFF", "school", TipoTransferencia.RECEITA));
+	System.out.println();
     }
 }

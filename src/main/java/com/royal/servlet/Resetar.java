@@ -4,7 +4,10 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.ValueType;
 import com.jsoniter.output.JsonStream;
 import com.jsoniter.spi.JsonException;
+import com.jsoniter.spi.TypeMismatchException;
+import com.royal.MustHasFailedException;
 import com.royal.Status;
+import com.royal.StringMust;
 import com.royal.dao.RecuperacaoDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.external.Mail;
@@ -46,90 +49,64 @@ public class Resetar extends HttpServlet {
 	
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
-
-	    System.out.println(json);
 	    
 	    var tipo = json.get("tipo");
 
 	    if (tipo.valueType() == ValueType.STRING) {
 		switch (tipo.toString()) {
 		    case "PEDIR": {
-			var email = json.get("email");
+			var email = json.get("email").mustBe(ValueType.STRING).asString();
 
-			if (email.valueType() == ValueType.STRING) {
 			    status = Status.OK;
 			    httpStatus = 200;
 
 			    //TODO virar procedure
-			    var usuario = UsuarioDAO.buscar(email.toString());
+			    var usuario = UsuarioDAO.buscar(email);
 
 			    if (usuario != null) {
 				var codigo = RANDOM.nextInt(999999);
 
 				RecuperacaoDAO.gravar(new Recuperacao(codigo, usuario.id));
 
-				Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + codigo + "\nDuração: 15 min", usuario.email);
+				new Thread(
+					() -> Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + codigo + "\nDuração: 15 min", usuario.email)
+				).start();
 			    }
-			} else {
-			    status = Status.CAMPO_INVALIDO;
-			    httpStatus = 400;
-			}
+			
 
 			break;
 		    }
 		    case "USAR": {
-			var email = json.get("email");
-			var codigo = json.get("codigo");
-			
-			if(email.valueType() == ValueType.STRING && codigo.valueType() == ValueType.STRING){
 			    status = Status.OK;
 			    httpStatus = 200;
 			    
-			    var emailString = email.toString();
+			    var emailString = json.get("email").mustBe(ValueType.STRING).asString();
 			    var recuperacao = RecuperacaoDAO.ativa(emailString);
 			    
 			    
-			    if(recuperacao != null && codigo.toString().equals(Integer.toString(recuperacao.codigo))){
+			    if(recuperacao != null && json.get("codigo").mustBe(ValueType.STRING).asString().equals(Integer.toString(recuperacao.codigo))){
 				EMAILS_ATIVOS.add(emailString);
 				map.put("reset", true);
 			    } else {
 				map.put("reset", false);
 			    }
-			} else {
-			    status = Status.CAMPO_INVALIDO; 
-			    httpStatus = 400;
-			}
 			
 			break;
 		    }
 		    case "MUDAR": {
-			var email = json.get("email");
-			var senha = json.get("senha");
-			
-			
-			    System.out.println(EMAILS_ATIVOS);
-			
-			if(email.valueType() == ValueType.STRING && senha.valueType() == ValueType.STRING){
-			    var senhaString = senha.toString();
+			var email = json.get("email").mustBe(ValueType.STRING).asString();
+			var senha = new StringMust(json.get("senha").mustBe(ValueType.STRING).asString()).notBlank().get();
 			    
-			    if(senhaString.isBlank()){
-				status = Status.CAMPO_INVALIDO;
-				httpStatus = 400;
-			    } 
-			    else if(!EMAILS_ATIVOS.contains(email.toString())){
-				status = Status.REQUISICAO_INVALIDA;
-				httpStatus = 400;
-			    }
-			    else {
+			    if(EMAILS_ATIVOS.contains(email)){
 				status = Status.OK;
 				httpStatus = 200;
 				
-				UsuarioDAO.editarSenha(email.toString(), senhaString);
+				UsuarioDAO.editarSenha(email, senha);
 			    }
-			} else {
-			    status = Status.CAMPO_INVALIDO; 
-			    httpStatus = 400;
-			}
+			    else {
+				status = Status.REQUISICAO_INVALIDA;
+				httpStatus = 400;
+			    }
 			
 			break;
 		    }
@@ -144,11 +121,17 @@ public class Resetar extends HttpServlet {
 		status = Status.CAMPO_INVALIDO;
 		httpStatus = 400;
 	    }
+	} catch (SQLException e) {
+	    throw new RuntimeException(e);
+	} catch (TypeMismatchException e){
+	    status = Status.CAMPO_TIPO_INCORRETO;
+	    httpStatus = 400;
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;
 	    httpStatus = 400;
-	} catch (SQLException e) {
-	    throw new RuntimeException(e);
+	} catch (MustHasFailedException e) {
+	    status = Status.CAMPO_INVALIDO;
+	    httpStatus = 400;
 	}
 
 	resp.setStatus(httpStatus);

@@ -26,50 +26,37 @@ import java.util.Map;
  */
 @WebServlet(name = "Cadastro", urlPatterns = {"/cadastro"})
 public class Cadastro extends HttpServlet {
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+
 	resp.setContentType("application/json");
 	resp.setHeader("Access-Control-Allow-Origin", "*");
-	
+
 	int httpStatus;
 	Status status;
-	
-	
+
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
-	    System.out.println(json);
-	    
-	    var email = json.get("email");
-	    var senha = json.get("senha");
-	    var nome = json.get("nome");
-	    
-	    if(email.valueType() == ValueType.STRING && senha.valueType() == ValueType.STRING && email.valueType() == ValueType.STRING ){
-		var emailString = email.toString();
-		var senhaString = senha.toString();
-		var nomeString = nome.toString();
-		
-		if( emailString.length() <= 100 && senhaString.length() <= 100 && nomeString.length() <= 200 && !emailString.isBlank() && !senhaString.isBlank() && !nomeString.isBlank()){
-		    UsuarioDAO.gravar(
-			    new Usuario(
-				    nomeString,
-				    emailString,
-				    senhaString,
-				    BigDecimal.ZERO,
-				    false, 
-				    null,
-				    null
-			    )
-		    );
-		    httpStatus = 200;
-		    status = Status.OK;
-		} else {
-		    status = Status.CAMPO_INVALIDO;
-		    httpStatus = 400;
-		}
-		
-		
+
+	    var emailString = json.get("email").mustBe(ValueType.STRING).asString();
+	    var senhaString = json.get("senha").mustBe(ValueType.STRING).asString();
+	    var nomeString = json.get("nome").mustBe(ValueType.STRING).asString();
+
+	    if (emailString.length() <= 100 && senhaString.length() <= 100 && nomeString.length() <= 200 && !emailString.isBlank() && !senhaString.isBlank() && !nomeString.isBlank()) {
+		UsuarioDAO.gravar(
+			new Usuario(
+				nomeString,
+				emailString,
+				senhaString,
+				BigDecimal.ZERO,
+				false,
+				null,
+				null
+			)
+		);
+		httpStatus = 200;
+		status = Status.OK;
 	    } else {
 		status = Status.CAMPO_INVALIDO;
 		httpStatus = 400;
@@ -77,17 +64,18 @@ public class Cadastro extends HttpServlet {
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;
 	    httpStatus = 400;
-	} catch (SQLException e){
-	    if(e.getErrorCode() == Status.EMAIL_REPETIDO.codigo){
+	} catch (SQLException e) {
+	    if (e.getErrorCode() == Status.EMAIL_REPETIDO.codigo) {
 		status = Status.EMAIL_REPETIDO;
 		httpStatus = 202;
 	    } else {
 		throw new RuntimeException(e);
 	    }
-	} 
-	
+	}
+
 	resp.setStatus(httpStatus);
+
 	JsonStream.serialize(Map.of("status", status.codigo), resp.getOutputStream());
     }
-    
+
 }

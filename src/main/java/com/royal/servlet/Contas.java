@@ -47,14 +47,12 @@ public class Contas extends HttpServlet {
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 	    
-	    System.out.println(json);
-	    
 	    final var email = json.get("email");
 	    final var senha = json.get("senha");
 	    final var manterConectado = json.get("manter");
 	    
 	    if(email.valueType() == ValueType.STRING && senha.valueType() == ValueType.STRING && manterConectado.valueType() == ValueType.BOOLEAN){
-		final var pessoa = UsuarioDAO.buscar(email.toString(), senha.toString());		
+		final var pessoa = UsuarioDAO.buscar(email.asString(), senha.asString());		
 		
 		if(pessoa != null){
 		    

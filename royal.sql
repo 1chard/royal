@@ -30,15 +30,18 @@ CREATE TABLE IF NOT EXISTS tblRecuperacao (
 
 -- criação da tabela tipotransferencia
 CREATE TABLE IF NOT EXISTS tblTipoTransferencia (
-    idTipoTransferencia INT UNSIGNED NOT NULL PRIMARY KEY,
+    idTipoTransferencia INT UNSIGNED NOT NULL PRIMARY KEY auto_increment,
     nome VARCHAR(10) NOT NULL unique,
     UNIQUE INDEX (idTipoTransferencia)
 );
 
--- criação da tabela categoria
+INSERT INTO tblTipoTransferencia(nome) value("DESPESA");
+INSERT INTO tblTipoTransferencia(nome) value("RECEITA");
+
+-- criação da tabela categori
 CREATE TABLE IF NOT EXISTS tblCategoria (
     idCategoria INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nome TEXT NOT NULL,
+    nome varchar(50) NOT NULL unique,
     cor VARCHAR(6) NOT NULL,
     icone TEXT NOT NULL,
     idTipoTransferencia INT UNSIGNED NOT NULL,
