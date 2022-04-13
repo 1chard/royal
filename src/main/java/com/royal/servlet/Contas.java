@@ -15,11 +15,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -55,7 +57,24 @@ public class Contas extends HttpServlet {
 		final var pessoa = UsuarioDAO.buscar(email.toString(), senha.toString());		
 		
 		if(pessoa != null){
+		    
+		    //instancia tudo
+		    var sessao = new Sistema.Sessao();
+		    String token = UUID.nameUUIDFromBytes(
+			    Sistema.ENCRIPTA.encrypt(
+				    Integer.toOctalString(pessoa.id)
+			    ).getBytes(StandardCharsets.ISO_8859_1)
+		    ).toString();
+		    
+		    sessao.httpSession = req.getSession(true);
+		    sessao.id = pessoa.id;
+		    
+		    
 		    response.put("found", true);
+		    response.put("token", token);
+		    
+		    Sistema.sessoes.put(token, sessao);
+		    
 		    httpStatus = 200;
 		} else {
 		    response.put("found", false);

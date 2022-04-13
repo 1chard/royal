@@ -4,6 +4,7 @@ import com.royal.Cripto;
 import com.royal.jdbc.MariaDB;
 import com.royal.jdbc.MySQL;
 import com.royal.jdbc.SQL;
+import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -57,23 +58,6 @@ public class Sistema extends HttpServlet {
 	public jakarta.servlet.http.HttpSession httpSession;
 	public jakarta.websocket.Session socketSession;
 	public Map<String, Object> objetos = new HashMap<>();
-
-	@Override
-	public int hashCode() {
-	    return Objects.hash(httpSession, socketSession, objetos);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-	    if (this == obj) {
-		return true;
-	    } else if (obj instanceof Sessao) {
-		return false;
-	    } else {
-		final Sessao other = (Sessao) obj;
-		return Objects.equals(this.httpSession, other.httpSession) && Objects.equals(this.socketSession, other.socketSession) && Objects.equals(this.objetos, other.objetos);
-	    }
-
-	}
+	public int id;
     }
 }

@@ -1,6 +1,7 @@
 package com.royal.external;
 
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Address;
