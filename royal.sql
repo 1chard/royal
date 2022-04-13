@@ -1,4 +1,5 @@
 -- Criação de tabelas
+drop database if exists royal;
 create database IF NOT EXISTS royal;
 
 -- usar a tabela Royal Inance
@@ -8,7 +9,7 @@ USE royal;
 CREATE TABLE IF NOT EXISTS tblUsuario (
     idUsuario INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
     nome TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
+    email VARCHAR(256) NOT NULL UNIQUE,
     senha TEXT NOT NULL,
     foto TEXT NULL DEFAULT NULL,
     duasetapas BOOLEAN NOT NULL DEFAULT FALSE,
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS tblRecuperacao (
 -- criação da tabela tipotransferencia
 CREATE TABLE IF NOT EXISTS tblTipoTransferencia (
     idTipoTransferencia INT UNSIGNED NOT NULL PRIMARY KEY,
-    nome TEXT NOT NULL unique,
+    nome VARCHAR(10) NOT NULL unique,
     UNIQUE INDEX (idTipoTransferencia)
 );
 
@@ -107,7 +108,7 @@ CREATE TABLE IF NOT EXISTS tblReceitaUsuario (
     idUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Usuario_ReceitaUsuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
-    idCategoria INT NOT NULL,
+    idCategoria INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Categoria_ReceitaUsuario FOREIGN KEY (idCategoria)
         REFERENCES tblCategoria (idCategoria),
     UNIQUE INDEX (idReceitaUsuario)
@@ -131,7 +132,7 @@ CREATE TABLE IF NOT EXISTS tblUsuarioGrupo (
     idUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_UsuarioGrupo_Usuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
-    idGrupo INT NOT NULL,
+    idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_UsuarioGrupo_Grupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
     UNIQUE INDEX (idUsuarioGrupo)
@@ -146,7 +147,7 @@ CREATE TABLE IF NOT EXISTS tblConvite (
     idUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Convite_Usuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
-    idGrupo INT NOT NULL,
+    idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Convite_Grupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
     UNIQUE INDEX (idConvite)
@@ -162,10 +163,10 @@ CREATE TABLE IF NOT EXISTS tblMetaGrupo (
     idTipoTransferencia INT UNSIGNED NOT NULL,
     CONSTRAINT FK_TipoTransferencia_MetaGrupo FOREIGN KEY (idTipoTransferencia)
         REFERENCES tblTipoTransferencia (idTipoTransferencia),
-    idGrupo INT NOT NULL,
+    idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Usuario_MetaGrupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
-    idCategoria INT NOT NULL,
+    idCategoria INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Categoria_MetaGrupo FOREIGN KEY (idCategoria)
         REFERENCES tblCategoria (idCategoria),
     UNIQUE INDEX (idMetaGrupo)
@@ -189,7 +190,7 @@ CREATE TABLE IF NOT EXISTS tblDespesaGrupo (
     idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Grupo_DespesaGrupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
-    idCategoria INT NOT NULL,
+    idCategoria INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Categoria_DespesaGrupo FOREIGN KEY (idCategoria)
         REFERENCES tblCategoria (idCategoria),
     UNIQUE INDEX (idDespesaGrupo)
