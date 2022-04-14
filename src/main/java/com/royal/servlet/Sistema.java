@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +34,18 @@ public class Sistema extends HttpServlet {
     
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
-    public static final SQL BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
+    public static final SQL BANCO;
     public static final Map<String, Sessao> PESSOAS = new HashMap<>();
 
     private static final long serialVersionUID = 1L;
 
-    
+    static {
+		try{
+			BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
+		} catch(SQLException e){
+			throw new RuntimeException(e);
+		}
+	}
     
     @Override
     public void init() throws ServletException {
