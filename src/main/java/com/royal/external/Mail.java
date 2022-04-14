@@ -2,6 +2,8 @@ package com.royal.external;
 
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Address;
@@ -48,27 +50,23 @@ public class Mail {
 	});
     }
 
-    public static boolean enviar(String titulo, String mensagem, String destinatarios) {
-	try {
-
-	    Message message = new MimeMessage(SESSION);
-	    message.setFrom(INTERNET_ADDRESS);
-	    //Remetente
-
-	    Address[] toUser = InternetAddress.parse(destinatarios);
-	    
-	    message.setRecipients(Message.RecipientType.TO, toUser);
-	    message.setSubject(titulo);//Assunto
-	    message.setText(mensagem);
-	    /**
-	     * Método para enviar a mensagem criada
-	     */
-	    Transport.send(message);
-
-	} catch (MessagingException e) {
-	    throw new RuntimeException(e);
-	}
-
-	return true;
+    public static Future<Void> enviar(String titulo, String mensagem, String destinatarios) {
+	    return (Future<Void>) Executors.newSingleThreadExecutor().submit(() -> {
+		try {
+		    Message message = new MimeMessage(SESSION);
+		    message.setFrom(INTERNET_ADDRESS);
+		    //Remetente
+		    
+		    Address[] toUser = InternetAddress.parse(destinatarios);
+		    
+		    message.setRecipients(Message.RecipientType.TO, toUser);
+		    message.setSubject(titulo);//Assunto
+		    message.setText(mensagem);
+		    
+		    Transport.send(message);
+		} catch (MessagingException ex) {
+		    throw new RuntimeException(ex);
+		}
+	    });
     }
 }

@@ -1,6 +1,7 @@
 package com.royal.websockets;
 
 import com.jsoniter.JsonIterator;
+import com.jsoniter.any.Any;
 import com.royal.servlet.Sistema;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
@@ -38,10 +39,12 @@ public class Data {
 	    var json = JsonIterator.deserialize(mensagem);
 	    
 	    switch (json.get("metodo").toString()) {
-		case "despesa":{
-		    
-		}
+		case "despesa":
+		    DespesaData.tratador(json, s);
+
 		break;
+		default:
+		    throw new IllegalArgumentException();
 	    }
 	}
 	
@@ -51,8 +54,10 @@ public class Data {
 	}
 }
 
-class DataTratadorDespesa{
-    private DataTratadorDespesa(){}
+class DespesaData{
+    private DespesaData(){}
     
-    
+    static void tratador(Any json, Session s){
+	
+    }
 }

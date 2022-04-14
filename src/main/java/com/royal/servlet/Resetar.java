@@ -20,6 +20,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +37,7 @@ import java.util.Set;
 public class Resetar extends HttpServlet {
 
     private final static Random RANDOM = new Random();
+    private final static NumberFormat FORMATTER = new DecimalFormat("000000");
     private final static Set<String> EMAILS_ATIVOS = Collections.synchronizedSet(new HashSet<>());
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -50,10 +53,12 @@ public class Resetar extends HttpServlet {
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 	    
+	    System.out.println(json);
+	    
 	    var tipo = json.get("tipo");
 
 	    if (tipo.valueType() == ValueType.STRING) {
-		switch (tipo.toString()) {
+		switch (tipo.mustBe(ValueType.STRING).asString()) {
 		    case "PEDIR": {
 			var email = json.get("email").mustBe(ValueType.STRING).asString();
 
@@ -67,10 +72,8 @@ public class Resetar extends HttpServlet {
 				var codigo = RANDOM.nextInt(999999);
 
 				RecuperacaoDAO.gravar(new Recuperacao(codigo, usuario.id));
-
-				new Thread(
-					() -> Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + codigo + "\nDuração: 15 min", usuario.email)
-				).start();
+				
+				Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + FORMATTER.format(codigo) + "\nDuração: 15 min", usuario.email);
 			    }
 			
 
