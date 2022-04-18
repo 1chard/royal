@@ -22,8 +22,11 @@ import java.util.Random;
 import java.util.UUID;
 import jakarta.servlet.http.HttpSession;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
@@ -31,4 +34,7 @@ import java.util.Locale;
  * @author suporte
  */
 public class Extra {
+    public static void main(String[] args) {
+	System.out.println(java.sql.Date.valueOf("8324-12-22"));
+    }
 }

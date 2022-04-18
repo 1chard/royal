@@ -64,6 +64,6 @@ public class Sistema extends HttpServlet {
     public static class Sessao {
 	public jakarta.servlet.http.HttpSession httpSession;
 	public Map<String, Object> objetos = new HashMap<>();
-	public int id;
+	public Usuario usuario;
     }
 }

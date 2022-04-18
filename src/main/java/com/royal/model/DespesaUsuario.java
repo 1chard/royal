@@ -45,7 +45,7 @@ public class DespesaUsuario {
 	this.idCategoria = idCategoria;
     }
 
-    public static class DespesaUsuarioBuilder{
+    public static class Builder{
 	private Integer idDespesaUsuario;
 	private final BigDecimal valor;
 	private final java.sql.Date data;
@@ -62,7 +62,7 @@ public class DespesaUsuario {
 	private final int idUsuario;
 	private final int idCategoria;
 
-	public DespesaUsuarioBuilder(BigDecimal valor, Date data, boolean pendente, String descricao, boolean favorito, int idUsuario, int idCategoria) {
+	public Builder(BigDecimal valor, Date data, boolean pendente, String descricao, boolean favorito, int idUsuario, int idCategoria) {
 	    this.valor = valor;
 	    this.data = data;
 	    this.pendente = pendente;
@@ -72,42 +72,42 @@ public class DespesaUsuario {
 	    this.idCategoria = idCategoria;
 	}
 
-	public DespesaUsuarioBuilder idDespesaUsuario(Integer idDespesaUsuario) {
+	public Builder idDespesaUsuario(Integer idDespesaUsuario) {
 	    this.idDespesaUsuario = idDespesaUsuario;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setAnexo(String anexo) {
+	public Builder setAnexo(String anexo) {
 	    this.anexo = anexo;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setObservacao(String observacao) {
+	public Builder setObservacao(String observacao) {
 	    this.observacao = observacao;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setInicioRepeticao(Date inicioRepeticao) {
+	public Builder setInicioRepeticao(Date inicioRepeticao) {
 	    this.inicioRepeticao = inicioRepeticao;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setTotalParcelas(Integer totalParcelas) {
+	public Builder setTotalParcelas(Integer totalParcelas) {
 	    this.totalParcelas = totalParcelas;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setParcelasPagas(Integer parcelasPagas) {
+	public Builder setParcelasPagas(Integer parcelasPagas) {
 	    this.parcelasPagas = parcelasPagas;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setParcelasFixas(Boolean parcelasFixas) {
+	public Builder setParcelasFixas(Boolean parcelasFixas) {
 	    this.parcelasFixas = parcelasFixas;
 	    return this;
 	}
 
-	public DespesaUsuarioBuilder setNomeFrequencia(Frequencia nomeFrequencia) {
+	public Builder setNomeFrequencia(Frequencia nomeFrequencia) {
 	    this.nomeFrequencia = nomeFrequencia;
 	    return this;
 	}

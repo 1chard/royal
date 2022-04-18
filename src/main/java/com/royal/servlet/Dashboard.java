@@ -14,27 +14,21 @@ import java.io.PrintWriter;
  *
  * @author suporte
  */
-@WebServlet(name = "Data", urlPatterns = {"/data/*"})
-public class Data extends HttpServlet {
+@WebServlet(name = "Dashboard", urlPatterns = {"/dashboard"})
+public class Dashboard extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	resp.setContentType("application/json");
 	resp.setHeader("Access-Control-Allow-Origin", "*");
 	
-	var argumentos = API.parameters(req);
 	int httpStatus;
 	Status status;
 	
-	String token = req.getParameter("key");
+	String token = req.getParameter("k");
 	
-	if(argumentos.length == 1 && Sistema.PESSOAS.containsKey(token)){ 
+	if(Sistema.PESSOAS.containsKey(token)){ 
 	    
-	    switch(argumentos[0]){
-		
-	    }
-	    
-	    resp.getWriter().append("teste =" +req.getAttributeNames()).flush();
 	} else {
 	    resp.sendError(404);
 	}

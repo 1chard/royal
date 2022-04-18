@@ -2,6 +2,7 @@ package com.royal.dao;
 
 import com.royal.model.DespesaUsuario;
 import com.royal.servlet.Sistema;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 /**
@@ -29,5 +30,9 @@ public class DespesaUsuarioDAO {
 		);
 	
 	return true;
+    }
+    
+    public static BigDecimal despesaMensal(int mes, int ano){
+	return null;
     }
 }

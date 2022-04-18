@@ -65,8 +65,7 @@ public class Contas extends HttpServlet {
 		    ).toString();
 		    
 		    sessao.httpSession = req.getSession(true);
-		    sessao.id = pessoa.id;
-		    
+		    sessao.usuario = pessoa;
 		    
 		    response.put("found", true);
 		    response.put("token", token);
