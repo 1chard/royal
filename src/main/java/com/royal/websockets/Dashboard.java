@@ -16,8 +16,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,7 +29,7 @@ import java.util.Map;
 @ServerEndpoint("/dashboard/{token}")
 public class Dashboard {
 
-	public final static Map<String, Session> SESSOES = Collections.synchronizedMap(new HashMap<>());
+	public final static Map<String, List<Session>> SESSOES = Collections.synchronizedMap(new HashMap<>());
 
 	@OnOpen
 	public void abrir(Session s, @PathParam("token") String token) throws IOException {
@@ -41,7 +43,14 @@ public class Dashboard {
 			s.getBasicRemote().sendText(JsonStream.serialize(Map.of("saldo", pessoa.usuario.saldo)));
 		}
 
-		SESSOES.put(token, s);
+		if(SESSOES.containsKey(token)){
+			var list = new ArrayList<Session>(4);
+			list.add(s);
+			SESSOES.put(token, list);
+		} else {
+			SESSOES.get(token).add(s);
+		}
+		
 	}
 
 	@OnMessage
