@@ -15,6 +15,12 @@ public class MariaDB extends SQL {
     final Connection connection;
 
     public MariaDB(String url, String database, String user, String pass) throws SQLException{
+		try{
+			Class.forName("org.mariadb.jdbc.Driver");
+		} catch(ClassNotFoundException e){
+			throw new SQLException(e);
+		}
+		
 		connection = DriverManager.getConnection("jdbc:" + "mariadb" + "://" + url + "/" + database, user, pass);
     }
     

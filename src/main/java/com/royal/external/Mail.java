@@ -18,55 +18,56 @@ import javax.mail.internet.MimeMessage;
 
 public class Mail {
 
-    private final static Session SESSION;
-    private final static String EMAIL = "totesfokes@gmail.com";
-    private final static String SENHA = "qweruiop";
-    private final static InternetAddress INTERNET_ADDRESS;
+	private final static Session SESSION;
+	private final static String EMAIL = "totesfokes@gmail.com";
+	private final static String SENHA = "qweruiop";
+	private final static InternetAddress INTERNET_ADDRESS;
 
-    static {
+	static {
 
-	try {
-	    INTERNET_ADDRESS = new InternetAddress(EMAIL);
-	} catch (AddressException ex) {
-	    throw new RuntimeException(ex);
+		try {
+			INTERNET_ADDRESS = new InternetAddress(EMAIL);
+		} catch (AddressException ex) {
+			throw new RuntimeException(ex);
+		}
+
+		Properties props = new Properties();
+		/**
+		 * Parâmetros de conexão com servidor Gmail
+		 */
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.socketFactory.port", "465");
+		props.put("mail.smtp.socketFactory.class",
+				"javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", "465");
+
+		SESSION = Session.getDefaultInstance(props,
+				new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(EMAIL, SENHA);
+			}
+		});
 	}
 
-	Properties props = new Properties();
-	/**
-	 * Parâmetros de conexão com servidor Gmail
-	 */
-	props.put("mail.smtp.host", "smtp.gmail.com");
-	props.put("mail.smtp.socketFactory.port", "465");
-	props.put("mail.smtp.socketFactory.class",
-		"javax.net.ssl.SSLSocketFactory");
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.port", "465");
+	@SuppressWarnings("unchecked")
+	public static Future<Void> enviar(String titulo, String mensagem, String destinatarios) {
+		return (Future<Void>) Executors.newSingleThreadExecutor().submit(() -> {
+			try {
+				Message message = new MimeMessage(SESSION);
+				message.setFrom(INTERNET_ADDRESS);
+				//Remetente
 
-	SESSION = Session.getDefaultInstance(props,
-		new javax.mail.Authenticator() {
-	    protected PasswordAuthentication getPasswordAuthentication() {
-		return new PasswordAuthentication(EMAIL, SENHA);
-	    }
-	});
-    }
+				Address[] toUser = InternetAddress.parse(destinatarios);
 
-    public static Future<Void> enviar(String titulo, String mensagem, String destinatarios) {
-	    return (Future<Void>) Executors.newSingleThreadExecutor().submit(() -> {
-		try {
-		    Message message = new MimeMessage(SESSION);
-		    message.setFrom(INTERNET_ADDRESS);
-		    //Remetente
-		    
-		    Address[] toUser = InternetAddress.parse(destinatarios);
-		    
-		    message.setRecipients(Message.RecipientType.TO, toUser);
-		    message.setSubject(titulo);//Assunto
-		    message.setText(mensagem);
-		    
-		    Transport.send(message);
-		} catch (MessagingException ex) {
-		    throw new RuntimeException(ex);
-		}
-	    });
-    }
+				message.setRecipients(Message.RecipientType.TO, toUser);
+				message.setSubject(titulo);//Assunto
+				message.setText(mensagem);
+
+				Transport.send(message);
+			} catch (MessagingException ex) {
+				throw new RuntimeException(ex);
+			}
+		});
+	}
 }

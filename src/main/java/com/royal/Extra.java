@@ -12,6 +12,7 @@ import com.royal.model.ReceitaUsuario;
 import com.royal.model.TipoTransferencia;
 import com.royal.model.Usuario;
 import com.royal.servlet.Sistema;
+import com.royal.validation.Senha;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -35,6 +36,27 @@ import java.util.Locale;
  */
 public class Extra {
     public static void main(String[] args) {
-	System.out.println(java.sql.Date.valueOf("8324-12-22"));
+		for(char i = 0; i < 0xff; i++){
+			if(isNumero(i) || isLetraMaiuscula(i) || isLetraMinuscula(i) || isCaractereEspecial(i)){
+				System.out.print(i);
+			}
+		}
+		
     }
+	
+	private static boolean isNumero(char ch){
+		return ch >= '0' && ch <= '9';
+	}
+	
+	private static boolean isLetraMaiuscula(char ch){
+		return (ch >= 'A' && ch <= 'Z') || ch == 'À'|| ch == 'Á'|| ch == 'Â'|| ch == 'Ã'|| ch == 'Ç'|| ch == 'È'|| ch == 'É'|| ch == 'Ê'|| ch == 'Ì'|| ch == 'Í'|| ch == 'Î'|| ch == 'Ò'|| ch == 'Ó'|| ch == 'Ô'|| ch == 'Õ'|| ch == 'Ù'|| ch == 'Ú'|| ch == 'Û';
+	}
+	
+	private static boolean isLetraMinuscula(char ch){
+		return (ch >= 'a' && ch <= 'z') || ch == 'à'|| ch == 'á'|| ch == 'â'|| ch == 'ã'|| ch == 'ç'|| ch == 'è'|| ch == 'é'|| ch == 'ê'|| ch == 'ì'|| ch == 'í'|| ch == 'î'|| ch == 'ò'|| ch == 'ó'|| ch == 'ô'|| ch == 'õ'|| ch == 'ù'|| ch == 'ú'|| ch == 'û';
+	}
+	
+	private static boolean isCaractereEspecial(char ch){
+		return ch == ' ' || ch == '!'|| ch == '"'|| ch == '#'|| ch == '$'|| ch == '%'|| ch == '&'|| ch == '\''|| ch == '('|| ch == ')'|| ch == '*'|| ch == '+'|| ch == ','|| ch == '-'|| ch == '.'|| ch == '/'|| ch == ':'|| ch == ';'|| ch == '<'|| ch == '='|| ch == '>'|| ch == '?'|| ch == '@'|| ch == '['|| ch == '\\'|| ch == ']'|| ch == '^'|| ch == '_'|| ch == '{'|| ch == '|'|| ch == '}'|| ch == '~'|| ch == '|'|| ch == '¨'|| ch == '°'|| ch == '“'|| ch == '”';
+	}
 }

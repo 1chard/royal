@@ -1,4 +1,4 @@
-package com.royal;
+package com.royal.validation;
 
 /**
  *
