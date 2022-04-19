@@ -29,7 +29,7 @@ public class Sistema extends HttpServlet {
     private static final String HOST = "localhost:3306";
     private static final String DATABASE = "royal";
     private static final String USER = "root";
-    private static final String PASSWORD = "123";
+    private static final String PASSWORD = "12345678";
     private static final String CHAVE = "cumonista";
     
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);

@@ -33,14 +33,14 @@ public class DespesaUsuarioDAO {
     }
     
     public static BigDecimal despesaMensal(int quem, int ano, int mes) throws SQLException{
-		var query = Sistema.BANCO.query("SELECT sum(valor) FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", 
+		var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", 
 				quem,
 				ano,
 				mes
 		);
     
-		query.first();
+		query.next();
 		
-		return query.getBigDecimal("sum(valor)");
+		return query.getBigDecimal("ifnull(sum(valor), 0)");
 	}
 }

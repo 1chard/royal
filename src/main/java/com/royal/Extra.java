@@ -38,6 +38,6 @@ import java.util.Locale;
  */
 public class Extra {
 	public static void main(String[] args) {
-		System.out.println(GregorianCalendar.getInstance(Locale.ROOT).get(Calendar.YEAR));
+		System.out.println(GregorianCalendar.getInstance(Locale.ROOT).getActualMinimum(Calendar.MONTH));
 	}
 }
