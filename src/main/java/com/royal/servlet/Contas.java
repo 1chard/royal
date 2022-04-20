@@ -1,5 +1,6 @@
 package com.royal.servlet;
 
+import com.royal.Sistema;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.ValueType;
 import com.jsoniter.any.Any;
@@ -64,7 +65,7 @@ public class Contas extends HttpServlet {
 			    ).getBytes(StandardCharsets.ISO_8859_1)
 		    ).toString();
 		    
-		    sessao.httpSession = req.getSession(true);
+		    sessao.sessoes.add(req.getSession(true));
 		    sessao.usuario = pessoa;
 		    
 		    response.put("found", true);

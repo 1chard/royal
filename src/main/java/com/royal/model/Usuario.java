@@ -1,7 +1,7 @@
 package com.royal.model;
 
 import com.royal.Cripto;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
 import java.math.BigDecimal;
 import java.util.Objects;
 

@@ -2,7 +2,7 @@ package com.royal.dao;
 
 import com.royal.model.DespesaUsuario;
 import com.royal.model.ReceitaUsuario;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 

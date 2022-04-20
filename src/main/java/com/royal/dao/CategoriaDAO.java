@@ -2,7 +2,7 @@ package com.royal.dao;
 
 import com.royal.model.Categoria;
 import com.royal.model.TipoTransferencia;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

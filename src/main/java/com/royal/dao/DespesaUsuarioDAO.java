@@ -1,7 +1,7 @@
 package com.royal.dao;
 
 import com.royal.model.DespesaUsuario;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
@@ -39,6 +39,8 @@ public class DespesaUsuarioDAO {
 				mes
 		);
     
+		System.out.println(mes);
+		
 		query.next();
 		
 		return query.getBigDecimal("ifnull(sum(valor), 0)");

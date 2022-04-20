@@ -11,7 +11,6 @@ import com.royal.model.DespesaUsuario;
 import com.royal.model.ReceitaUsuario;
 import com.royal.model.TipoTransferencia;
 import com.royal.model.Usuario;
-import com.royal.servlet.Sistema;
 import com.royal.validation.Senha;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -37,7 +36,16 @@ import java.util.Locale;
  * @author suporte
  */
 public class Extra {
-	public static void main(String[] args) {
-		System.out.println(GregorianCalendar.getInstance(Locale.ROOT).getActualMinimum(Calendar.MONTH));
+    static class Teste{
+	public BigDecimal as = BigDecimal.ONE;
+    }
+    
+    public static void main(String[] args) throws SQLException {
+	    var t = new Teste();
+		    t.as.subtract(BigDecimal.TEN);
+	    
+	    System.out.println(
+		    t.as
+	    );
 	}
 }

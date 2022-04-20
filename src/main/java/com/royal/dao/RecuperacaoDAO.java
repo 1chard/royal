@@ -3,7 +3,7 @@ package com.royal.dao;
 import com.royal.jdbc.MySQL;
 import com.royal.model.Recuperacao;
 import com.royal.model.Usuario;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -2,7 +2,8 @@ package com.royal.dao;
 
 import com.royal.jdbc.MySQL;
 import com.royal.model.Usuario;
-import com.royal.servlet.Sistema;
+import com.royal.Sistema;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +41,12 @@ public class UsuarioDAO {
 		    ):
 		    null;
 
+    }
+    
+    public static boolean reduzirSaldo(BigDecimal decimo, int quemId) throws SQLException{
+	return Sistema.BANCO.update("UPDATE tblUsuario "
+		+ "SET saldo = saldo - ? "
+		+ "WHERE idusuario = ?;", decimo, quemId) == 1;
     }
     
     public static Usuario buscar(String email) throws SQLException{
