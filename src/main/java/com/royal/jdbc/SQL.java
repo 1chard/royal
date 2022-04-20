@@ -71,8 +71,8 @@ public abstract class SQL implements AutoCloseable {
 					stmt.setTime(i, (java.sql.Time) obj);
 				} else if (obj instanceof java.sql.Timestamp) {
 					stmt.setTimestamp(i, (java.sql.Timestamp) obj);
-				} else if (obj instanceof java.util.Date) {
-					stmt.setDate(i, new java.sql.Date(((java.util.Date) obj).getTime()));
+				} else if (obj instanceof java.sql.Date) {
+					stmt.setDate(i, (java.sql.Date) obj);
 				} else if (obj instanceof BigDecimal) {
 					stmt.setBigDecimal(i, (BigDecimal) obj);
 				} else if (obj == null) {
