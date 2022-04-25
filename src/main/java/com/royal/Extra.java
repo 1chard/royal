@@ -41,11 +41,6 @@ public class Extra {
     }
     
     public static void main(String[] args) throws SQLException {
-	    var t = new Teste();
-		    t.as.subtract(BigDecimal.TEN);
-	    
-	    System.out.println(
-		    t.as
-	    );
+		System.out.println(System.getProperties());
 	}
 }

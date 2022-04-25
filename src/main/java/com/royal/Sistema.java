@@ -28,11 +28,42 @@ import java.util.logging.Logger;
 @WebServlet(loadOnStartup = 1)
 public class Sistema{
 
-    private static final String HOST = "localhost:3306";
-    private static final String DATABASE = "royal";
-    private static final String USER = "root";
-    private static final String PASSWORD = "12345678";
-    private static final String CHAVE = "cumonista";
+    private static final String HOST;
+    private static final String DATABASE;
+    private static final String USER;
+    private static final String PASSWORD;
+    private static final String CHAVE;
+	
+	static {
+		switch (System.getProperty("user.name")){
+			case "richard": {
+				HOST = "localhost:3306";
+				DATABASE = "royal";
+				USER = "root";
+				PASSWORD = "123";
+				CHAVE = "pOrQuEaTeRrAéPlAnA";
+				break;
+			}
+			case "suporte": {
+				HOST = "localhost:3306";
+				DATABASE = "royal";
+				USER = "root";
+				PASSWORD = "12345678";
+				CHAVE = "cumonista";
+				break;
+			}
+			default: {
+				throw new RuntimeException();
+			}
+		}
+		
+		try{
+			BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
+		} catch(SQLException e){
+			throw new RuntimeException(e);
+		}
+	}
+
     
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
@@ -41,14 +72,7 @@ public class Sistema{
 
     private static final long serialVersionUID = 1L;
 
-    static {
-		try{
-			BANCO = new MySQL(HOST, DATABASE, USER, PASSWORD);
-		} catch(SQLException e){
-			throw new RuntimeException(e);
-		}
-	}
-
+    
     public static class Sessao {
 	public Map<String, Object> objetos = new HashMap<>();
 	public Usuario usuario;

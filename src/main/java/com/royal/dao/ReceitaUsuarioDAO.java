@@ -33,7 +33,17 @@ public class ReceitaUsuarioDAO {
 	return true;
     }
     
-    public static BigDecimal despesaMensal(int quem, int ano, int mes) throws SQLException{
+	public static BigDecimal receitaGeral(int quem) throws SQLException{
+		var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblReceitaUsuario WHERE idusuario = ?;", 
+				quem
+		);
+    
+		query.next();
+		
+		return query.getBigDecimal("ifnull(sum(valor), 0)");
+	}
+	
+    public static BigDecimal receitaMensal(int quem, int ano, int mes) throws SQLException{
 		var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", 
 				quem,
 				ano,
