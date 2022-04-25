@@ -42,8 +42,7 @@ public class Dashboard extends HttpServlet {
 
 		if (Sistema.PESSOAS.containsKey(token)) {
 			var pessoa = Sistema.PESSOAS.get(token).usuario;
-			var calendario = Calendar.getInstance();
-
+			
 			try {
 				var categorias = CategoriaDAO.listar();
 				var despesas = new ArrayList<Categoria>();
@@ -56,12 +55,15 @@ public class Dashboard extends HttpServlet {
 						receitas.add(categoria);
 					}
 				});
+				
+				var despesaGeral = DespesaUsuarioDAO.despesaGeral(pessoa.id);
+				var receitaGeral = ReceitaUsuarioDAO.receitaGeral(pessoa.id);
 
 				JsonStream.serialize(Map.of(
-						"saldo", pessoa.saldo,
-						"despesa", DespesaUsuarioDAO.despesaMensal(pessoa.id, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH) + 1),
-						"receita", ReceitaUsuarioDAO.receitaMensal(pessoa.id, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH) + 1),
-						"categoria", Map.of(
+						"saldo", receitaGeral.subtract(despesaGeral),
+						"despesa", despesaGeral,
+						"receita", receitaGeral,
+						"categorias", Map.of(
 								"despesas", despesas,
 								"receitas", receitas
 						)

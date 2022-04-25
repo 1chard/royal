@@ -49,7 +49,6 @@ public class Cadastro extends HttpServlet {
 				nomeString,
 				emailString,
 				senhaString,
-				BigDecimal.ZERO,
 				false,
 				null,
 				null

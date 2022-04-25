@@ -14,13 +14,12 @@ import java.util.logging.Logger;
  */
 public class UsuarioDAO {
     public static boolean gravar(Usuario user) throws SQLException{
-	    Sistema.BANCO.run("INSERT into tblUsuario(nome, email, senha, foto, duasetapas, saldo) values(?, ?, ?, ?, ?, ?);", 
+	    Sistema.BANCO.run("INSERT into tblUsuario(nome, email, senha, foto, duasetapas) values(?, ?, ?, ?, ?);", 
 		    Sistema.ENCRIPTA.encrypt(user.nome), 
 		    Sistema.ENCRIPTA.encrypt(user.email),
 		    Sistema.ENCRIPTA.encrypt(user.senha),
 		    user.foto,
-		    user.duasetapas,
-		    user.saldo
+		    user.duasetapas
 	    );
 	    return true;
     }
@@ -34,19 +33,12 @@ public class UsuarioDAO {
 			    Sistema.DESENCRIPTA.decrypt(set.getString("nome")),
 			    Sistema.DESENCRIPTA.decrypt(set.getString("email")),
 			    Sistema.DESENCRIPTA.decrypt(set.getString("senha")), 
-			    set.getBigDecimal("saldo"),
 			    set.getBoolean("duasetapas"),
 			    set.getString("foto"),
 			    set.getInt("idusuario")
 		    ):
 		    null;
 
-    }
-    
-    public static boolean reduzirSaldo(BigDecimal decimo, int quemId) throws SQLException{
-	return Sistema.BANCO.update("UPDATE tblUsuario "
-		+ "SET saldo = saldo - ? "
-		+ "WHERE idusuario = ?;", decimo, quemId) == 1;
     }
     
     public static Usuario buscar(String email) throws SQLException{
@@ -58,7 +50,6 @@ public class UsuarioDAO {
 			    Sistema.DESENCRIPTA.decrypt(set.getString("nome")),
 			    Sistema.DESENCRIPTA.decrypt(set.getString("email")),
 			    Sistema.DESENCRIPTA.decrypt(set.getString("senha")), 
-			    set.getBigDecimal("saldo"),
 			    set.getBoolean("duasetapas"),
 			    set.getString("foto"),
 			    set.getInt("idusuario")

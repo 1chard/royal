@@ -13,7 +13,7 @@ public class DespesaUsuario {
 	public Integer idDespesaUsuario;
 	public BigDecimal valor;
 	public java.sql.Date data;
-	public boolean pendente;
+	public java.sql.Date pendente;
 	public String anexo;
 	public String descricao;
 	public String observacao;
@@ -26,7 +26,7 @@ public class DespesaUsuario {
 	public int idUsuario;
 	public int idCategoria;
 
-	public DespesaUsuario(BigDecimal valor, Date data, boolean pendente, String descricao, boolean favorito, int idUsuario, int idCategoria, Integer idDespesaUsuario, String anexo, String observacao, Date inicioRepeticao, Integer totalParcelas, Integer parcelasPagas, Boolean parcelasFixas, Frequencia nomeFrequencia) {
+	public DespesaUsuario(BigDecimal valor, Date data, java.sql.Date pendente, String descricao, boolean favorito, int idUsuario, int idCategoria, Integer idDespesaUsuario, String anexo, String observacao, Date inicioRepeticao, Integer totalParcelas, Integer parcelasPagas, Boolean parcelasFixas, Frequencia nomeFrequencia) {
 		this.idDespesaUsuario = idDespesaUsuario;
 		this.valor = valor;
 		this.data = data;
@@ -49,7 +49,7 @@ public class DespesaUsuario {
 		private Integer idDespesaUsuario;
 		private final BigDecimal valor;
 		private final java.sql.Date data;
-		private final boolean pendente;
+		private final java.sql.Date pendente;
 		private String anexo;
 		private final String descricao;
 		private String observacao;
@@ -62,7 +62,7 @@ public class DespesaUsuario {
 		private final int idUsuario;
 		private final int idCategoria;
 
-		public Builder(BigDecimal valor, Date data, boolean pendente, String descricao, boolean favorito, int idUsuario, int idCategoria) {
+		public Builder(BigDecimal valor, Date data, java.sql.Date pendente, String descricao, boolean favorito, int idUsuario, int idCategoria) {
 			this.valor = valor;
 			this.data = data;
 			this.pendente = pendente;

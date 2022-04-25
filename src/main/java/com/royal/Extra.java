@@ -41,6 +41,6 @@ public class Extra {
     }
     
     public static void main(String[] args) throws SQLException {
-		System.out.println(System.getProperties());
-	}
+	CategoriaDAO.inserir(new Categoria(Integer.BYTES, "Gemas", "00FF00", "school", TipoTransferencia.RECEITA));
+    }
 }

@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS tblUsuario (
     senha TEXT NOT NULL,
     foto TEXT NULL DEFAULT NULL,
     duasetapas BOOLEAN NOT NULL DEFAULT FALSE,
-    saldo DECIMAL(14 , 2 ) NOT NULL,
     UNIQUE INDEX (idUsuario)
 );
 
@@ -74,7 +73,7 @@ CREATE TABLE IF NOT EXISTS tblDespesaUsuario (
     idDespesaUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente TINYINT NOT NULL,
+    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
@@ -98,7 +97,7 @@ CREATE TABLE IF NOT EXISTS tblReceitaUsuario (
     idReceitaUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente TINYINT NOT NULL,
+    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
@@ -180,7 +179,7 @@ CREATE TABLE IF NOT EXISTS tblDespesaGrupo (
     idDespesaGrupo INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente TINYINT NOT NULL,
+    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
@@ -204,7 +203,7 @@ CREATE TABLE IF NOT EXISTS tblReceitaGrupo (
     idReceitaGrupo INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente TINYINT NOT NULL,
+    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
