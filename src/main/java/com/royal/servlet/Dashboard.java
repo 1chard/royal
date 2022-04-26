@@ -35,9 +35,6 @@ public class Dashboard extends HttpServlet {
 		resp.setContentType("application/json");
 		resp.setHeader("Access-Control-Allow-Origin", "*");
 
-		int httpStatus;
-		Status status;
-
 		String token = req.getParameter("k");
 
 		if (Sistema.PESSOAS.containsKey(token)) {

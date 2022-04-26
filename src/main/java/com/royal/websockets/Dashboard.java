@@ -45,8 +45,6 @@ public class Dashboard {
 
     @OnOpen
     public void abrir(Session s, @PathParam("token") String token) throws IOException {
-	System.out.println(s + " <<<<<<");
-
 	var pessoa = Sistema.PESSOAS.get(token);
 
 	if (pessoa == null) {
@@ -71,10 +69,10 @@ public class Dashboard {
 
 	switch (json.get("metodo").mustBe(ValueType.STRING).asString()) {
 	    case "despesa":
-		DespesaData.tratador(json, s, token);
+		DespesaTratador.tratador(json, s, token);
 		break;
 	    case "receita":
-		ReceitaData.tratador(json, s, token);
+		ReceitaTratador.tratador(json, s, token);
 		break;
 	    default:
 		throw new IllegalArgumentException();
@@ -110,83 +108,5 @@ public class Dashboard {
 	}
 
 	s.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, message));
-    }
-}
-
-class DespesaData {
-
-    private DespesaData() {
-    }
-
-    static void tratador(Any json, Session s, String token) throws SQLException {
-
-	switch (json.get("arg").mustBe(ValueType.STRING).asString()) {
-	    case "inserir": {
-		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
-		var usuario = Sistema.PESSOAS.get(token).usuario;
-		var pendente = json.get("pendente");
-
-		DespesaUsuarioDAO.gravar(
-			new DespesaUsuario.Builder(
-				valor,
-				Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString()),
-				pendente.valueType() == ValueType.STRING ? Date.valueOf(pendente.asString()) : null,
-				json.get("descricao").mustBe(ValueType.STRING).asString(),
-				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
-				usuario.id,
-				json.get("idCategoria").mustBe(ValueType.NUMBER).asInt()
-			).build()
-		);
-
-		Dashboard.SESSOES.get(token).forEach(sessao -> {
-		    synchronized (sessao) {
-			try {
-			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
-			} catch (IOException ex) {
-			    throw new RuntimeException(ex);
-			}
-		    }
-		});
-	    }
-	}
-    }
-}
-
-class ReceitaData {
-
-    private ReceitaData() {
-    }
-
-    static void tratador(Any json, Session s, String token) throws SQLException {
-
-	switch (json.get("arg").mustBe(ValueType.STRING).asString()) {
-	    case "inserir": {
-		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
-		var usuario = Sistema.PESSOAS.get(token).usuario;
-		var pendente = json.get("pendente");
-		
-		ReceitaUsuarioDAO.gravar(
-			new ReceitaUsuario.Builder(
-				valor,
-				Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString()),
-				pendente.valueType() == ValueType.STRING ? Date.valueOf(pendente.asString()) : null,
-				json.get("descricao").mustBe(ValueType.STRING).asString(),
-				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
-				usuario.id,
-				json.get("idCategoria").mustBe(ValueType.NUMBER).asInt()
-			).build()
-		);
-
-		Dashboard.SESSOES.get(token).forEach(sessao -> {
-		    synchronized (sessao) {
-			try {
-			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
-			} catch (IOException ex) {
-			    throw new RuntimeException(ex);
-			}
-		    }
-		});
-	    }
-	}
     }
 }
