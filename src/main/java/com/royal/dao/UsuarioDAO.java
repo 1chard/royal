@@ -26,7 +26,7 @@ public class UsuarioDAO {
     
     public static Usuario buscar(String email, String senha) throws SQLException{
 
-	    var set = Sistema.BANCO.query("SELECT * from tblusuario where email = ? and senha = ?;", Sistema.ENCRIPTA.encrypt(email), Sistema.ENCRIPTA.encrypt(senha));
+	    var set = Sistema.BANCO.query("SELECT * from tblUsuario where email = ? and senha = ?;", Sistema.ENCRIPTA.encrypt(email), Sistema.ENCRIPTA.encrypt(senha));
 	    
 	    return set.next() ?
 		    new Usuario(
@@ -43,7 +43,7 @@ public class UsuarioDAO {
     
     public static Usuario buscar(String email) throws SQLException{
 
-	    var set = Sistema.BANCO.query("SELECT * from tblusuario where email = ?;", Sistema.ENCRIPTA.encrypt(email));
+	    var set = Sistema.BANCO.query("SELECT * from tblUsuario where email = ?;", Sistema.ENCRIPTA.encrypt(email));
 	    
 	    return set.next() ?
 		    new Usuario(

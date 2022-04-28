@@ -39,7 +39,7 @@ public class Sistema{
 			case "richard": {
 				HOST = "localhost:3306";
 				DATABASE = "royal";
-				USER = "root";
+				USER = "richard";
 				PASSWORD = "123";
 				CHAVE = "pOrQuEaTeRrAéPlAnA";
 				break;
@@ -50,6 +50,14 @@ public class Sistema{
 				USER = "root";
 				PASSWORD = "12345678";
 				CHAVE = "cumonista";
+				break;
+			}
+			case "SERVIÇO LOCAL": {
+				HOST = "localhost:3308";
+				DATABASE = "royal";
+				USER = "royal";
+				PASSWORD = "royal";
+				CHAVE = "alemanhaSemprePerde";
 				break;
 			}
 			default: {
