@@ -1,5 +1,13 @@
 package com.royal.model;
 
+import com.royal.dao.CategoriaDAO;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author suporte
@@ -32,5 +40,49 @@ public final class Categoria {
 	return sb.toString();
     }
     
+    public static final List<Categoria> DESPESAS = Collections.synchronizedList(new ArrayList<>());
+    public static final List<Categoria> RECEITAS = Collections.synchronizedList(new ArrayList<>());
     
+    static{
+	try {
+	    CategoriaDAO.listar().forEach(categoria -> {
+		if(null == categoria.tipoTransferencia){
+		    throw new RuntimeException();
+		} else switch (categoria.tipoTransferencia) {
+		    case DESPESA:
+			DESPESAS.add(categoria);
+			break;
+		    case RECEITA:
+			RECEITAS.add(categoria);
+			break;
+		}
+	    });
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
+    }
+    
+    public static Categoria despesaPorId(int id){
+	for(int i = 0; i < DESPESAS.size(); i++){
+	    var despesa = DESPESAS.get(i);
+	    
+	    if(despesa.idCategoria == id){
+		return despesa;
+	    }
+	}
+	
+	return null;
+    }
+    
+    public static Categoria receitaPorId(int id){
+	for(int i = 0; i < RECEITAS.size(); i++){
+	    var receita = RECEITAS.get(i);
+	    
+	    if(receita.idCategoria == id){
+		return receita;
+	    }
+	}
+	
+	return null;
+    }
 }

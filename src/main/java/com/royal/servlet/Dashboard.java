@@ -2,26 +2,18 @@ package com.royal.servlet;
 
 import com.royal.Sistema;
 import com.jsoniter.output.JsonStream;
-import com.royal.API;
-import com.royal.Status;
-import com.royal.dao.CategoriaDAO;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;
 import com.royal.model.Categoria;
-import com.royal.model.TipoTransferencia;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -41,7 +33,6 @@ public class Dashboard extends HttpServlet {
 			var pessoa = Sistema.PESSOAS.get(token).usuario;
 			
 			try {
-				var categorias = CategoriaDAO.listar();
 				var despesas = new ArrayList<Map<String, Object>>();
 				var receitas = new ArrayList<Map<String, Object>>();
 
@@ -51,24 +42,19 @@ public class Dashboard extends HttpServlet {
 //    public String cor;
 //    public String icone;
 				
-				categorias.forEach((categoria) -> {
-					if (categoria.tipoTransferencia == TipoTransferencia.DESPESA) {
-						despesas.add(
-							Map.of("idCategoria", categoria.idCategoria,
-								"nome", categoria.nome,
-								"cor", categoria.cor,
-								"icone", categoria.icone)
-						
-						);
-					} else {
-						receitas.add(
-							Map.of("idCategoria", categoria.idCategoria,
-								"nome", categoria.nome,
-								"cor", categoria.cor,
-								"icone", categoria.icone)
-						);
-					}
-				});
+						   Categoria.DESPESAS.forEach(despesa -> despesas.add(
+							Map.of("idCategoria", despesa.idCategoria,
+								"nome", despesa.nome,
+								"cor", despesa.cor,
+								"icone", despesa.icone)
+						   ));
+						   
+						   Categoria.RECEITAS.forEach(despesa -> despesas.add(
+							Map.of("idCategoria", despesa.idCategoria,
+								"nome", despesa.nome,
+								"cor", despesa.cor,
+								"icone", despesa.icone)
+						   ));
 				
 				var despesaGeral = DespesaUsuarioDAO.despesaGeral(pessoa.id);
 				var receitaGeral = ReceitaUsuarioDAO.receitaGeral(pessoa.id);

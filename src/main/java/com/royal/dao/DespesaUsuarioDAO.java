@@ -2,8 +2,12 @@ package com.royal.dao;
 
 import com.royal.model.DespesaUsuario;
 import com.royal.Sistema;
+import com.royal.model.Frequencia;
+import com.royal.model.ReceitaUsuario;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -53,4 +57,36 @@ public class DespesaUsuarioDAO {
 		
 		return query.getBigDecimal("ifnull(sum(valor), 0)");
 	}
+    
+    public static List<DespesaUsuario> listarPorMes(int quem, int ano, int mes) throws SQLException{
+	var query = Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes);
+	
+	var list = new ArrayList<DespesaUsuario>();
+	
+	while(query.next()){
+	    var frequencia = query.getString("nomeFrequencia");
+	    
+	    list.add(
+		    new DespesaUsuario(
+			    query.getBigDecimal("valor"),
+			    query.getDate("data"),
+			    query.getDate("pendente"),
+			    query.getString("descricao"),
+			    query.getBoolean("favorito"),
+			    query.getInt("idUsuario"), 
+			    query.getInt("idCategoria"),
+			    query.getInt("idDespesaUsuario"),
+			    query.getString("anexo"), 
+			    query.getString("observacao"),
+			    query.getDate("inicioRepeticao"),
+			    query.getInt("totalParcelas"),
+			    query.getInt("parcelasPagas"),
+			    query.getBoolean("parcelasFixas"),
+			    frequencia != null? Frequencia.valueOf(frequencia) : null
+		    )
+	    );
+	}
+	
+	return list;
+    }
 }

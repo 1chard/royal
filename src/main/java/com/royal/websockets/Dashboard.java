@@ -43,6 +43,18 @@ import javax.xml.crypto.Data;
 public class Dashboard {
 
     public final static Map<String, List<Session>> SESSOES = Collections.synchronizedMap(new HashMap<>());
+    
+    public static void enviar(String token, String mensagem){
+	Dashboard.SESSOES.get(token).forEach(sessao -> {
+		    synchronized (sessao) {
+			try {
+			    sessao.getBasicRemote().sendText(mensagem);
+			} catch (IOException ex) {
+			    throw new RuntimeException(ex);
+			}
+		    }
+	});
+    }
 
     @OnOpen
     public void abrir(Session s, @PathParam("token") String token) throws IOException {

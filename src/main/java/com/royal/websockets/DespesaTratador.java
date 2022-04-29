@@ -5,12 +5,16 @@ import com.jsoniter.any.Any;
 import com.jsoniter.output.JsonStream;
 import com.royal.Sistema;
 import com.royal.dao.DespesaUsuarioDAO;
+import com.royal.dao.ReceitaUsuarioDAO;
 import com.royal.model.DespesaUsuario;
 import jakarta.websocket.Session;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,15 +42,7 @@ public class DespesaTratador {
 			).build()
 		);
 
-		Dashboard.SESSOES.get(token).forEach(sessao -> {
-		    synchronized (sessao) {
-			try {
-			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
-			} catch (IOException ex) {
-			    throw new RuntimeException(ex);
-			}
-		    }
-		});
+		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
 		
 		break;
 	    }

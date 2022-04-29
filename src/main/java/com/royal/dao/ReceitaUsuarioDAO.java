@@ -58,7 +58,7 @@ public class ReceitaUsuarioDAO {
 		return query.getBigDecimal("ifnull(sum(valor), 0)");
 	}
     
-    public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes) throws SQLException{
+     public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes) throws SQLException{
 	var query = Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes);
 	
 	var list = new ArrayList<ReceitaUsuario>();
