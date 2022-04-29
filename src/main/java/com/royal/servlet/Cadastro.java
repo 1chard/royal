@@ -25,7 +25,7 @@ import java.util.Map;
  * @author suporte
  */
 @WebServlet(name = "Cadastro", urlPatterns = {"/cadastro"})
-public class Cadastro extends HttpServlet {
+public final class Cadastro extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

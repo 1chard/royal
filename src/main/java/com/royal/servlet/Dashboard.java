@@ -42,14 +42,31 @@ public class Dashboard extends HttpServlet {
 			
 			try {
 				var categorias = CategoriaDAO.listar();
-				var despesas = new ArrayList<Categoria>();
-				var receitas = new ArrayList<Categoria>();
+				var despesas = new ArrayList<Map<String, Object>>();
+				var receitas = new ArrayList<Map<String, Object>>();
 
+				
+//    public Integer idCategoria;
+//    public String nome;
+//    public String cor;
+//    public String icone;
+				
 				categorias.forEach((categoria) -> {
 					if (categoria.tipoTransferencia == TipoTransferencia.DESPESA) {
-						despesas.add(categoria);
+						despesas.add(
+							Map.of("idCategoria", categoria.idCategoria,
+								"nome", categoria.nome,
+								"cor", categoria.cor,
+								"icone", categoria.icone)
+						
+						);
 					} else {
-						receitas.add(categoria);
+						receitas.add(
+							Map.of("idCategoria", categoria.idCategoria,
+								"nome", categoria.nome,
+								"cor", categoria.cor,
+								"icone", categoria.icone)
+						);
 					}
 				});
 				

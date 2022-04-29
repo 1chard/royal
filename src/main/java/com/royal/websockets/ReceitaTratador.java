@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -41,7 +42,7 @@ public class ReceitaTratador {
 		Dashboard.SESSOES.get(token).forEach(sessao -> {
 		    synchronized (sessao) {
 			try {
-			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
+			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar", "valor", valor.doubleValue())));
 			} catch (IOException ex) {
 			    throw new RuntimeException(ex);
 			}
@@ -49,9 +50,6 @@ public class ReceitaTratador {
 		});
 		
 		break;
-	    }
-	    case "lista-mes": {
-		
 	    }
 	}
     }

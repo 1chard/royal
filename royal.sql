@@ -49,6 +49,10 @@ CREATE TABLE IF NOT EXISTS tblCategoria (
     UNIQUE INDEX (idCategoria)
 );
 
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Salário', '880000', 'attach_money', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Viagens', '000088', 'flight', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '008800', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+
 -- criação da tabela MetaUsuario
 CREATE TABLE IF NOT EXISTS tblMetaUsuario (
     idMetaUsuario INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,

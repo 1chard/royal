@@ -41,7 +41,7 @@ public class DespesaTratador {
 		Dashboard.SESSOES.get(token).forEach(sessao -> {
 		    synchronized (sessao) {
 			try {
-			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar", "valor", valor.doubleValue())));
+			    sessao.getBasicRemote().sendText(JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
 			} catch (IOException ex) {
 			    throw new RuntimeException(ex);
 			}

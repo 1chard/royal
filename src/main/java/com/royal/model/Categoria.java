@@ -4,7 +4,7 @@ package com.royal.model;
  *
  * @author suporte
  */
-public class Categoria {
+public final class Categoria {
     public Integer idCategoria;
     public String nome;
     public String cor;

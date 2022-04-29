@@ -11,6 +11,7 @@ import com.royal.Sistema;
 import com.royal.dao.ReceitaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.model.ReceitaUsuario;
+import com.royal.servlet.Erro;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
 import jakarta.websocket.OnError;
@@ -108,5 +109,7 @@ public class Dashboard {
 	}
 
 	s.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, message));
+	
+	Erro.enviador(t);
     }
 }

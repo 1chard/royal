@@ -20,16 +20,19 @@ public class Erro extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	var exception = (Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
-	
+	var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
+	resp.getWriter().append(string).flush();
+    }
+    
+    public static String enviador(Throwable t){
 	StringWriter sw = new StringWriter();
 	PrintWriter pw = new PrintWriter(sw);
-	exception.printStackTrace(pw);
+	t.printStackTrace(pw);
 	String pst = sw.toString();
 	
-	resp.getWriter().append(pst).flush();
+	Mail.enviar(t.getClass().getName(), pst, "richardcutrim01@gmail.com");
 	
-	Mail.enviar(exception.getClass().getName(), pst, "richardcutrim01@gmail.com");
+	return pst;
     }
     
 }
