@@ -64,6 +64,8 @@ public class ReceitaUsuarioDAO {
 	var list = new ArrayList<ReceitaUsuario>();
 	
 	while(query.next()){
+	    String nomeFrequencia = query.getString("nomeFrequencia");
+	    
 	    list.add(
 		    new ReceitaUsuario(
 			    query.getBigDecimal("valor"),
@@ -77,10 +79,11 @@ public class ReceitaUsuarioDAO {
 			    query.getString("anexo"), 
 			    query.getString("observacao"),
 			    query.getDate("inicioRepeticao"),
-			    query.getInt("totalParcelas"),
-			    query.getInt("parcelasPagas"),
-			    query.getBoolean("parcelasFixas"),
-			    Frequencia.valueOf(query.getString("nomeFrequencia")))
+			    query.getObject("totalParcelas", Integer.class),
+			    query.getObject("parcelasPagas", Integer.class),
+			    query.getObject("parcelasFixas", Boolean.class),
+			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+		    )
 	    );
 	}
 	

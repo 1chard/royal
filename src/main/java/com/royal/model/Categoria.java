@@ -49,12 +49,8 @@ public final class Categoria {
 		if(null == categoria.tipoTransferencia){
 		    throw new RuntimeException();
 		} else switch (categoria.tipoTransferencia) {
-		    case DESPESA:
-			DESPESAS.add(categoria);
-			break;
-		    case RECEITA:
-			RECEITAS.add(categoria);
-			break;
+		    case DESPESA -> DESPESAS.add(categoria);
+		    case RECEITA -> RECEITAS.add(categoria);
 		}
 	    });
 	} catch (SQLException ex) {

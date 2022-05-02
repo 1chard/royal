@@ -25,7 +25,7 @@ public class DespesaTratador {
     static void tratador(Any json, Session s, String token) throws SQLException {
 
 	switch (json.get("arg").mustBe(ValueType.STRING).asString()) {
-	    case "inserir": {
+	    case "inserir" ->  {
 		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
 		var usuario = Sistema.PESSOAS.get(token).usuario;
 		var pendente = json.get("pendente");
@@ -44,7 +44,6 @@ public class DespesaTratador {
 
 		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));
 		
-		break;
 	    }
 	}
     }

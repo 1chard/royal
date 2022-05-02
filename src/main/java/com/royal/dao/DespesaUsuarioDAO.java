@@ -64,7 +64,7 @@ public class DespesaUsuarioDAO {
 	var list = new ArrayList<DespesaUsuario>();
 	
 	while(query.next()){
-	    var frequencia = query.getString("nomeFrequencia");
+	    String nomeFrequencia = query.getString("nomeFrequencia");
 	    
 	    list.add(
 		    new DespesaUsuario(
@@ -75,14 +75,14 @@ public class DespesaUsuarioDAO {
 			    query.getBoolean("favorito"),
 			    query.getInt("idUsuario"), 
 			    query.getInt("idCategoria"),
-			    query.getInt("idDespesaUsuario"),
+			    query.getInt("idReceitaUsuario"),
 			    query.getString("anexo"), 
 			    query.getString("observacao"),
 			    query.getDate("inicioRepeticao"),
-			    query.getInt("totalParcelas"),
-			    query.getInt("parcelasPagas"),
-			    query.getBoolean("parcelasFixas"),
-			    frequencia != null? Frequencia.valueOf(frequencia) : null
+			    query.getObject("totalParcelas", Integer.class),
+			    query.getObject("parcelasPagas", Integer.class),
+			    query.getObject("parcelasFixas", Boolean.class),
+			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
 		    )
 	    );
 	}

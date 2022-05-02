@@ -81,14 +81,9 @@ public class Dashboard {
 	var json = JsonIterator.deserialize(mensagem);
 
 	switch (json.get("metodo").mustBe(ValueType.STRING).asString()) {
-	    case "despesa":
-		DespesaTratador.tratador(json, s, token);
-		break;
-	    case "receita":
-		ReceitaTratador.tratador(json, s, token);
-		break;
-	    default:
-		throw new IllegalArgumentException();
+	    case "despesa" -> DespesaTratador.tratador(json, s, token);
+	    case "receita" -> ReceitaTratador.tratador(json, s, token);
+	    default -> throw new IllegalArgumentException();
 	}
     }
 
