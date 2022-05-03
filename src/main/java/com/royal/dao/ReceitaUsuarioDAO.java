@@ -28,7 +28,7 @@ public class ReceitaUsuarioDAO {
 		receitaUsuario.totalParcelas,
 		receitaUsuario.parcelasPagas,
 		receitaUsuario.parcelasFixas,
-		receitaUsuario.nomeFrequencia,
+		receitaUsuario.nomeFrequencia != null ? receitaUsuario.nomeFrequencia.toString() : null,
 		receitaUsuario.idUsuario,
 		receitaUsuario.idCategoria
 		);

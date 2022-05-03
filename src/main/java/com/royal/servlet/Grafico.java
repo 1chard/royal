@@ -6,6 +6,7 @@ import com.royal.API;
 import com.royal.Sistema;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;
+import com.royal.model.Categoria;
 import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -41,9 +42,13 @@ public class Grafico extends HttpServlet {
 			    despesaTrata(args, point.usuario);
 			case "receita" ->
 			    receitaTrata(args, point.usuario);
-			default ->
+			default -> {
 			    resp.sendError(400);
+			    throw new RuntimeException("veio nem um nem outro");
+			}
 		    }).flush();
+		    
+		  
 		} catch (SQLException e) {
 		    throw new ServerException(e.getSQLState(), e);
 		}
@@ -69,7 +74,7 @@ public class Grafico extends HttpServlet {
 			.forEach(despesa -> {
 			    System.out.println(despesa.valor);
 
-			    var numero = String.valueOf(despesa.idCategoria);
+			    var numero = Categoria.despesaPorId(despesa.idCategoria).nome;
 
 			    var decimal = json.getOrDefault(numero, BigDecimal.ZERO);
 

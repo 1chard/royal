@@ -28,7 +28,7 @@ public class DespesaUsuarioDAO {
 		despesaUsuario.totalParcelas,
 		despesaUsuario.parcelasPagas,
 		despesaUsuario.parcelasFixas,
-		despesaUsuario.nomeFrequencia,
+		despesaUsuario.nomeFrequencia != null ? despesaUsuario.nomeFrequencia.toString() : null,
 		despesaUsuario.idUsuario,
 		despesaUsuario.idCategoria
 		);
@@ -58,6 +58,8 @@ public class DespesaUsuarioDAO {
 		return query.getBigDecimal("ifnull(sum(valor), 0)");
 	}
     
+    
+    
     public static List<DespesaUsuario> listarPorMes(int quem, int ano, int mes) throws SQLException{
 	var query = Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes);
 	
@@ -75,7 +77,7 @@ public class DespesaUsuarioDAO {
 			    query.getBoolean("favorito"),
 			    query.getInt("idUsuario"), 
 			    query.getInt("idCategoria"),
-			    query.getInt("idReceitaUsuario"),
+			    query.getInt("idDespesaUsuario"),
 			    query.getString("anexo"), 
 			    query.getString("observacao"),
 			    query.getDate("inicioRepeticao"),

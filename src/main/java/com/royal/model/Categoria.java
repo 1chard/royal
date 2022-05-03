@@ -46,6 +46,8 @@ public final class Categoria {
     static{
 	try {
 	    CategoriaDAO.listar().forEach(categoria -> {
+		System.out.println(categoria);
+		
 		if(null == categoria.tipoTransferencia){
 		    throw new RuntimeException();
 		} else switch (categoria.tipoTransferencia) {

@@ -78,6 +78,8 @@ public class Dashboard {
     @OnMessage
     public void mensagem(String mensagem, Session s, @PathParam("token") String token) throws IOException, SQLException {
 
+	System.out.println(mensagem);
+	
 	var json = JsonIterator.deserialize(mensagem);
 
 	switch (json.get("metodo").mustBe(ValueType.STRING).asString()) {
@@ -89,8 +91,6 @@ public class Dashboard {
 
     @OnClose
     public void fechar(Session s, @PathParam("token") String token) {
-	System.out.println(s + " <<<<<<");
-
 	var sessoes = SESSOES.get(token);
 
 	if (sessoes != null) {

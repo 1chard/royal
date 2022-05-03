@@ -46,6 +46,9 @@ public class Data extends HttpServlet {
 		    case "categorias" -> {
 		    
 		    }
+		    case "extrato-mes" -> {
+			
+		    }
 		}
 	    }
 	    
@@ -60,13 +63,13 @@ public class Data extends HttpServlet {
 				"icone", despesa.icone)
 		));
 
-		Categoria.RECEITAS.forEach(despesa -> despesas.add(
+		Categoria.RECEITAS.forEach(despesa -> receitas.add(
 			Map.of("idCategoria", despesa.idCategoria,
 				"nome", despesa.nome,
 				"cor", despesa.cor,
 				"icone", despesa.icone)
 		));
-
+		
 		var despesaGeral = DespesaUsuarioDAO.despesaGeral(pessoa.id);
 		var receitaGeral = ReceitaUsuarioDAO.receitaGeral(pessoa.id);
 

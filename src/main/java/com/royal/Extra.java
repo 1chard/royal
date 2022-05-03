@@ -18,6 +18,6 @@ public class Extra {
     public static void main(String[] args) throws SQLException {
 	int id;
 	
-	System.out.println((id = 23) == 23);
+	System.out.println(CategoriaDAO.listar());
     }
 }
