@@ -14,6 +14,10 @@ public class MapBuilder {
 	map.put(key, value);
 	return this;
     }
+    
+    public Map<String, Object> build(){
+	return map;
+    }
 }
 
 

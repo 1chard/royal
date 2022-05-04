@@ -91,4 +91,68 @@ public class DespesaUsuarioDAO {
 	
 	return list;
     }
+    
+    public static List<DespesaUsuario> listarPorAno(int quem, int ano) throws SQLException{
+	var query = Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ?;", quem, ano);
+	
+	var list = new ArrayList<DespesaUsuario>();
+	
+	while(query.next()){
+	    String nomeFrequencia = query.getString("nomeFrequencia");
+	    
+	    list.add(
+		    new DespesaUsuario(
+			    query.getBigDecimal("valor"),
+			    query.getDate("data"),
+			    query.getDate("pendente"),
+			    query.getString("descricao"),
+			    query.getBoolean("favorito"),
+			    query.getInt("idUsuario"), 
+			    query.getInt("idCategoria"),
+			    query.getInt("idDespesaUsuario"),
+			    query.getString("anexo"), 
+			    query.getString("observacao"),
+			    query.getDate("inicioRepeticao"),
+			    query.getObject("totalParcelas", Integer.class),
+			    query.getObject("parcelasPagas", Integer.class),
+			    query.getObject("parcelasFixas", Boolean.class),
+			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+		    )
+	    );
+	}
+	
+	return list;
+    }
+    
+    public static List<DespesaUsuario> listar(int quem) throws SQLException{
+	var query = Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ?", quem);
+	
+	var list = new ArrayList<DespesaUsuario>();
+	
+	while(query.next()){
+	    String nomeFrequencia = query.getString("nomeFrequencia");
+	    
+	    list.add(
+		    new DespesaUsuario(
+			    query.getBigDecimal("valor"),
+			    query.getDate("data"),
+			    query.getDate("pendente"),
+			    query.getString("descricao"),
+			    query.getBoolean("favorito"),
+			    query.getInt("idUsuario"), 
+			    query.getInt("idCategoria"),
+			    query.getInt("idDespesaUsuario"),
+			    query.getString("anexo"), 
+			    query.getString("observacao"),
+			    query.getDate("inicioRepeticao"),
+			    query.getObject("totalParcelas", Integer.class),
+			    query.getObject("parcelasPagas", Integer.class),
+			    query.getObject("parcelasFixas", Boolean.class),
+			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+		    )
+	    );
+	}
+	
+	return list;
+    }
 }

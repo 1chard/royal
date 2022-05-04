@@ -3,6 +3,7 @@ package com.royal.servlet;
 import com.royal.Sistema;
 import com.jsoniter.output.JsonStream;
 import com.royal.API;
+import com.royal.Extra;
 import com.royal.MapBuilder;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;
@@ -16,6 +17,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,23 +38,36 @@ public class Data extends HttpServlet {
 	    var pessoa = Sistema.PESSOAS.get(token).usuario;
 
 	    if(args.length >= 2){
-		var json = new MapBuilder();
+		final Object json;
 		
 		switch (args[1]) {
-		    case "saldo-mes" -> {
-		
-		    }
-		    case "saldo-geral" -> {
-		
+		    case "saldo" -> {
+			
 		    }
 		    case "categorias" -> {
 		    
 		    }
-		    case "extrato-mes" -> {
+		    case "extrato" -> {
+			var lista = new ArrayList<Map<String, Object>>();
 			
+			var mes = Extra.orDefault(Integer.parseInt(req.getParameter("mes")), Sistema.CALENDARIO.get(Calendar.MONTH) + 1); 
+			var ano = Extra.orDefault(Integer.parseInt(req.getParameter("ano")), Sistema.CALENDARIO.get(Calendar.YEAR)); 
+			
+			try {
+			    DespesaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
+				    new MapBuilder()
+				    .add("data", despesa.data.toString())
+					    .add("valor", despesa.valor)
+					    .add("categoria", despesa.idCategoria)
+				    .build()
+				    
+			    ));
+			} catch (SQLException ex) {
+			    Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		    }
 		}
-	    }
+	    } else {
 	    
 	    try {
 		var despesas = new ArrayList<Map<String, Object>>();
@@ -84,6 +101,8 @@ public class Data extends HttpServlet {
 		), resp.getOutputStream());
 	    } catch (SQLException ex) {
 		throw new RuntimeException(ex);
+	    }
+	    
 	    }
 	} else {
 	    resp.sendError(404);

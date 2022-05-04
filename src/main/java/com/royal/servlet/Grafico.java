@@ -7,6 +7,8 @@ import com.royal.Sistema;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;
 import com.royal.model.Categoria;
+import com.royal.model.DespesaUsuario;
+import com.royal.model.ReceitaUsuario;
 import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,6 +20,7 @@ import java.math.BigDecimal;
 import java.rmi.ServerException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,8 +50,7 @@ public class Grafico extends HttpServlet {
 			    throw new RuntimeException("veio nem um nem outro");
 			}
 		    }).flush();
-		    
-		  
+
 		} catch (SQLException e) {
 		    throw new ServerException(e.getSQLState(), e);
 		}
@@ -61,8 +63,8 @@ public class Grafico extends HttpServlet {
     }
 
     private static String despesaTrata(String[] args, Usuario usuario) throws IOException, SQLException {
-
 	var json = new HashMap<String, BigDecimal>();
+	final List<DespesaUsuario> lista;
 
 	if (args.length >= 3) {
 	    int ano = Integer.parseInt(args[2]);
@@ -70,26 +72,31 @@ public class Grafico extends HttpServlet {
 	    if (args.length >= 4) {
 		int mes = Integer.parseInt(args[3]);
 
-		DespesaUsuarioDAO.listarPorMes(usuario.id, ano, mes)
-			.forEach(despesa -> {
-			    System.out.println(despesa.valor);
+		lista = DespesaUsuarioDAO.listarPorMes(usuario.id, ano, mes);
 
-			    var numero = Categoria.despesaPorId(despesa.idCategoria).nome;
+	    } else {
 
-			    var decimal = json.getOrDefault(numero, BigDecimal.ZERO);
-
-			    json.put(numero, decimal.add(despesa.valor));
-			});
+		lista = DespesaUsuarioDAO.listarPorAno(usuario.id, ano);
 
 	    }
+	} else {
+	    lista = DespesaUsuarioDAO.listar(usuario.id);
 	}
+	
+	lista.forEach(despesa -> {
+	    var nome = Integer.toString(despesa.idCategoria);
+
+	    var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
+
+	    json.put(nome, decimal.add(despesa.valor));
+	});
 
 	return JsonStream.serialize(json);
     }
 
     private static String receitaTrata(String[] args, Usuario usuario) throws IOException, SQLException {
-
 	var json = new HashMap<String, BigDecimal>();
+	final List<ReceitaUsuario> lista;
 
 	if (args.length >= 3) {
 	    int ano = Integer.parseInt(args[2]);
@@ -97,20 +104,24 @@ public class Grafico extends HttpServlet {
 	    if (args.length >= 4) {
 		int mes = Integer.parseInt(args[3]);
 
-		ReceitaUsuarioDAO.listarPorMes(usuario.id, ano, mes)
-			.forEach(receita -> {
-			    System.out.println(receita.valor);
+		lista = ReceitaUsuarioDAO.listarPorMes(usuario.id, ano, mes);
 
-			    var numero = String.valueOf(receita.idCategoria);
-
-			    var decimal = json.getOrDefault(numero, BigDecimal.ZERO);
-
-			    json.put(numero, decimal.add(receita.valor));
-			});
 	    } else {
-		
+
+		lista = ReceitaUsuarioDAO.listarPorAno(usuario.id, ano);
+
 	    }
+	} else {
+	    lista = ReceitaUsuarioDAO.listar(usuario.id);
 	}
+
+	lista.forEach(receita -> {
+	    var nome = Integer.toString(receita.idCategoria);
+
+	    var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
+
+	    json.put(nome, decimal.add(receita.valor));
+	});
 
 	return JsonStream.serialize(json);
     }

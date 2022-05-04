@@ -78,7 +78,7 @@ public abstract class SQL implements AutoCloseable {
 				} else if (obj == null) {
 					stmt.setObject(i, null);
 				} else {
-					throw new RuntimeException("WTF");
+					throw new RuntimeException("WTF: tipo " + obj.getClass().getName() + ": não aceito essa porra");
 				}
 			}
 		}

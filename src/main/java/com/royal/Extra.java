@@ -15,6 +15,10 @@ import java.sql.SQLException;
  * @author suporte
  */
 public class Extra {
+    public static <T> T orDefault(T x1, T x2){
+	return x1 != null ? x1 : x2;
+    }
+    
     public static void main(String[] args) throws SQLException {
 	int id;
 	

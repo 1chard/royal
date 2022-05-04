@@ -13,7 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +79,8 @@ public class Sistema{
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
     public static final SQL BANCO;
     public static final Map<String, Sessao> PESSOAS = new HashMap<>();
+    public static final Calendar CALENDARIO = GregorianCalendar.getInstance();
+    
 
     private static final long serialVersionUID = 1L;
 
