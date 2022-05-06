@@ -1,8 +1,8 @@
 package com.royal.websockets;
 
-import com.jsoniter.ValueType;
-import com.jsoniter.any.Any;
-import com.jsoniter.output.JsonStream;
+import com.qsoniter.ValueType;
+import com.qsoniter.any.Any;
+import com.qsoniter.output.JsonStream;
 import com.royal.Sistema;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;

@@ -26,7 +26,7 @@
     
 	<dependencies>
 		<dependency>
-			<groupId>org.qsoniter</groupId>
+			<groupId>com.qsoniter</groupId>
 			<artifactId>qsoniter</artifactId>
 			<version>0.10.0-dev</version>
 		</dependency>
@@ -68,6 +68,7 @@
 					<compilerArguments>
 						<endorseddirs>${endorsed.dir}</endorseddirs>
 					</compilerArguments>
+				 <showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 			<plugin>

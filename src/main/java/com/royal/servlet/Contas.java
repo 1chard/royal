@@ -1,11 +1,11 @@
 package com.royal.servlet;
 
 import com.royal.Sistema;
-import com.jsoniter.JsonIterator;
-import com.jsoniter.ValueType;
-import com.jsoniter.any.Any;
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.JsonException;
+import com.qsoniter.JsonIterator;
+import com.qsoniter.ValueType;
+import com.qsoniter.any.Any;
+import com.qsoniter.output.JsonStream;
+import com.qsoniter.spi.JsonException;
 import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 import com.royal.API;
 import com.royal.Status;

@@ -1,10 +1,10 @@
 package com.royal.websockets;
 
-import com.jsoniter.JsonIterator;
-import com.jsoniter.ValueType;
-import com.jsoniter.any.Any;
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.JsonException;
+import com.qsoniter.JsonIterator;
+import com.qsoniter.ValueType;
+import com.qsoniter.any.Any;
+import com.qsoniter.output.JsonStream;
+import com.qsoniter.spi.JsonException;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.model.DespesaUsuario;
 import com.royal.Sistema;
@@ -59,6 +59,8 @@ public class Dashboard {
     @OnOpen
     public void abrir(Session s, @PathParam("token") String token) throws IOException {
 	var pessoa = Sistema.PESSOAS.get(token);
+	
+	System.out.println(token);
 
 	if (pessoa == null) {
 	    s.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Não posso permitir seu login"));
@@ -105,9 +107,9 @@ public class Dashboard {
 
 	t.printStackTrace();
 
-	if (t instanceof com.jsoniter.spi.InvalidFieldException) {
+	if (t instanceof com.qsoniter.spi.InvalidFieldException) {
 	    message = "Faltou campos";
-	} else if (t instanceof com.jsoniter.spi.TypeMismatchException) {
+	} else if (t instanceof com.qsoniter.spi.TypeMismatchException) {
 	    message = "Tipo incorreto";
 	} else if (t instanceof JsonException) {
 	    message = "JSON invalido";

@@ -9,6 +9,9 @@ import com.royal.model.TipoTransferencia;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 /**
  *
@@ -16,12 +19,13 @@ import java.sql.SQLException;
  */
 public class Extra {
     public static <T> T orDefault(T x1, T x2){
-	return x1 != null ? x1 : x2;
+		return x1 != null ? x1 : x2;
     }
     
     public static void main(String[] args) throws SQLException {
-	int id;
-	
-	System.out.println(CategoriaDAO.listar());
+		System.out.println(new Locale("pt", "BR"));
+		System.out.println(Locale.getDefault());
+		System.out.println(DecimalFormat.getCurrencyInstance().format(321.3));
+		System.out.println(DateFormat.getDateInstance(DateFormat.SHORT, new Locale("pt", "BR")).format(312318.1));
     }
 }

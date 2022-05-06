@@ -1,10 +1,10 @@
 package com.royal.servlet;
 
-import com.jsoniter.JsonIterator;
-import com.jsoniter.ValueType;
-import com.jsoniter.any.Any;
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.JsonException;
+import com.qsoniter.JsonIterator;
+import com.qsoniter.ValueType;
+import com.qsoniter.any.Any;
+import com.qsoniter.output.JsonStream;
+import com.qsoniter.spi.JsonException;
 import com.royal.Cripto;
 import com.royal.Status;
 import com.royal.dao.UsuarioDAO;
