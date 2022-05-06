@@ -1,5 +1,6 @@
 package com.royal.servlet;
 
+import com.qsoniter.JsonObject;
 import com.royal.Sistema;
 import com.qsoniter.output.JsonStream;
 import com.royal.API;
@@ -14,10 +15,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.rmi.ServerException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,35 +41,58 @@ public class Data extends HttpServlet {
 		if (args.length >= 1 && Sistema.PESSOAS.containsKey((token = args[0]))) {
 			var pessoa = Sistema.PESSOAS.get(token).usuario;
 
-			if (args.length >= 2) {
+			if (args.length == 2) {
 				final Object json;
 
 				switch (args[1]) {
 					case "saldo" -> {
-
+					    json = "";
 					}
 					case "categorias" -> {
-
+					    json = "";
 					}
-					case "extrato" -> {
-						var lista = new ArrayList<Map<String, Object>>();
+					case "favorito" -> {
+					    json = "";
+					}
+					case "extrato-mes" -> {
+					    
+					    
+						var lista = new ArrayList<JsonObject>();
 
-						var mes = Extra.orDefault(Integer.parseInt(req.getParameter("mes")), Sistema.CALENDARIO.get(Calendar.MONTH) + 1);
-						var ano = Extra.orDefault(Integer.parseInt(req.getParameter("ano")), Sistema.CALENDARIO.get(Calendar.YEAR));
+						var mes = Integer.parseInt(req.getParameter("mes"));
+						var ano = Integer.parseInt( req.getParameter("ano"));
 
 						try {
 							DespesaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
-									new MapBuilder()
-											.add("data", despesa.data.toString())
-											.add("valor", despesa.valor)
-											.add("categoria", despesa.idCategoria)
-											.build()
+									new JsonObject()
+										.add("data", despesa.data)
+										.add("valor", despesa.valor)
+										.add("categoria", despesa.idCategoria)
+										.add("descricao", despesa.descricao)
+							));
+							ReceitaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
+									new JsonObject()
+										.add("data", despesa.data)
+										.add("valor", despesa.valor)
+										.add("categoria", despesa.idCategoria)
+										.add("descricao", despesa.descricao)
 							));
 						} catch (SQLException ex) {
-							Logger.getLogger(Data.class.getName()).log(Level.SEVERE, null, ex);
+						    throw new ServletException(ex);
 						}
+						
+						  Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((java.sql.Date) o1.get("data"))));
+						  
+						  lista.forEach(mapa -> {
+						      mapa.put("data", mapa.get("data").toString());
+						  });
+						
+						json = lista;
 					}
+					default -> throw new ServletException("nao tem essa porra");
 				}
+				
+				resp.getWriter().append(json.toString());
 			} else {
 
 				try {

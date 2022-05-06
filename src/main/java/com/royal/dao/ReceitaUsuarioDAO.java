@@ -5,6 +5,7 @@ import com.royal.model.ReceitaUsuario;
 import com.royal.Sistema;
 import com.royal.model.Frequencia;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,74 +61,28 @@ public class ReceitaUsuarioDAO {
     }
 
     public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes) throws SQLException {
-	var query = Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes);
 
 	var list = new ArrayList<ReceitaUsuario>();
-
-	while (query.next()) {
-	    String nomeFrequencia = query.getString("nomeFrequencia");
-
-	    list.add(
-		    new ReceitaUsuario(
-			    query.getBigDecimal("valor"),
-			    query.getDate("data"),
-			    query.getDate("pendente"),
-			    query.getString("descricao"),
-			    query.getBoolean("favorito"),
-			    query.getInt("idUsuario"),
-			    query.getInt("idCategoria"),
-			    query.getInt("idReceitaUsuario"),
-			    query.getString("anexo"),
-			    query.getString("observacao"),
-			    query.getDate("inicioRepeticao"),
-			    query.getObject("totalParcelas", Integer.class),
-			    query.getObject("parcelasPagas", Integer.class),
-			    query.getObject("parcelasFixas", Boolean.class),
-			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
-		    )
-	    );
-	}
+	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes), list);
 
 	return list;
     }
     
     public static List<ReceitaUsuario> listarPorAno(int quem, int ano) throws SQLException {
-	var query = Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ?;", quem, ano);
-
 	var list = new ArrayList<ReceitaUsuario>();
-
-	while (query.next()) {
-	    String nomeFrequencia = query.getString("nomeFrequencia");
-
-	    list.add(
-		    new ReceitaUsuario(
-			    query.getBigDecimal("valor"),
-			    query.getDate("data"),
-			    query.getDate("pendente"),
-			    query.getString("descricao"),
-			    query.getBoolean("favorito"),
-			    query.getInt("idUsuario"),
-			    query.getInt("idCategoria"),
-			    query.getInt("idReceitaUsuario"),
-			    query.getString("anexo"),
-			    query.getString("observacao"),
-			    query.getDate("inicioRepeticao"),
-			    query.getObject("totalParcelas", Integer.class),
-			    query.getObject("parcelasPagas", Integer.class),
-			    query.getObject("parcelasFixas", Boolean.class),
-			    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
-		    )
-	    );
-	}
+	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ?;", quem, ano), list);
 
 	return list;
     }
     
     public static List<ReceitaUsuario> listar(int quem) throws SQLException {
-	var query = Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ?;", quem);
-
 	var list = new ArrayList<ReceitaUsuario>();
+	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ?;", quem), list);
 
+	return list;
+    }
+    
+    private static void queryTratador(ResultSet query, List<ReceitaUsuario> list) throws SQLException{
 	while (query.next()) {
 	    String nomeFrequencia = query.getString("nomeFrequencia");
 
@@ -151,7 +106,5 @@ public class ReceitaUsuarioDAO {
 		    )
 	    );
 	}
-
-	return list;
     }
 }

@@ -11,6 +11,8 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 /**
@@ -24,8 +26,8 @@ public class Extra {
     
     public static void main(String[] args) throws SQLException {
 		System.out.println(new Locale("pt", "BR"));
-		System.out.println(Locale.getDefault());
-		System.out.println(DecimalFormat.getCurrencyInstance().format(321.3));
-		System.out.println(DateFormat.getDateInstance(DateFormat.SHORT, new Locale("pt", "BR")).format(312318.1));
+		var list = Arrays.asList(new Date(0), new Date(324243423434l), new Date(-232534525435l));
+		Collections.sort(list);
+		System.out.println(list);
     }
 }

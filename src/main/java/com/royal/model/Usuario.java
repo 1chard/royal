@@ -16,12 +16,12 @@ public class Usuario {
     public Integer id;
 
     public Usuario(String nome, String email, String senha, boolean duasetapas, String foto, Integer id) {
-	this.nome = Objects.requireNonNull(nome);
-	this.email = Objects.requireNonNull(email);
-	this.senha = Objects.requireNonNull(senha);
+	this.nome = nome;
+	this.email = email;
+	this.senha = senha;
 	this.foto = foto;
 	this.id = id;
-	this.duasetapas = Objects.requireNonNull(duasetapas);
+	this.duasetapas = duasetapas;
     }
     
     public Usuario(String nome, String email, String senha, boolean duasetapas) {
