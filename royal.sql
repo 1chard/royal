@@ -49,9 +49,10 @@ CREATE TABLE IF NOT EXISTS tblCategoria (
     UNIQUE INDEX (idCategoria)
 );
 
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Salário', '880000', 'attach_money', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Viagens', '000088', 'flight', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '008800', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Casa', '2D98B3', 'roofing', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Restaurante', 'D11B1B', 'storefront', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Serviço', '3C6E10', 'home_repair_service', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '6B3528', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 
 -- criação da tabela MetaUsuario
 CREATE TABLE IF NOT EXISTS tblMetaUsuario (

@@ -13,15 +13,21 @@ import java.util.logging.Logger;
  * @author suporte
  */
 public class RecuperacaoDAO {
-    public static boolean gravar(Recuperacao recuperacao) throws SQLException{
-	    Sistema.BANCO.run("INSERT into tblRecuperacao(codigo, idUsuario) values(?, ?);", 
+    public static boolean gravar(Recuperacao recuperacao){
+	try { 
+	    Sistema.BANCO.run("INSERT into tblRecuperacao(codigo, idUsuario) values(?, ?);",
 		    recuperacao.codigo,
 		    recuperacao.idUsuario
 	    );
 	    return true;
+	
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
     }
     
-    public static Recuperacao buscar(int idRecuperacao) throws SQLException{
+    public static Recuperacao buscar(int idRecuperacao){
+	try{
 
 	    var set = Sistema.BANCO.query("SELECT * from tblRecuperacao where idRecuperacao = ?;", idRecuperacao);
 	    
@@ -34,11 +40,14 @@ public class RecuperacaoDAO {
 			    
 		    ):
 		    null;
-
+	    
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
     }
     
-    public static Recuperacao ativa(String email) throws SQLException{
-
+    public static Recuperacao ativa(String email){
+	try{
 	    var set = Sistema.BANCO.query("select tblrecuperacao.* from tblrecuperacao "
 		    + "inner join tblusuario on tblusuario.idusuario = tblrecuperacao.idusuario "
 		    + "where tblusuario.email = ? and tblrecuperacao.data > date_sub(now(), interval 15 minute)"
@@ -53,6 +62,9 @@ public class RecuperacaoDAO {
 			    
 		    ):
 		    null;
-
+	    
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
     }
 }

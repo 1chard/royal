@@ -44,7 +44,7 @@ public final class Cadastro extends HttpServlet {
 	    var nomeString = json.get("nome").mustBe(ValueType.STRING).asString();
 
 	    if (emailString.length() <= 100 && senhaString.length() <= 100 && nomeString.length() <= 200 && !emailString.isBlank() && !senhaString.isBlank() && !nomeString.isBlank()) {
-		UsuarioDAO.gravar(
+		if(UsuarioDAO.gravar(
 			new Usuario(
 				nomeString,
 				emailString,
@@ -53,9 +53,13 @@ public final class Cadastro extends HttpServlet {
 				null,
 				null
 			)
-		);
+		)){
 		httpStatus = 200;
 		status = Status.OK;
+		} else {
+		    status = Status.EMAIL_REPETIDO;
+		httpStatus = 202;
+		}
 	    } else {
 		status = Status.CAMPO_INVALIDO;
 		httpStatus = 400;
@@ -63,14 +67,7 @@ public final class Cadastro extends HttpServlet {
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;
 	    httpStatus = 400;
-	} catch (SQLException e) {
-	    if (e.getErrorCode() == Status.EMAIL_REPETIDO.codigo) {
-		status = Status.EMAIL_REPETIDO;
-		httpStatus = 202;
-	    } else {
-		throw new RuntimeException(e);
-	    }
-	}
+	} 
 
 	resp.setStatus(httpStatus);
 

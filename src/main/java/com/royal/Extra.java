@@ -24,10 +24,15 @@ public class Extra {
 		return x1 != null ? x1 : x2;
     }
     
+    public static Integer parseInteger(String string){
+	try {
+	    return Integer.valueOf(string);
+	} catch (NumberFormatException e) {
+	    return null;
+	}
+    }
+    
     public static void main(String[] args) throws SQLException {
-		System.out.println(new Locale("pt", "BR"));
-		var list = Arrays.asList(new Date(0), new Date(324243423434l), new Date(-232534525435l));
-		Collections.sort(list);
-		System.out.println(list);
+	System.out.println(Integer.valueOf(null));
     }
 }

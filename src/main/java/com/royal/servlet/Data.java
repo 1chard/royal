@@ -1,5 +1,6 @@
 package com.royal.servlet;
 
+import com.qsoniter.JsonArray;
 import com.qsoniter.JsonObject;
 import com.royal.Sistema;
 import com.qsoniter.output.JsonStream;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.rmi.ServerException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -46,27 +48,58 @@ public class Data extends HttpServlet {
 
 				switch (args[1]) {
 					case "saldo" -> {
-					    json = "";
+					    final BigDecimal despesa;
+					    final BigDecimal receita;
+					    
+					    
+					    
+					    var ano = Extra.parseInteger(req.getParameter("ano"));
+					    
+					    if(ano != null){
+						var mes = Extra.parseInteger(req.getParameter("mes"));
+						
+						if(mes != null){
+						    despesa = DespesaUsuarioDAO.despesaMensal(pessoa.id, ano, mes);
+						    receita = ReceitaUsuarioDAO.receitaMensal(pessoa.id, ano, mes);
+						} else {
+						    despesa = DespesaUsuarioDAO.despesaAnual(pessoa.id, ano);
+						    receita = ReceitaUsuarioDAO.receitaAnual(pessoa.id, ano);
+						}
+					    } else {
+						despesa = DespesaUsuarioDAO.despesaGeral(pessoa.id);
+						   receita = ReceitaUsuarioDAO.receitaGeral(pessoa.id);
+					    }
+					    
+					    json = new JsonObject().add("despesa", despesa)
+						    .add("receita", receita)
+						    .add("saldo", receita.subtract(despesa));
 					}
 					case "categorias" -> {
-					    json = "";
+					    var objeto = new JsonObject();
+					    
+					    objeto.add("despesas", Categoria.DESPESAS);
+					    objeto.add("receitas", Categoria.RECEITAS);
+					    
+					    json = objeto;
 					}
 					case "favorito" -> {
-					    json = "";
+					    var lista = new JsonArray();
+					    
+//					    DespesaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> lista.add(despesa));
+//					    ReceitaUsuarioDAO.favoritos(pessoa.id).forEach(receita -> lista.add(receita));
+					    
+					    json = lista;
 					}
-					case "extrato-mes" -> {
-					    
-					    
+					case "extrato-mes" -> { 
 						var lista = new ArrayList<JsonObject>();
 
 						var mes = Integer.parseInt(req.getParameter("mes"));
 						var ano = Integer.parseInt( req.getParameter("ano"));
 
-						try {
 							DespesaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
 									new JsonObject()
 										.add("data", despesa.data)
-										.add("valor", despesa.valor)
+										.add("valor", despesa.valor.negate())
 										.add("categoria", despesa.idCategoria)
 										.add("descricao", despesa.descricao)
 							));
@@ -77,10 +110,6 @@ public class Data extends HttpServlet {
 										.add("categoria", despesa.idCategoria)
 										.add("descricao", despesa.descricao)
 							));
-						} catch (SQLException ex) {
-						    throw new ServletException(ex);
-						}
-						
 						  Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((java.sql.Date) o1.get("data"))));
 						  
 						  lista.forEach(mapa -> {
@@ -95,24 +124,7 @@ public class Data extends HttpServlet {
 				resp.getWriter().append(json.toString());
 			} else {
 
-				try {
-					var despesas = new ArrayList<Map<String, Object>>();
-					var receitas = new ArrayList<Map<String, Object>>();
-
-					Categoria.DESPESAS.forEach(despesa -> despesas.add(
-							Map.of("idCategoria", despesa.idCategoria,
-									"nome", despesa.nome,
-									"cor", despesa.cor,
-									"icone", despesa.icone)
-					));
-
-					Categoria.RECEITAS.forEach(despesa -> receitas.add(
-							Map.of("idCategoria", despesa.idCategoria,
-									"nome", despesa.nome,
-									"cor", despesa.cor,
-									"icone", despesa.icone)
-					));
-
+				
 					var despesaGeral = DespesaUsuarioDAO.despesaGeral(pessoa.id);
 					var receitaGeral = ReceitaUsuarioDAO.receitaGeral(pessoa.id);
 
@@ -121,13 +133,10 @@ public class Data extends HttpServlet {
 							"despesa", despesaGeral,
 							"receita", receitaGeral,
 							"categorias", Map.of(
-									"despesas", despesas,
-									"receitas", receitas
+									"despesas", Categoria.DESPESAS,
+									"receitas", Categoria.RECEITAS
 							)
-					), resp.getOutputStream());
-				} catch (SQLException ex) {
-					throw new RuntimeException(ex);
-				}
+					), resp.getOutputStream()); 
 
 			}
 		} else {
