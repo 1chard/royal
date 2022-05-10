@@ -13,13 +13,13 @@ import java.util.logging.Logger;
  * @author suporte
  */
 public class RecuperacaoDAO {
-    public static boolean gravar(Recuperacao recuperacao){
+    public static Integer pedir(String email){
 	try { 
-	    Sistema.BANCO.run("INSERT into tblRecuperacao(codigo, idUsuario) values(?, ?);",
-		    recuperacao.codigo,
-		    recuperacao.idUsuario
-	    );
-	    return true;
+	    var query = Sistema.BANCO.query("set @val = 0;" +
+				    "call resetar_senha(?, @val);" +
+				    "select @val;", Sistema.ENCRIPTA.encrypt(email));
+	    query.next();
+	    return query.getObject("@val", Integer.class);
 	
 	} catch (SQLException ex) {
 	    throw new RuntimeException(ex);
@@ -46,22 +46,14 @@ public class RecuperacaoDAO {
 	}
     }
     
-    public static Recuperacao ativa(String email){
+    public static Integer ativa(String email){
 	try{
-	    var set = Sistema.BANCO.query("select tblrecuperacao.* from tblrecuperacao "
+	    var set = Sistema.BANCO.query("select tblrecuperacao.codigo from tblrecuperacao "
 		    + "inner join tblusuario on tblusuario.idusuario = tblrecuperacao.idusuario "
 		    + "where tblusuario.email = ? and tblrecuperacao.data > date_sub(now(), interval 15 minute)"
 		    + "order by tblrecuperacao.idrecuperacao desc limit 1", Sistema.ENCRIPTA.encrypt(email));
 	    
-	    return set.next() ?
-		    new Recuperacao(
-			    set.getInt("codigo"),
-			    set.getInt("idRecuperacao"),
-			    set.getTimestamp("data"),
-			    set.getInt("idUsuario")
-			    
-		    ):
-		    null;
+	    return set.next() ? set.getInt("codigo") : null;
 	    
 	} catch (SQLException ex) {
 	    throw new RuntimeException(ex);

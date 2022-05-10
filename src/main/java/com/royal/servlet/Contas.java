@@ -71,7 +71,8 @@ public class Contas extends HttpServlet {
 		    response.put("found", true);
 		    response.put("token", token);
 		    
-		    Sistema.PESSOAS.put(token, sessao);
+		Sistema.PESSOAS.put(token, sessao);
+		    
 		    
 		    httpStatus = 200;
 		} else {
@@ -89,8 +90,6 @@ public class Contas extends HttpServlet {
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;
 	    httpStatus = 400;
-	} catch (SQLException ex) {
-	    throw new RuntimeException(ex);
 	}
 	
 	resp.setStatus(httpStatus);

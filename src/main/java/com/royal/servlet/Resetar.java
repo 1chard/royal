@@ -59,27 +59,22 @@ public class Resetar extends HttpServlet {
 
 	    if (tipo.valueType() == ValueType.STRING) {
 		switch (tipo.mustBe(ValueType.STRING).asString()) {
-		    case "PEDIR": {
+		    case "PEDIR" -> {
 			var email = json.get("email").mustBe(ValueType.STRING).asString();
 
 			    status = Status.OK;
 			    httpStatus = 200;
 
-			    //TODO virar procedure
-			    var usuario = UsuarioDAO.buscar(email);
-
-			    if (usuario != null) {
-				var codigo = RANDOM.nextInt(999999);
-
-				RecuperacaoDAO.gravar(new Recuperacao(codigo, usuario.id));
+			    
+				Integer codigo = RecuperacaoDAO.pedir(email);
 				
-				Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + FORMATTER.format(codigo) + "\nDuração: 15 min", usuario.email);
+				if(codigo != null){
+				
+				    Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + FORMATTER.format(codigo) + "\nDuração: 15 min", email);
+				}
 			    }
-			
-
-			break;
-		    }
-		    case "USAR": {
+		    
+		    case "USAR" ->  {
 			    status = Status.OK;
 			    httpStatus = 200;
 			    
@@ -87,16 +82,15 @@ public class Resetar extends HttpServlet {
 			    var recuperacao = RecuperacaoDAO.ativa(emailString);
 			    
 			    
-			    if(recuperacao != null && json.get("codigo").mustBe(ValueType.STRING).asString().equals(Integer.toString(recuperacao.codigo))){
+			    if(recuperacao != null && json.get("codigo").mustBe(ValueType.STRING).asString().equals(recuperacao.toString())){
 				EMAILS_ATIVOS.add(emailString);
 				map.put("reset", true);
 			    } else {
 				map.put("reset", false);
 			    }
 			
-			break;
 		    }
-		    case "MUDAR": {
+		    case "MUDAR" ->  {
 			var email = json.get("email").mustBe(ValueType.STRING).asString();
 			var senha = new StringMust(json.get("senha").mustBe(ValueType.STRING).asString()).notBlank().get();
 			    
@@ -111,12 +105,10 @@ public class Resetar extends HttpServlet {
 				httpStatus = 400;
 			    }
 			
-			break;
 		    }
-		    default: {
+		    default ->  {
 			status = Status.CAMPO_INVALIDO;
 			httpStatus = 400;
-			break;
 		    }
 		}
 
@@ -124,8 +116,6 @@ public class Resetar extends HttpServlet {
 		status = Status.CAMPO_INVALIDO;
 		httpStatus = 400;
 	    }
-	} catch (SQLException e) {
-	    throw new RuntimeException(e);
 	} catch (TypeMismatchException e){
 	    status = Status.CAMPO_TIPO_INCORRETO;
 	    httpStatus = 400;

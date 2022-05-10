@@ -15,7 +15,7 @@ import java.util.Objects;
 public abstract class SQL implements AutoCloseable {
 	protected abstract Connection connection();
 	
-	public boolean run(String sql, Object... fields) throws SQLException {
+	public synchronized boolean run(String sql, Object... fields) throws SQLException {
 			var stmt = connection().prepareStatement(sql);
 			
 			SQLHelperTreatMethods.marks(stmt, fields);
@@ -23,7 +23,7 @@ public abstract class SQL implements AutoCloseable {
 			return stmt.execute();
 	}
 	
-	public ResultSet query(String sql, Object... fields) throws SQLException {
+	public synchronized ResultSet query(String sql, Object... fields) throws SQLException {
 			var stmt = connection().prepareStatement(sql);
 			
 			SQLHelperTreatMethods.marks(stmt, fields);
@@ -31,7 +31,7 @@ public abstract class SQL implements AutoCloseable {
 			return stmt.executeQuery();
 	}
 	
-	public int update(String sql, Object... fields) throws SQLException {
+	public synchronized int update(String sql, Object... fields) throws SQLException {
 			var stmt = connection().prepareStatement(sql);
 			
 			SQLHelperTreatMethods.marks(stmt, fields);
@@ -41,7 +41,7 @@ public abstract class SQL implements AutoCloseable {
 	}
 
 	@Override
-	public void close() throws Exception {
+	public synchronized void close() throws Exception {
 		connection().close();
 	}
 

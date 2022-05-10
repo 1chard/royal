@@ -27,6 +27,27 @@ CREATE TABLE IF NOT EXISTS tblRecuperacao (
     UNIQUE INDEX (idRecuperacao)
 );
 
+-- procedure pra resetar a senha
+DELIMITER $$
+CREATE PROCEDURE resetar_senha(IN email varchar(256), INOUT codigo int)
+BEGIN
+	DECLARE idusuario int unsigned;
+    
+    select tblrecuperacao.idUsuario
+    into idusuario
+    from tblrecuperacao 
+    inner join tblusuario on tblusuario.idUsuario = tblrecuperacao.idUsuario where tblusuario.email = email and tblrecuperacao.data > date_sub(now(), interval 15 minute)
+    order by tblrecuperacao.idrecuperacao desc limit 1;
+    
+    if NOT isnull(idusuario) THEN
+		set codigo = floor(rand() * 999999);
+        INSERT into tblRecuperacao(codigo, idusuario) values(codigo, idusuario);
+    END IF;
+    
+    
+END $$
+DELIMITER ;
+
 -- criação da tabela tipotransferencia
 CREATE TABLE IF NOT EXISTS tblTipoTransferencia (
     idTipoTransferencia INT UNSIGNED NOT NULL PRIMARY KEY auto_increment,
@@ -53,6 +74,22 @@ INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Casa', 
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Restaurante', 'D11B1B', 'storefront', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Serviço', '3C6E10', 'home_repair_service', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '6B3528', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Cuidados pessoais', '58C91A', 'volunteer activism',(select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Empréstimos', '0AF57B', 'real_estate_agent', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Educação', 'C88DF2', 'school', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Família', 'EB8F05', 'family_restroom', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Impostos', 'B84F2C', 'price_change', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Investimentos', 'EDDC1F', 'savings', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Lazer', 'FF8629', 'attractions', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Mercado', '87AD07', 'storefront', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Pets', 'BEF01D ', 'pets', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Doações', 'FABE32', 'redeem', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Roupas', 'D9025F', 'checkroom', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Saúde', '029999', 'medication_liquid', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Salário', 'A607B8', ' work', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Transporte', '322AD1', 'directions_bus', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Viagem', '2AB5D1', 'flight', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Outros', '919191', 'menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 
 -- criação da tabela MetaUsuario
 CREATE TABLE IF NOT EXISTS tblMetaUsuario (

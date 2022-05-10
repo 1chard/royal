@@ -38,31 +38,28 @@ public class Sistema{
 	
 	static {
 		switch (System.getProperty("user.name")){
-			case "richard": {
+			case "richard" ->  {
 				HOST = "localhost:3306";
 				DATABASE = "royal";
 				USER = "richard";
 				PASSWORD = "123";
 				CHAVE = "pOrQuEaTeRrAéPlAnA";
-				break;
 			}
-			case "suporte": {
+			case "suporte" ->  {
 				HOST = "localhost:3306";
 				DATABASE = "royal";
 				USER = "root";
 				PASSWORD = "12345678";
 				CHAVE = "cumonista";
-				break;
 			}
-			case "SERVIÇO LOCAL": {
+			case "SERVIÇO LOCAL" ->  {
 				HOST = "localhost:3308";
 				DATABASE = "royal";
 				USER = "royal";
 				PASSWORD = "royal";
 				CHAVE = "alemanhaSemprePerde";
-				break;
 			}
-			default: {
+			default -> {
 				throw new RuntimeException();
 			}
 		}
@@ -78,7 +75,7 @@ public class Sistema{
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
     public static final SQL BANCO;
-    public static final Map<String, Sessao> PESSOAS = new HashMap<>();
+    public static final Map<String, Sessao> PESSOAS = Collections.synchronizedMap(new HashMap<>());
     public static final Calendar CALENDARIO = GregorianCalendar.getInstance();
     
 

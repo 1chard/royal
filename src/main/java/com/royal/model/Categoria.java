@@ -44,7 +44,6 @@ public final class Categoria {
     public static final List<Categoria> RECEITAS = Collections.synchronizedList(new ArrayList<>());
     
     static{
-	try {
 	    CategoriaDAO.listar().forEach(categoria -> {
 		System.out.println(categoria);
 		
@@ -55,9 +54,6 @@ public final class Categoria {
 		    case RECEITA -> RECEITAS.add(categoria);
 		}
 	    });
-	} catch (SQLException ex) {
-	    throw new RuntimeException(ex);
-	}
     }
     
     public static Categoria despesaPorId(int id){
