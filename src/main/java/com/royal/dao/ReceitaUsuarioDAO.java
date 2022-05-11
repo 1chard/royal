@@ -91,44 +91,68 @@ public class ReceitaUsuarioDAO {
 	    throw new RuntimeException(ex);
 	}
     }
-
-    public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes) {
-	try{
-
-	var list = new ArrayList<ReceitaUsuario>();
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes), list);
-
-	return list;
-	
-	} catch (SQLException ex) {
-	    throw new RuntimeException(ex);
-	}
-	}
     
-    public static List<ReceitaUsuario> listarPorAno(int quem, int ano) {
+    public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes){
+	return listarPorMes(quem, ano, mes, new String[]{});
+    }
+    
+    public static List<ReceitaUsuario> listarPorMes(int quem, int ano, int mes, String[] idcategorias){
 	try{
 	var list = new ArrayList<ReceitaUsuario>();
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ?;", quem, ano), list);
-
+	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes), list);
+	
 	return list;
-	
-	} catch (SQLException ex) {
-	    throw new RuntimeException(ex);
-	}
-	}
-    
-    public static List<ReceitaUsuario> listar(int quem) {
-	try{
-	    var list = new ArrayList<ReceitaUsuario>();
-	
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ?;", quem), list);
-
-	return list;
-	
 	} catch (SQLException ex) {
 	    throw new RuntimeException(ex);
 	}
     }
+    
+    public static List<ReceitaUsuario> listarPorAno(int quem, int ano){
+	return listarPorAno(quem, ano, new String[]{});
+    }
+    
+    public static List<ReceitaUsuario> listarPorAno(int quem, int ano, String[] idcategorias){
+	try{
+	var list = new ArrayList<ReceitaUsuario>();
+	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ? AND year(data) = ?" + extra, quem, ano), list);
+	
+	return list;
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
+    }
+    
+    public static List<ReceitaUsuario> listar(int quem){
+	return listar(quem, new String[]{});
+    }
+    
+    public static List<ReceitaUsuario> listar(int quem, String[] idcategorias){
+	try{
+	var list = new ArrayList<ReceitaUsuario>();
+	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblReceitaUsuario WHERE idusuario = ?" + extra, quem), list);
+	
+	return list;
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
+    }
+    
+    
     
     public static List<ReceitaUsuario> favoritos(int quem){
 	try{

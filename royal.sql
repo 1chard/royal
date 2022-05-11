@@ -29,20 +29,24 @@ CREATE TABLE IF NOT EXISTS tblRecuperacao (
 
 -- procedure pra resetar a senha
 DELIMITER $$
-CREATE PROCEDURE resetar_senha(IN email varchar(256), INOUT codigo int)
+CREATE function resetar_senha(email varchar(256))
+RETURNS INTEGER UNSIGNED 
+READS SQL DATA
 BEGIN
 	DECLARE idusuario int unsigned;
+	DECLARE codigo int;
     
-    select tblrecuperacao.idUsuario
+    select tblUsuario.idUsuario
     into idusuario
-    from tblrecuperacao 
-    inner join tblusuario on tblusuario.idUsuario = tblrecuperacao.idUsuario where tblusuario.email = email and tblrecuperacao.data > date_sub(now(), interval 15 minute)
-    order by tblrecuperacao.idrecuperacao desc limit 1;
+    from tblusuario
+    where tblUsuario.email = email;
     
     if NOT isnull(idusuario) THEN
 		set codigo = floor(rand() * 999999);
         INSERT into tblRecuperacao(codigo, idusuario) values(codigo, idusuario);
     END IF;
+    
+    RETURN codigo;
     
     
 END $$
@@ -70,7 +74,7 @@ CREATE TABLE IF NOT EXISTS tblCategoria (
     UNIQUE INDEX (idCategoria)
 );
 
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Casa', '2D98B3', 'roofing', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Casa', '2D98B3', 'house', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Restaurante', 'D11B1B', 'storefront', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Serviço', '3C6E10', 'home_repair_service', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '6B3528', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));

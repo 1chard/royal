@@ -88,12 +88,19 @@ public class DespesaUsuarioDAO {
 	}
 	}
     
-    
-    
     public static List<DespesaUsuario> listarPorMes(int quem, int ano, int mes){
+	return listarPorMes(quem, ano, mes, new String[]{});
+    }
+    
+    public static List<DespesaUsuario> listarPorMes(int quem, int ano, int mes, String[] idcategorias){
 	try{
 	var list = new ArrayList<DespesaUsuario>();
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?;", quem, ano, mes), list);
+	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes), list);
 	
 	return list;
 	} catch (SQLException ex) {
@@ -102,10 +109,18 @@ public class DespesaUsuarioDAO {
     }
     
     public static List<DespesaUsuario> listarPorAno(int quem, int ano){
+	return listarPorAno(quem, ano, new String[]{});
+    }
+    
+    public static List<DespesaUsuario> listarPorAno(int quem, int ano, String[] idcategorias){
 	try{
 	var list = new ArrayList<DespesaUsuario>();
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ?;", quem, ano), list);
 	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ? AND year(data) = ?" + extra, quem, ano), list);
 	
 	return list;
 	} catch (SQLException ex) {
@@ -114,10 +129,18 @@ public class DespesaUsuarioDAO {
     }
     
     public static List<DespesaUsuario> listar(int quem){
+	return listar(quem, new String[]{});
+    }
+    
+    public static List<DespesaUsuario> listar(int quem, String[] idcategorias){
 	try{
 	var list = new ArrayList<DespesaUsuario>();
-	queryTratador(Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ?;", quem), list);
 	
+	final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
+	    
+	
+	queryTratador(
+		Sistema.BANCO.query("SELECT * FROM tblDespesaUsuario WHERE idusuario = ?" + extra, quem), list);
 	
 	return list;
 	} catch (SQLException ex) {

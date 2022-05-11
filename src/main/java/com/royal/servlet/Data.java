@@ -10,6 +10,7 @@ import com.royal.MapBuilder;
 import com.royal.dao.DespesaUsuarioDAO;
 import com.royal.dao.ReceitaUsuarioDAO;
 import com.royal.model.Categoria;
+import com.royal.model.Frequencia;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -85,25 +86,57 @@ public class Data extends HttpServlet {
 					case "favorito" -> {
 					    var lista = new JsonArray();
 					    
-//					    DespesaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> lista.add(despesa));
-//					    ReceitaUsuarioDAO.favoritos(pessoa.id).forEach(receita -> lista.add(receita));
+					    DespesaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> lista.add(
+						    new JsonObject()
+						    .add("valor", despesa.valor)
+						    .add("data", despesa.data.toString())
+						    .add("pendente", despesa.data != null ? despesa.data.toString() : null)
+						    .add("anexo", despesa.anexo)
+						    .add("descricao", despesa.descricao)
+						    .add("observacao", despesa.observacao)
+						    .add("favorito", despesa.favorito)
+						    .add("inicioRepeticao", despesa.inicioRepeticao != null ? despesa.inicioRepeticao.toString() : null)
+						    .add("totalParcelas", despesa.totalParcelas)
+						    .add("parcelasPagas", despesa.parcelasPagas)
+						    .add("parcelasFixas", despesa.parcelasFixas)
+						    .add("nomeFrequencia", despesa.nomeFrequencia != null ? despesa.nomeFrequencia.toString() : null)
+						    .add("parcelasFixas", despesa.parcelasFixas)
+						    .add("idCategoria", despesa.idCategoria)
+					    ));
+					    ReceitaUsuarioDAO.favoritos(pessoa.id).forEach(receita -> lista.add(new JsonObject()
+						    .add("valor", receita.valor)
+						    .add("data", receita.data.toString())
+						    .add("pendente", receita.data != null ? receita.data.toString() : null)
+						    .add("anexo", receita.anexo)
+						    .add("descricao", receita.descricao)
+						    .add("observacao", receita.observacao)
+						    .add("favorito", receita.favorito)
+						    .add("inicioRepeticao", receita.inicioRepeticao != null ? receita.inicioRepeticao.toString() : null)
+						    .add("totalParcelas", receita.totalParcelas)
+						    .add("parcelasPagas", receita.parcelasPagas)
+						    .add("parcelasFixas", receita.parcelasFixas)
+						    .add("nomeFrequencia", receita.nomeFrequencia != null ? receita.nomeFrequencia.toString() : null)
+						    .add("parcelasFixas", receita.parcelasFixas)
+						    .add("idCategoria", receita.idCategoria)
+					    ));
 					    
 					    json = lista;
 					}
-					case "extrato-mes" -> { 
+					case "extrato-mes" -> {
 						var lista = new ArrayList<JsonObject>();
 
 						var mes = Integer.parseInt(req.getParameter("mes"));
 						var ano = Integer.parseInt( req.getParameter("ano"));
+						var categorias = Extra.orDefault(req.getParameterValues("cat"), new String[]{});
 
-							DespesaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
+							DespesaUsuarioDAO.listarPorMes(pessoa.id, ano, mes, categorias).forEach(despesa -> lista.add(
 									new JsonObject()
 										.add("data", despesa.data)
 										.add("valor", despesa.valor.negate())
 										.add("categoria", despesa.idCategoria)
 										.add("descricao", despesa.descricao)
 							));
-							ReceitaUsuarioDAO.listarPorMes(pessoa.id, ano, mes).forEach(despesa -> lista.add(
+							ReceitaUsuarioDAO.listarPorMes(pessoa.id, ano, mes, categorias).forEach(despesa -> lista.add(
 									new JsonObject()
 										.add("data", despesa.data)
 										.add("valor", despesa.valor)

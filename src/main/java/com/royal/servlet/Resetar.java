@@ -5,9 +5,7 @@ import com.qsoniter.ValueType;
 import com.qsoniter.output.JsonStream;
 import com.qsoniter.spi.JsonException;
 import com.qsoniter.spi.TypeMismatchException;
-import com.royal.validation.MustHasFailedException;
 import com.royal.Status;
-import com.royal.validation.StringMust;
 import com.royal.dao.RecuperacaoDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.external.Mail;
@@ -28,6 +26,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -35,11 +34,11 @@ import java.util.Set;
  */
 @WebServlet(name = "Resetar", urlPatterns = {"/resetar"})
 public class Resetar extends HttpServlet {
-
-    private final static Random RANDOM = new Random();
     private final static NumberFormat FORMATTER = new DecimalFormat("000000");
     private final static Set<String> EMAILS_ATIVOS = Collections.synchronizedSet(new HashSet<>());
+    private final static Pattern PADRAO = Pattern.compile("^[\\w\\d]+@.+$");
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	    throws ServletException, IOException {
 	
@@ -68,9 +67,11 @@ public class Resetar extends HttpServlet {
 			    
 				Integer codigo = RecuperacaoDAO.pedir(email);
 				
-				if(codigo != null){
 				
+				if(codigo != null){
 				    Mail.enviar("Royal Finance - Recuperação de senha", "codigo=" + FORMATTER.format(codigo) + "\nDuração: 15 min", email);
+				} else {
+				    Mail.enviar("Royal Finance - Recuperação de senha", "Você não está cadastrado no sistema, cadastre-se hoje mesmo!", email);
 				}
 			    }
 		    
@@ -82,7 +83,7 @@ public class Resetar extends HttpServlet {
 			    var recuperacao = RecuperacaoDAO.ativa(emailString);
 			    
 			    
-			    if(recuperacao != null && json.get("codigo").mustBe(ValueType.STRING).asString().equals(recuperacao.toString())){
+			    if(recuperacao != null && json.get("codigo").mustBe(ValueType.STRING).asString().equals(FORMATTER.format(recuperacao))){
 				EMAILS_ATIVOS.add(emailString);
 				map.put("reset", true);
 			    } else {
@@ -92,13 +93,15 @@ public class Resetar extends HttpServlet {
 		    }
 		    case "MUDAR" ->  {
 			var email = json.get("email").mustBe(ValueType.STRING).asString();
-			var senha = new StringMust(json.get("senha").mustBe(ValueType.STRING).asString()).notBlank().get();
-			    
+			var senha = json.get("senha").mustBe(ValueType.STRING).asString();
+			
+//			if(PADRAO.matcher(email))
 			    if(EMAILS_ATIVOS.contains(email)){
 				status = Status.OK;
 				httpStatus = 200;
 				
 				UsuarioDAO.editarSenha(email, senha);
+				EMAILS_ATIVOS.remove(email);
 			    }
 			    else {
 				status = Status.REQUISICAO_INVALIDA;
@@ -122,10 +125,7 @@ public class Resetar extends HttpServlet {
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;
 	    httpStatus = 400;
-	} catch (MustHasFailedException e) {
-	    status = Status.CAMPO_INVALIDO;
-	    httpStatus = 400;
-	}
+	} 
 
 	resp.setStatus(httpStatus);
 	map.put("status", status.codigo);

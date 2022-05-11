@@ -15,11 +15,9 @@ import java.util.logging.Logger;
 public class RecuperacaoDAO {
     public static Integer pedir(String email){
 	try { 
-	    var query = Sistema.BANCO.query("set @val = 0;" +
-				    "call resetar_senha(?, @val);" +
-				    "select @val;", Sistema.ENCRIPTA.encrypt(email));
+	    var query = Sistema.BANCO.query("select resetar_senha(?) as codigo;", Sistema.ENCRIPTA.encrypt(email));
 	    query.next();
-	    return query.getObject("@val", Integer.class);
+	    return query.getObject("codigo", Integer.class);
 	
 	} catch (SQLException ex) {
 	    throw new RuntimeException(ex);

@@ -15,9 +15,11 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 
 /**
  *
@@ -34,11 +36,12 @@ public class DespesaTratador {
 		var pendente = json.get("pendente");
 		var inicioRepeticaoString = json.get("inicioRepeticao").asString();
 		var nomeFrequenciaString = json.get("nomeFrequencia").asString();
+		var data = Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString());
 		
 		DespesaUsuarioDAO.gravar(
 			new DespesaUsuario(
 				valor,
-				Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString()),
+				data,
 				pendente.valueType() == ValueType.STRING ? Date.valueOf(pendente.asString()) : null,
 				json.get("descricao").mustBe(ValueType.STRING).asString(),
 				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
@@ -55,7 +58,12 @@ public class DespesaTratador {
 			)
 		);
 
-		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue())));		
+		var calendario = new GregorianCalendar();
+		calendario.setTime(data);
+		
+		Dashboard.enviar(token, JsonStream.serialize(
+			Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue(), "mes", calendario.get(Calendar.MONTH) + 1, "ano", calendario.get(Calendar.YEAR))
+		));		
 	    }
 	}
     }

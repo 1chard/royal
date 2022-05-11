@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
 
 /**
@@ -30,11 +32,12 @@ public class ReceitaTratador {
 		var pendente = json.get("pendente");
 		var inicioRepeticaoString = json.get("inicioRepeticao").asString();
 		var nomeFrequenciaString = json.get("nomeFrequencia").asString();
+		var data = Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString());
 		
 		ReceitaUsuarioDAO.gravar(
 			new ReceitaUsuario(
 				valor,
-				Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString()),
+				data,
 				pendente.valueType() == ValueType.STRING ? Date.valueOf(pendente.asString()) : null,
 				json.get("descricao").mustBe(ValueType.STRING).asString(),
 				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
@@ -50,8 +53,11 @@ public class ReceitaTratador {
 				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null
 			)
 		);
+		
+		var calendario = new GregorianCalendar();
+		calendario.setTime(data);
 
-		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar", "valor", valor.doubleValue())));
+		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar", "valor", valor.doubleValue(), "mes", calendario.get(Calendar.MONTH) + 1, "ano", calendario.get(Calendar.YEAR))));
 	    }
 	}
     }

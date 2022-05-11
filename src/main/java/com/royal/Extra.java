@@ -36,8 +36,6 @@ public class Extra {
     }
     
     public static void main(String[] args) throws SQLException {
-	
-	RecuperacaoDAO.gravar(new Recuperacao(32131, 1, new Timestamp(System.currentTimeMillis()), null));
-	System.out.println(Sistema.ENCRIPTA.encrypt("richardcutrim01@gmail.com"));
+	System.out.println(String.join(",", new String[]{"tst", "adf"}));
     }
 }
