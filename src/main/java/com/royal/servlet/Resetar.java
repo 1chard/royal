@@ -41,10 +41,6 @@ public class Resetar extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 	    throws ServletException, IOException {
-	
-	resp.setContentType("application/json");
-	resp.setHeader("Access-Control-Allow-Origin", "*");
-
 	int httpStatus;
 	Status status;
 	var map = new HashMap<String, Object>();

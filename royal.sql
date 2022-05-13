@@ -27,14 +27,14 @@ CREATE TABLE IF NOT EXISTS tblRecuperacao (
     UNIQUE INDEX (idRecuperacao)
 );
 
--- procedure pra resetar a senha
+-- function pra resetar a senha
 DELIMITER $$
 CREATE function resetar_senha(email varchar(256))
 RETURNS INTEGER UNSIGNED 
 READS SQL DATA
 BEGIN
-	DECLARE idusuario int unsigned;
-	DECLARE codigo int;
+    DECLARE idusuario int unsigned;
+    DECLARE codigo int;
     
     select tblUsuario.idUsuario
     into idusuario
@@ -42,13 +42,11 @@ BEGIN
     where tblUsuario.email = email;
     
     if NOT isnull(idusuario) THEN
-		set codigo = floor(rand() * 999999);
-        INSERT into tblRecuperacao(codigo, idusuario) values(codigo, idusuario);
+	SET codigo = floor(rand() * 999999);
+	INSERT into tblRecuperacao(codigo, idusuario) values(codigo, idusuario);
     END IF;
     
     RETURN codigo;
-    
-    
 END $$
 DELIMITER ;
 
@@ -114,52 +112,39 @@ CREATE TABLE IF NOT EXISTS tblMetaUsuario (
     UNIQUE INDEX (idMetaUsuario)
 );
 
--- criação da tabela DespesaUsuario
-CREATE TABLE IF NOT EXISTS tblDespesaUsuario (
-    idDespesaUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+
+
+-- criação da tabela TransferenciaUsuario
+CREATE TABLE IF NOT EXISTS tblTransferenciaUsuario (
+    idTransferenciaUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
-    favorito TINYINT NOT NULL,
+    favorito BOOLEAN NOT NULL,
     iniciorepeticao DATE,
-    totalparcelas INT,
-    parcelaspagas INT,
-    parcelasfixas BOOLEAN,
-    nomeFrequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+    parcelada BOOLEAN NOT NULL,
+    fixa BOOLEAN NOT NULL,
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
     idUsuario INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Usuario_DespesaUsuario FOREIGN KEY (idUsuario)
+    CONSTRAINT FK_Usuario_TransferenciaUsuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
     idCategoria INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Categoria_DespesaUsuario FOREIGN KEY (idCategoria)
+    CONSTRAINT FK_Categoria_TransferenciaUsuario FOREIGN KEY (idCategoria)
         REFERENCES tblCategoria (idCategoria),
-    UNIQUE INDEX (idDespesaUsuario)
+    UNIQUE INDEX (idTransferenciaUsuario)
 );
 
--- criação da tabela ReceitaUsuario
-CREATE TABLE IF NOT EXISTS tblReceitaUsuario (
-    idReceitaUsuario INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tblTransferenciaUsuarioParcelas(
+    idTransferenciaUsuarioParcelas INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente DATE,
-    anexo TEXT,
-    descricao TEXT NOT NULL,
-    observacao TEXT,
-    favorito TINYINT NOT NULL,
-    iniciorepeticao DATE,
-    totalparcelas INT,
-    parcelaspagas INT,
-    parcelasfixas TINYINT,
-    nomeFrequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
-    idUsuario INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Usuario_ReceitaUsuario FOREIGN KEY (idUsuario)
-        REFERENCES tblUsuario (idUsuario),
-    idCategoria INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Categoria_ReceitaUsuario FOREIGN KEY (idCategoria)
-        REFERENCES tblCategoria (idCategoria),
-    UNIQUE INDEX (idReceitaUsuario)
+    paga BOOLEAN NOT NULL,
+    idTransferenciaUsuario INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_TransferenciaUsuario_TransferenciaUsuarioParcelas FOREIGN KEY (idTransferenciaUsuario)
+        REFERENCES tblTransferenciaUsuario (idTransferenciaUsuario),
+    UNIQUE INDEX (idTransferenciaUsuarioParcelas)
 );
 
 -- criação da tabela grupo
@@ -220,52 +205,36 @@ CREATE TABLE IF NOT EXISTS tblMetaGrupo (
     UNIQUE INDEX (idMetaGrupo)
 );
 
--- criação da tabela DespesaGrupo
-CREATE TABLE IF NOT EXISTS tblDespesaGrupo (
-    idDespesaGrupo INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+-- criação da tabela TransferenciaGrupo
+CREATE TABLE IF NOT EXISTS tblTransferenciaGrupo (
+    idTransferenciaGrupo INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente DATE,
     anexo TEXT,
     descricao TEXT NOT NULL,
     observacao TEXT,
-    favorito TINYINT NOT NULL,
+    favorito BOOLEAN NOT NULL,
     iniciorepeticao DATE,
-    totalparcelas INT,
-    parcelaspagas INT,
-    parcelasfixas TINYINT,
-    nomeFrequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+    parcelada BOOLEAN NOT NULL,
+    fixa BOOLEAN NOT NULL,
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
     idGrupo INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Grupo_DespesaGrupo FOREIGN KEY (idGrupo)
+    CONSTRAINT FK_Grupo_TransferenciaGrupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
     idCategoria INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Categoria_DespesaGrupo FOREIGN KEY (idCategoria)
+    CONSTRAINT FK_Categoria_TransferenciaGrupo FOREIGN KEY (idCategoria)
         REFERENCES tblCategoria (idCategoria),
-    UNIQUE INDEX (idDespesaGrupo)
+    UNIQUE INDEX (idTransferenciaGrupo)
 );
 
--- criação da tabela ReceitaGrupo
-CREATE TABLE IF NOT EXISTS tblReceitaGrupo (
-    idReceitaGrupo INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcelas(
+    idTransferenciaGrupoParcelas INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
-    pendente DATE,
-    anexo TEXT,
-    descricao TEXT NOT NULL,
-    observacao TEXT,
-    favorito TINYINT NOT NULL,
-    iniciorepeticao DATE,
-    totalparcelas INT,
-    parcelaspagas INT,
-    parcelasfixas TINYINT,
-    nomeFrequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
-    idGrupo INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Grupo_ReceitaGrupo FOREIGN KEY (idGrupo)
-        REFERENCES tblGrupo (idGrupo),
-    idCategoria INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_Categoria_ReceitaGrupo FOREIGN KEY (idCategoria)
-        REFERENCES tblCategoria (idCategoria),
-    UNIQUE INDEX (idReceitaGrupo)
+    paga BOOLEAN NOT NULL,
+    idTransferenciaGrupo INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_TransferenciaGrupo_TransferenciaGrupoParcelas FOREIGN KEY (idTransferenciaGrupo)
+        REFERENCES tblTransferenciaGrupo (idTransferenciaGrupo),
+    UNIQUE INDEX (idTransferenciaGrupoParcelas)
 );
-
 

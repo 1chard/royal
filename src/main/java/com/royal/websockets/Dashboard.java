@@ -2,15 +2,8 @@ package com.royal.websockets;
 
 import com.qsoniter.JsonIterator;
 import com.qsoniter.ValueType;
-import com.qsoniter.any.Any;
-import com.qsoniter.output.JsonStream;
 import com.qsoniter.spi.JsonException;
-import com.royal.dao.DespesaUsuarioDAO;
-import com.royal.model.DespesaUsuario;
 import com.royal.Sistema;
-import com.royal.dao.ReceitaUsuarioDAO;
-import com.royal.dao.UsuarioDAO;
-import com.royal.model.ReceitaUsuario;
 import com.royal.servlet.Erro;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
@@ -21,19 +14,12 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.xml.crypto.Data;
 
 /**
  *

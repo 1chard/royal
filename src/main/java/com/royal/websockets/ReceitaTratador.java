@@ -4,15 +4,13 @@ import com.qsoniter.ValueType;
 import com.qsoniter.any.Any;
 import com.qsoniter.output.JsonStream;
 import com.royal.Sistema;
-import com.royal.dao.ReceitaUsuarioDAO;
+import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.model.Frequencia;
-import com.royal.model.ReceitaUsuario;
+import com.royal.model.TransferenciaUsuario;
 import jakarta.websocket.Session;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -29,27 +27,24 @@ public class ReceitaTratador {
 		var usuario = Sistema.PESSOAS.get(token).usuario;
 		
 		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
-		var pendente = json.get("pendente");
 		var inicioRepeticaoString = json.get("inicioRepeticao").asString();
 		var nomeFrequenciaString = json.get("nomeFrequencia").asString();
 		var data = Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString());
 		
-		ReceitaUsuarioDAO.gravar(
-			new ReceitaUsuario(
+		TransferenciaUsuarioDAO.gravar(
+			new TransferenciaUsuario(
 				valor,
 				data,
-				pendente.valueType() == ValueType.STRING ? Date.valueOf(pendente.asString()) : null,
 				json.get("descricao").mustBe(ValueType.STRING).asString(),
 				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
+				false,
+				false,
 				usuario.id,
 				json.get("idCategoria").mustBe(ValueType.NUMBER).asInt(),
 				null,
 				null,
 				json.get("observacao").asString(),
 				inicioRepeticaoString != null ? Date.valueOf(inicioRepeticaoString) : null,
-				json.get("totalParcelas").as(Integer.class),
-				0,
-				false,
 				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null
 			)
 		);
