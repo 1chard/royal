@@ -37,8 +37,8 @@ public class ReceitaTratador {
 				data,
 				json.get("descricao").mustBe(ValueType.STRING).asString(),
 				json.get("favorito").mustBe(ValueType.BOOLEAN).asBoolean(),
-				false,
-				false,
+				json.get("parcelada").mustBe(ValueType.BOOLEAN).asBoolean(),
+								json.get("fixa").mustBe(ValueType.BOOLEAN).asBoolean(),
 				usuario.id,
 				json.get("idCategoria").mustBe(ValueType.NUMBER).asInt(),
 				null,
@@ -46,7 +46,8 @@ public class ReceitaTratador {
 				json.get("observacao").asString(),
 				inicioRepeticaoString != null ? Date.valueOf(inicioRepeticaoString) : null,
 				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null
-			)
+			),
+				json.get("totalParcelas").asInt()
 		);
 		
 		var calendario = new GregorianCalendar();

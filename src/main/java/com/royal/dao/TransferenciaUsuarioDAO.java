@@ -3,6 +3,7 @@ package com.royal.dao;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.Sistema;
 import com.royal.model.Frequencia;
+import com.royal.model.TransferenciaUsuarioParcela;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,23 +16,28 @@ import java.util.List;
  */
 public class TransferenciaUsuarioDAO {
 
-	public static boolean gravar(TransferenciaUsuario transferenciaUsuario) {
+	public static boolean gravar(TransferenciaUsuario transferenciaUsuario, Integer parcelas) {
+		
+		System.out.println(transferenciaUsuario.parcelada);
+		System.out.println(parcelas);
+		
 		try {
-			Sistema.BANCO.run("INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, iniciorepeticao, parcelada, fixa, frequencia, idUsuario, idCategoria)"
-					+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?);",
+			Sistema.BANCO.run("call inserir_transferencia_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
 					transferenciaUsuario.valor,
 					transferenciaUsuario.data,
-					transferenciaUsuario.anexo,
 					transferenciaUsuario.descricao,
-					transferenciaUsuario.observacao,
 					transferenciaUsuario.favorito,
-					transferenciaUsuario.inicioRepeticao,
 					transferenciaUsuario.parcelada,
 					transferenciaUsuario.fixa,
-					transferenciaUsuario.frequencia != null ? transferenciaUsuario.frequencia.toString() : null,
 					transferenciaUsuario.idUsuario,
-					transferenciaUsuario.idCategoria
+					transferenciaUsuario.idCategoria,
+					transferenciaUsuario.anexo,
+					transferenciaUsuario.observacao,
+					transferenciaUsuario.inicioRepeticao,
+					transferenciaUsuario.frequencia != null ? transferenciaUsuario.frequencia.toString() : null,
+					parcelas
 			);
+			
 
 			return true;
 		} catch (SQLException ex) {
@@ -41,13 +47,13 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaGeral(int quem) {
 		try {
-			var query = Sistema.BANCO.query("SELECT -ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0;",
+			var query = Sistema.BANCO.query("call despesaGeral(?);",
 					quem
 			);
 
 			query.next();
 
-			return query.getBigDecimal("-ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -55,13 +61,13 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal receitaGeral(int quem) {
 		try {
-			var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0;",
+			var query = Sistema.BANCO.query("call receitaGeral(?);",
 					quem
 			);
 
 			query.next();
 
-			return query.getBigDecimal("ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -69,7 +75,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("SELECT -ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ? AND month(data) = ?;",
+			var query = Sistema.BANCO.query("call receitaMensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -77,7 +83,7 @@ public class TransferenciaUsuarioDAO {
 
 			query.next();
 
-			return query.getBigDecimal("-ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -85,7 +91,7 @@ public class TransferenciaUsuarioDAO {
 	
 	public static BigDecimal receitaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ? AND month(data) = ?;",
+			var query = Sistema.BANCO.query("call despesaMensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -93,7 +99,7 @@ public class TransferenciaUsuarioDAO {
 
 			query.next();
 
-			return query.getBigDecimal("ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -101,14 +107,14 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaAnual(int quem, int ano) {
 		try {
-			var query = Sistema.BANCO.query("SELECT -ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ?;",
+			var query = Sistema.BANCO.query("call despesaAnual(?, ?);",
 					quem,
 					ano
 			);
 
 			query.next();
 
-			return query.getBigDecimal("-ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -116,14 +122,14 @@ public class TransferenciaUsuarioDAO {
 	
 	public static BigDecimal receitaAnual(int quem, int ano) {
 		try {
-			var query = Sistema.BANCO.query("SELECT ifnull(sum(valor), 0) FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ?;",
+			var query = Sistema.BANCO.query("call receitaAnual(?, ?);",
 					quem,
 					ano
 			);
 
 			query.next();
 
-			return query.getBigDecimal("ifnull(sum(valor), 0)");
+			return query.getBigDecimal("valor");
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -234,8 +240,7 @@ public class TransferenciaUsuarioDAO {
 
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0" + extra, quem), list);
+			queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0" + extra, quem), list);
 
 			return list;
 		} catch (SQLException ex) {
@@ -254,6 +259,18 @@ public class TransferenciaUsuarioDAO {
 		}
 	}
 
+	private static void queryTratadorParcela(ResultSet query, List<TransferenciaUsuarioParcela> list) throws SQLException {
+		while (query.next()) {
+
+			list.add(new TransferenciaUsuarioParcela(
+					query.getInt("idTransferenciaUsuarioParcela"),
+					query.getBigDecimal("valor"),
+					query.getDate("data"),
+					query.getInt("idTransferenciaUsuario")
+			));
+		}
+	}
+	
 	private static void queryTratador(ResultSet query, List<TransferenciaUsuario> list) throws SQLException {
 		while (query.next()) {
 			String nomeFrequencia = query.getString("frequencia");
