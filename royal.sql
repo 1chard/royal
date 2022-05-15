@@ -38,7 +38,7 @@ BEGIN
     
     select tblUsuario.idUsuario
     into idusuario
-    from tblusuario
+    from tblUsuario
     where tblUsuario.email = email;
     
     if NOT isnull(idusuario) THEN

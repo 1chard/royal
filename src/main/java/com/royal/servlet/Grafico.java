@@ -2,7 +2,9 @@ package com.royal.servlet;
 
 import com.qsoniter.output.JsonStream;
 import com.royal.API;
+import com.royal.Extra;
 import com.royal.Sistema;
+import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
@@ -24,99 +26,96 @@ import java.util.List;
 @WebServlet(name = "Grafico", urlPatterns = {"/grafico/*"})
 public class Grafico extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	var args = API.parameters(req);
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var args = API.parameters(req);
 
-	if (args.length >= 2) {
-	    var point = Sistema.PESSOAS.get(args[0]);
+		String token;
+		if (args.length > 0 && Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
+			var point = Sistema.PESSOAS.get(token);
 
-	    if (point != null) {
-		try {
-		    resp.getWriter().append(switch (args[1]) {
-			case "despesa" ->
-			    despesaTrata(args, point.usuario);
-			case "receita" ->
-			    receitaTrata(args, point.usuario);
-			default -> {
-			    resp.sendError(400);
-			    throw new RuntimeException("veio nem um nem outro");
-			}
-		    }).flush();
+			resp.getWriter().append(switch (args[0]) {
+				case "despesa" ->
+					despesaTrata(req, point.usuario);
+				case "receita" ->
+					receitaTrata(req, point.usuario);
+				default -> {
+					resp.sendError(400);
+					yield "";
+				}
+			}).flush();
 
-		} catch (SQLException e) {
-		    throw new ServerException(e.getSQLState(), e);
+		} else {
+			resp.sendError(404);
 		}
-	    } else {
-		resp.sendError(404);
-	    }
-	} else {
-	    resp.sendError(404);
 	}
-    }
 
-    private static String despesaTrata(String[] args, Usuario usuario) throws IOException, SQLException {
-	var json = new HashMap<String, BigDecimal>();
-	final List<TransferenciaUsuario> lista;
+	private static String despesaTrata(HttpServletRequest req, Usuario usuario) {
+		var json = new HashMap<String, BigDecimal>();
+		final List<TransferenciaUsuario> lista;
 
-//	if (args.length >= 3) {
-//	    int ano = Integer.parseInt(args[2]);
-//
-//	    if (args.length >= 4) {
-//		int mes = Integer.parseInt(args[3]);
-//
-//		lista = TransferenciaUsuarioDAO.listarPorMes(usuario.id, ano, mes);
-//
-//	    } else {
-//
-//		lista = TransferenciaUsuarioDAO.listarPorAno(usuario.id, ano);
-//
-//	    }
-//	} else {
-//	    lista = TransferenciaUsuarioDAO.listar(usuario.id);
-//	}
-//	
-//	lista.forEach(despesa -> {
-//	    var nome = Integer.toString(despesa.idCategoria);
-//
-//	    var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
-//
-//	    json.put(nome, decimal.add(despesa.valor));
-//	});
+		var ano = Extra.parseInteger(req.getParameter("ano"));
 
-	return JsonStream.serialize(json);
-    }
+		if (ano != null) {
 
-    private static String receitaTrata(String[] args, Usuario usuario) throws IOException, SQLException {
-	var json = new HashMap<String, BigDecimal>();
-	final List<TransferenciaUsuario> lista;
+			var mes = Extra.parseInteger(req.getParameter("mes"));
 
-//	if (args.length >= 3) {
-//	    int ano = Integer.parseInt(args[2]);
-//
-//	    if (args.length >= 4) {
-//		int mes = Integer.parseInt(args[3]);
-//
-//		lista = ReceitaUsuarioDAO.listarPorMes(usuario.id, ano, mes);
-//
-//	    } else {
-//
-//		lista = ReceitaUsuarioDAO.listarPorAno(usuario.id, ano);
-//
-//	    }
-//	} else {
-//	    lista = ReceitaUsuarioDAO.listar(usuario.id);
-//	}
-//
-//	lista.forEach(receita -> {
-//	    var nome = Integer.toString(receita.idCategoria);
-//
-//	    var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
-//
-//	    json.put(nome, decimal.add(receita.valor));
-//	});
+			if (mes != null) {
 
-	return JsonStream.serialize(json);
-    }
+				lista = TransferenciaUsuarioDAO.despesaListarPorMes(usuario.id, ano, mes);
+
+			} else {
+
+				lista = TransferenciaUsuarioDAO.despesaListarPorAno(usuario.id, ano);
+
+			}
+		} else {
+			lista = TransferenciaUsuarioDAO.despesaListar(usuario.id);
+		}
+
+		lista.forEach(despesa -> {
+			var nome = Integer.toString(despesa.idCategoria);
+
+			var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
+
+			json.put(nome, decimal.subtract(despesa.valor));
+		});
+
+		return JsonStream.serialize(json);
+	}
+
+	private static String receitaTrata(HttpServletRequest req, Usuario usuario) {
+		var json = new HashMap<String, BigDecimal>();
+		final List<TransferenciaUsuario> lista;
+
+		var ano = Extra.parseInteger(req.getParameter("ano"));
+
+		if (ano != null) {
+
+			var mes = Extra.parseInteger(req.getParameter("mes"));
+
+			if (mes != null) {
+
+				lista = TransferenciaUsuarioDAO.receitaListarPorMes(usuario.id, ano, mes);
+
+			} else {
+
+				lista = TransferenciaUsuarioDAO.receitaListarPorAno(usuario.id, ano);
+
+			}
+		} else {
+			lista = TransferenciaUsuarioDAO.receitaListar(usuario.id);
+		}
+
+		lista.forEach(receita -> {
+			var nome = Integer.toString(receita.idCategoria);
+
+			var decimal = json.getOrDefault(nome, BigDecimal.ZERO);
+
+			json.put(nome, decimal.add(receita.valor));
+		});
+
+		return JsonStream.serialize(json);
+	}
 
 }

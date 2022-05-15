@@ -46,10 +46,10 @@ public class RecuperacaoDAO {
     
     public static Integer ativa(String email){
 	try{
-	    var set = Sistema.BANCO.query("select tblrecuperacao.codigo from tblrecuperacao "
-		    + "inner join tblusuario on tblusuario.idusuario = tblrecuperacao.idusuario "
-		    + "where tblusuario.email = ? and tblrecuperacao.data > date_sub(now(), interval 15 minute)"
-		    + "order by tblrecuperacao.idrecuperacao desc limit 1", Sistema.ENCRIPTA.encrypt(email));
+	    var set = Sistema.BANCO.query("select tblRecuperacao.codigo from tblRecuperacao "
+		    + "inner join tblUsuario on tblUsuario.idusuario = tblRecuperacao.idusuario "
+		    + "where tblUsuario.email = ? and tblRecuperacao.data > date_sub(now(), interval 15 minute)"
+		    + "order by tblRecuperacao.idrecuperacao desc limit 1", Sistema.ENCRIPTA.encrypt(email));
 	    
 	    return set.next() ? set.getInt("codigo") : null;
 	    

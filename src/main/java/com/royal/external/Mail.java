@@ -1,5 +1,7 @@
 package com.royal.external;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -44,6 +46,7 @@ public class Mail {
 
 		SESSION = Session.getDefaultInstance(props,
 				new javax.mail.Authenticator() {
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(EMAIL, SENHA);
 			}
@@ -51,16 +54,14 @@ public class Mail {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Future<Void> enviar(String titulo, String mensagem, String destinatarios) {
+	public static Future<Void> enviar(String titulo, String mensagem, String destinatario) {
 		return (Future<Void>) Executors.newSingleThreadExecutor().submit(() -> {
 			try {
 				Message message = new MimeMessage(SESSION);
 				message.setFrom(INTERNET_ADDRESS);
-				//Remetente
+				
 
-				Address[] toUser = InternetAddress.parse(destinatarios);
-
-				message.setRecipients(Message.RecipientType.TO, toUser);
+				message.setRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
 				message.setSubject(titulo);//Assunto
 				message.setText(mensagem);
 

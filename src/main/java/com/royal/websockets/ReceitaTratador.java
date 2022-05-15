@@ -28,7 +28,7 @@ public class ReceitaTratador {
 		
 		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
 		var inicioRepeticaoString = json.get("inicioRepeticao").asString();
-		var nomeFrequenciaString = json.get("nomeFrequencia").asString();
+		var nomeFrequenciaString = json.get("frequencia").asString();
 		var data = Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString());
 		
 		TransferenciaUsuarioDAO.gravar(

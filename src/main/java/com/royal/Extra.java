@@ -1,6 +1,6 @@
 package com.royal;
 
-import java.sql.SQLException;
+import java.math.BigDecimal;
 
 /**
  *
@@ -18,8 +18,5 @@ public class Extra {
 	    return null;
 	}
     }
-    
-    public static void main(String[] args) throws SQLException {
-	System.out.println(String.join(",", new String[]{"tst", "adf"}));
-    }
+
 }
