@@ -10,6 +10,11 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+public class teste{
+    public static void main(String[] args) {
+	System.out.println("http?//".substring(2));
+    }
+}
 
 
 

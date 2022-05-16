@@ -70,7 +70,7 @@ DELIMITER ;
 
 -- procedure pra cadastrar transferenciausuario
 DELIMITER $$
-create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in dataRepeticao date, in nomeFrequencia varchar(10), in parcelas int unsigned)
+create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in nomeFrequencia varchar(10), in parcelas int unsigned)
 BEGIN
 	declare id int unsigned;
 SELECT 
@@ -79,8 +79,8 @@ INTO id FROM
     tblTransferenciaUsuario;
 	set id = id + 1;
     
-	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, iniciorepeticao, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario) 
-    VALUES (valor, data, anexo, descricao, observacao, favorito, iniciorepeticao, parcelada, fixa, frequencia, idUsuario, idCategoria, id );
+	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario) 
+    VALUES (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, id );
 
 	if parcelada then
     begin
@@ -99,7 +99,6 @@ INTO id FROM
         
         while iterator < parcelas do
         begin
-            set iterator = iterator + 1; 
 			
 			if diferenca > 0 then
 				set diferenca = diferenca - 1;
@@ -118,6 +117,7 @@ INTO id FROM
                 );
             end if;
             
+            set iterator = iterator + 1; 
 		end;
         end while;
         
@@ -293,7 +293,6 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuario (
     descricao TEXT NOT NULL,
     observacao TEXT,
     favorito BOOLEAN NOT NULL,
-    iniciorepeticao DATE,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
     frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
@@ -383,7 +382,6 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupo (
     descricao TEXT NOT NULL,
     observacao TEXT,
     favorito BOOLEAN NOT NULL,
-    iniciorepeticao DATE,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
     frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),

@@ -44,7 +44,6 @@ public class ReceitaTratador {
 				null,
 				null,
 				json.get("observacao").asString(),
-				inicioRepeticaoString != null ? Date.valueOf(inicioRepeticaoString) : null,
 				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null
 			),
 				json.get("totalParcelas").asInt()

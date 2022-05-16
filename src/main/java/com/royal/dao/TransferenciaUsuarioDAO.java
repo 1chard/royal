@@ -22,7 +22,7 @@ public class TransferenciaUsuarioDAO {
 		System.out.println(parcelas);
 		
 		try {
-			Sistema.BANCO.run("call inserir_transferencia_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+			Sistema.BANCO.run("call inserir_transferencia_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
 					transferenciaUsuario.valor,
 					transferenciaUsuario.data,
 					transferenciaUsuario.descricao,
@@ -33,7 +33,6 @@ public class TransferenciaUsuarioDAO {
 					transferenciaUsuario.idCategoria,
 					transferenciaUsuario.anexo,
 					transferenciaUsuario.observacao,
-					transferenciaUsuario.inicioRepeticao,
 					transferenciaUsuario.frequencia != null ? transferenciaUsuario.frequencia.toString() : null,
 					parcelas
 			);
@@ -47,7 +46,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaGeral(int quem) {
 		try {
-			var query = Sistema.BANCO.query("call despesaGeral(?);",
+			var query = Sistema.BANCO.query("call despesa_geral(?);",
 					quem
 			);
 
@@ -61,7 +60,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal receitaGeral(int quem) {
 		try {
-			var query = Sistema.BANCO.query("call receitaGeral(?);",
+			var query = Sistema.BANCO.query("call receita_geral(?);",
 					quem
 			);
 
@@ -75,7 +74,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("call receitaMensal(?, ?, ?);",
+			var query = Sistema.BANCO.query("call receita_mensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -91,7 +90,7 @@ public class TransferenciaUsuarioDAO {
 	
 	public static BigDecimal receitaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("call despesaMensal(?, ?, ?);",
+			var query = Sistema.BANCO.query("call despesa_mensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -107,7 +106,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaAnual(int quem, int ano) {
 		try {
-			var query = Sistema.BANCO.query("call despesaAnual(?, ?);",
+			var query = Sistema.BANCO.query("call despesa_anual(?, ?);",
 					quem,
 					ano
 			);
@@ -122,7 +121,7 @@ public class TransferenciaUsuarioDAO {
 	
 	public static BigDecimal receitaAnual(int quem, int ano) {
 		try {
-			var query = Sistema.BANCO.query("call receitaAnual(?, ?);",
+			var query = Sistema.BANCO.query("call receita_anual(?, ?);",
 					quem,
 					ano
 			);
@@ -141,14 +140,10 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> despesaListarPorMes(int quem, int ano, int mes, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
 
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes), list);
-
-			return list;
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -160,14 +155,10 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> receitaListarPorMes(int quem, int ano, int mes, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
 
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes), list);
-
-			return list;
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -179,14 +170,10 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> despesaListarPorAno(int quem, int ano, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
-
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ?" + extra, quem, ano), list);
-
-			return list;
+			return queryTratador(
+					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ?" + extra, quem, ano));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -198,14 +185,11 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> receitaListarPorAno(int quem, int ano, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
-
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ?" + extra, quem, ano), list);
+			return queryTratador(
+					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0 AND year(data) = ?" + extra, quem, ano));
 
-			return list;
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -217,14 +201,10 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> despesaListar(int quem, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
-
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(
-					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0" + extra, quem), list);
-
-			return list;
+			return queryTratador(
+					Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0" + extra, quem));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -236,13 +216,10 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> receitaListar(int quem, String[] idcategorias) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
-
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0" + extra, quem), list);
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor > 0" + extra, quem));
 
-			return list;
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -250,16 +227,16 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<TransferenciaUsuario> favoritos(int quem) {
 		try {
-			var list = new ArrayList<TransferenciaUsuario>();
-			queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? and favorito = true;", quem), list);
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? and favorito = true;", quem));
 
-			return list;
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 
-	private static void queryTratadorParcela(ResultSet query, List<TransferenciaUsuarioParcela> list) throws SQLException {
+	private static List<TransferenciaUsuarioParcela> queryTratadorParcela(ResultSet query) throws SQLException {
+	    var list = new ArrayList<TransferenciaUsuarioParcela>();
+	    
 		while (query.next()) {
 
 			list.add(new TransferenciaUsuarioParcela(
@@ -269,9 +246,13 @@ public class TransferenciaUsuarioDAO {
 					query.getInt("idTransferenciaUsuario")
 			));
 		}
+		
+		return list;
 	}
 	
-	private static void queryTratador(ResultSet query, List<TransferenciaUsuario> list) throws SQLException {
+	private static List<TransferenciaUsuario> queryTratador(ResultSet query) throws SQLException {
+	    var list = new ArrayList<TransferenciaUsuario>();
+	    
 		while (query.next()) {
 			String nomeFrequencia = query.getString("frequencia");
 
@@ -287,10 +268,11 @@ public class TransferenciaUsuarioDAO {
 					query.getObject("idTransferenciaUsuario", Integer.class),
 					query.getString("anexo"),
 					query.getString("observacao"),
-					query.getDate("iniciorepeticao"),
 					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
 			)
 			);
 		}
+		
+		return list;
 	}
 }

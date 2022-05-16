@@ -1,5 +1,6 @@
 package com.royal.servlet;
 
+import com.royal.Sistema;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,7 +23,7 @@ public class NewServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try ( PrintWriter out = response.getWriter()) {
 			/* TODO output your page here. You may use following sample code. */
-			out.println(request.getParameterValues("teste").length);
+			out.println(Sistema.PESSOAS);
 		}
 	}
 

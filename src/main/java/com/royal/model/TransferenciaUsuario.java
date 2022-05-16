@@ -16,7 +16,6 @@ public class TransferenciaUsuario {
 	public String descricao;
 	public String observacao;
 	public boolean favorito;
-	public java.sql.Date inicioRepeticao;
 	public boolean parcelada;
 	public boolean fixa;
 	public Frequencia frequencia;
@@ -34,7 +33,7 @@ public class TransferenciaUsuario {
 		this.idCategoria = idCategoria;
 	}
 
-	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria, Integer idTransferenciaUsuario, String anexo, String observacao, java.sql.Date inicioRepeticao, Frequencia frequencia) {
+	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria, Integer idTransferenciaUsuario, String anexo, String observacao, Frequencia frequencia) {
 		this.idTransferenciaUsuario = idTransferenciaUsuario;
 		this.valor = valor;
 		this.data = data;
@@ -42,7 +41,6 @@ public class TransferenciaUsuario {
 		this.descricao = descricao;
 		this.observacao = observacao;
 		this.favorito = favorito;
-		this.inicioRepeticao = inicioRepeticao;
 		this.parcelada = parcelada;
 		this.fixa = fixa;
 		this.frequencia = frequencia;
@@ -68,7 +66,6 @@ public class TransferenciaUsuario {
 		private final String descricao;
 		private String observacao;
 		private final boolean favorito;
-		private Date inicioRepeticao;
 		private final boolean fixa;
 		private Frequencia frequencia;
 		private final int idUsuario;
@@ -101,18 +98,13 @@ public class TransferenciaUsuario {
 			return this;
 		}
 
-		public Builder setInicioRepeticao(Date inicioRepeticao) {
-			this.inicioRepeticao = inicioRepeticao;
-			return this;
-		}
-
 		public Builder setFrequencia(Frequencia frequencia) {
 			this.frequencia = frequencia;
 			return this;
 		}
 
 		public TransferenciaUsuario build() {
-			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, inicioRepeticao, frequencia);
+			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, frequencia);
 		}
 
 	}
