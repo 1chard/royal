@@ -86,11 +86,10 @@ public class Data extends HttpServlet {
 					.add("anexo", despesa.anexo)
 					.add("descricao", despesa.descricao)
 					.add("observacao", despesa.observacao)
-					.add("favorito", despesa.favorito)
 					.add("parcelada", despesa.parcelada)
 					.add("fixa", despesa.fixa)
 					.add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
-					.add("idCategoria", despesa.idCategoria)
+					.add("categoria", despesa.idCategoria)
 			));
 			json = lista;
 		    }
@@ -145,7 +144,7 @@ public class Data extends HttpServlet {
 		resp.getWriter().append(Arrays.toString(retornos)).flush();
 	    }
 	} else {
-	    resp.sendError(401);
+	    resp.sendError(404);
 	}
     }
 

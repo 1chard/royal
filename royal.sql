@@ -102,18 +102,20 @@ INTO id FROM
 			
 			if diferenca > 0 then
 				set diferenca = diferenca - 1;
-                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario) 
+                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario) 
                 values(
 					valorparcela + valordiferenca,
 					somar_tempo(data, iterator, nomeFrequencia),
-					id
+					id,
+                    idUsuario
                 );
 			else 
-                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario) 
+                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario) 
                 values(
 					valorparcela,
 					somar_tempo(data, iterator, nomeFrequencia),
-					id
+					id,
+                    idUsuario
                 );
             end if;
             
@@ -312,6 +314,9 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuarioParcela(
     idTransferenciaUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_TransferenciaUsuario_TransferenciaUsuarioParcela FOREIGN KEY (idTransferenciaUsuario)
         REFERENCES tblTransferenciaUsuario (idTransferenciaUsuario),
+	idUsuario INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_Usuario_TransferenciaUsuarioParcela FOREIGN KEY (idUsuario)
+        REFERENCES tblUsuario (idUsuario),
     UNIQUE INDEX (idTransferenciaUsuarioParcela)
 );
 
@@ -394,13 +399,13 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupo (
     UNIQUE INDEX (idTransferenciaGrupo)
 );
 
-CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcelas(
-    idTransferenciaGrupoParcelas INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcela(
+    idTransferenciaGrupoParcela INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
     idTransferenciaGrupo INT UNSIGNED NOT NULL,
-    CONSTRAINT FK_TransferenciaGrupo_TransferenciaGrupoParcelas FOREIGN KEY (idTransferenciaGrupo)
+    CONSTRAINT FK_TransferenciaGrupo_TransferenciaGrupoParcela FOREIGN KEY (idTransferenciaGrupo)
         REFERENCES tblTransferenciaGrupo (idTransferenciaGrupo),
-    UNIQUE INDEX (idTransferenciaGrupoParcelas)
+    UNIQUE INDEX (idTransferenciaGrupoParcela)
 );
 

@@ -45,11 +45,7 @@ public final class Categoria {
     
     static{
 	    CategoriaDAO.listar().forEach(categoria -> {
-		System.out.println(categoria);
-		
-		if(null == categoria.tipoTransferencia){
-		    throw new RuntimeException();
-		} else switch (categoria.tipoTransferencia) {
+		switch (categoria.tipoTransferencia) {
 		    case DESPESA -> DESPESAS.add(categoria);
 		    case RECEITA -> RECEITAS.add(categoria);
 		}
@@ -78,5 +74,10 @@ public final class Categoria {
 	}
 	
 	return null;
+    }
+    
+    public enum TipoTransferencia{
+	DESPESA,
+	RECEITA
     }
 }

@@ -74,7 +74,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal despesaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("call receita_mensal(?, ?, ?);",
+			var query = Sistema.BANCO.query("call despesa_mensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -90,7 +90,7 @@ public class TransferenciaUsuarioDAO {
 	
 	public static BigDecimal receitaMensal(int quem, int ano, int mes) {
 		try {
-			var query = Sistema.BANCO.query("call despesa_mensal(?, ?, ?);",
+			var query = Sistema.BANCO.query("call receita_mensal(?, ?, ?);",
 					quem,
 					ano,
 					mes
@@ -143,14 +143,14 @@ public class TransferenciaUsuarioDAO {
 
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes));
+			return queryTratador(Sistema.BANCO.query("" + extra, quem, ano, mes));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
 	}
 	
 	public static List<TransferenciaUsuario> receitaListarPorMes(int quem, int ano, int mes) {
-		return despesaListarPorMes(quem, ano, mes, new String[]{});
+		return receitaListarPorMes(quem, ano, mes, new String[]{});
 	}
 
 	public static List<TransferenciaUsuario> receitaListarPorMes(int quem, int ano, int mes, String[] idcategorias) {
@@ -180,7 +180,7 @@ public class TransferenciaUsuarioDAO {
 	}
 	
 	public static List<TransferenciaUsuario> receitaListarPorAno(int quem, int ano) {
-		return despesaListarPorAno(quem, ano, new String[]{});
+		return receitaListarPorAno(quem, ano, new String[]{});
 	}
 
 	public static List<TransferenciaUsuario> receitaListarPorAno(int quem, int ano, String[] idcategorias) {
@@ -211,7 +211,7 @@ public class TransferenciaUsuarioDAO {
 	}
 	
 	public static List<TransferenciaUsuario> receitaListar(int quem) {
-		return despesaListar(quem, new String[]{});
+		return receitaListar(quem, new String[]{});
 	}
 
 	public static List<TransferenciaUsuario> receitaListar(int quem, String[] idcategorias) {
@@ -243,7 +243,8 @@ public class TransferenciaUsuarioDAO {
 					query.getInt("idTransferenciaUsuarioParcela"),
 					query.getBigDecimal("valor"),
 					query.getDate("data"),
-					query.getInt("idTransferenciaUsuario")
+					query.getInt("idTransferenciaUsuario"),
+					query.getInt("idCategoria")
 			));
 		}
 		

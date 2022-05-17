@@ -27,7 +27,6 @@ public class ReceitaTratador {
 		var usuario = Sistema.PESSOAS.get(token).usuario;
 		
 		var valor = BigDecimal.valueOf(json.get("valor").mustBe(ValueType.NUMBER).asDouble());
-		var inicioRepeticaoString = json.get("inicioRepeticao").asString();
 		var nomeFrequenciaString = json.get("frequencia").asString();
 		var data = Date.valueOf(json.get("data").mustBe(ValueType.STRING).asString());
 		
