@@ -52,15 +52,15 @@ public class Data extends HttpServlet {
 			    var mes = Extra.parseInteger(req.getParameter("mes"));
 
 			    if (mes != null) {
-				despesa = TransferenciaUsuarioDAO.despesaMensal(pessoa.id, ano, mes);
-				receita = TransferenciaUsuarioDAO.receitaMensal(pessoa.id, ano, mes);
+				despesa = TransferenciaUsuarioDAO.despesaLiquidaMensal(pessoa.id, ano, mes);
+				receita = TransferenciaUsuarioDAO.receitaLiquidaMensal(pessoa.id, ano, mes);
 			    } else {
-				despesa = TransferenciaUsuarioDAO.despesaAnual(pessoa.id, ano);
-				receita = TransferenciaUsuarioDAO.receitaAnual(pessoa.id, ano);
+				despesa = TransferenciaUsuarioDAO.despesaLiquidaAnual(pessoa.id, ano);
+				receita = TransferenciaUsuarioDAO.receitaLiquidaAnual(pessoa.id, ano);
 			    }
 			} else {
-			    despesa = TransferenciaUsuarioDAO.despesaGeral(pessoa.id);
-			    receita = TransferenciaUsuarioDAO.receitaGeral(pessoa.id);
+			    despesa = TransferenciaUsuarioDAO.despesaLiquidaGeral(pessoa.id);
+			    receita = TransferenciaUsuarioDAO.receitaLiquidaGeral(pessoa.id);
 			}
 
 			json = new JsonObject().add("despesa", despesa)
@@ -78,11 +78,15 @@ public class Data extends HttpServlet {
 		    case "favorito" -> {
 			var lista = new JsonArray();
 
-			TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> lista.add(
+			TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesaP -> {
+			    var despesa = despesaP.first;
+			    
+			    lista.add(
+			
+				
 				new JsonObject()
 					.add("valor", despesa.valor)
 					.add("data", despesa.data.toString())
-					.add("pendente", despesa.data != null ? despesa.data.toString() : null)
 					.add("anexo", despesa.anexo)
 					.add("descricao", despesa.descricao)
 					.add("observacao", despesa.observacao)
@@ -90,7 +94,10 @@ public class Data extends HttpServlet {
 					.add("fixa", despesa.fixa)
 					.add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
 					.add("categoria", despesa.idCategoria)
-			));
+					.add("parcelas", despesaP.second)
+			);
+			});
+			    
 			json = lista;
 		    }
 		    case "perfil" -> {

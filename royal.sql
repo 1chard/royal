@@ -68,160 +68,6 @@ BEGIN
 END $$
 DELIMITER ;
 
--- procedure pra cadastrar transferenciausuario
-DELIMITER $$
-create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in nomeFrequencia varchar(10), in parcelas int unsigned)
-BEGIN
-	declare id int unsigned;
-SELECT 
-    IFNULL(MAX(idTransferenciaUsuario), 0)
-INTO id FROM
-    tblTransferenciaUsuario;
-	set id = id + 1;
-    
-	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario) 
-    VALUES (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, id );
-
-	if parcelada then
-    begin
-		declare diferenca int unsigned default (abs(valor * 100) % (parcelas * 100)) / 100;
-		declare valorparcela decimal(14, 2);
-        declare valordiferenca decimal(14, 2);
-        declare iterator int unsigned default 0;
-        
-        if valor < 0 then
-			set valorparcela = -floor((abs(valor) * 100)/ parcelas) / 100;
-			set valordiferenca = -0.01;
-        else
-			set valorparcela = floor((abs(valor) * 100)/ parcelas) / 100;
-            set valordiferenca = 0.01;
-        end if;
-        
-        while iterator < parcelas do
-        begin
-			
-			if diferenca > 0 then
-				set diferenca = diferenca - 1;
-                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario) 
-                values(
-					valorparcela + valordiferenca,
-					somar_tempo(data, iterator, nomeFrequencia),
-					id,
-                    idUsuario
-                );
-			else 
-                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario) 
-                values(
-					valorparcela,
-					somar_tempo(data, iterator, nomeFrequencia),
-					id,
-                    idUsuario
-                );
-            end if;
-            
-            set iterator = iterator + 1; 
-		end;
-        end while;
-        
-    end;
-    end if;
-
-	
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure despesa_geral(in idusuario int unsigned)
-BEGIN
-	SELECT -ifnull(sum(valor), 0) as valor 
-    FROM tblTransferenciaUsuario 
-    WHERE idusuario = idusuario AND valor < 0;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure despesa_anual(in id int unsigned, in ano int unsigned)
-BEGIN
-	declare retorno DECIMAL(14 , 2 );
-
-	 SELECT ifnull(sum(valor), 0)
-     INTO retorno
-     FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano;
-
-    select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
-    from tblTransferenciaUsuarioParcela
-    inner join tblTransferenciaUsuario 
-	on tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario
-    where tblTransferenciaUsuarioParcela.valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure despesa_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
-BEGIN
-	declare retorno DECIMAL(14 , 2 );
-
-	 SELECT ifnull(sum(valor), 0)
-     INTO retorno
-     FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano AND month(data) = mes;
-
-    select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
-    from tblTransferenciaUsuarioParcela
-    inner join tblTransferenciaUsuario 
-	on tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario
-    where tblTransferenciaUsuarioParcela.valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano
-    AND month(tblTransferenciaUsuarioParcela.data) = mes;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure receita_geral(in idusuario int unsigned)
-BEGIN
-	SELECT ifnull(sum(valor), 0) as valor
-    FROM tblTransferenciaUsuario
-    WHERE idusuario = idusuario AND valor > 0;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure receita_anual(in id int unsigned, in ano int unsigned)
-BEGIN
-	declare retorno DECIMAL(14 , 2 );
-
-	 SELECT ifnull(sum(valor), 0)
-     INTO retorno
-     FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano;
-
-    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
-    from tblTransferenciaUsuarioParcela
-    inner join tblTransferenciaUsuario 
-	on tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario
-    where tblTransferenciaUsuarioParcela.valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano;
-END $$
-DELIMITER ;
-
-DELIMITER $$
-create procedure receita_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
-BEGIN
-	declare retorno DECIMAL(14 , 2 );
-
-	 SELECT ifnull(sum(valor), 0)
-     INTO retorno
-     FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano AND month(data) = mes;
-
-    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
-    from tblTransferenciaUsuarioParcela
-    inner join tblTransferenciaUsuario 
-	on tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario
-    where tblTransferenciaUsuarioParcela.valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano
-    AND month(tblTransferenciaUsuarioParcela.data) = mes;
-END $$
-DELIMITER ;
-
 -- criação da tabela tipotransferencia
 CREATE TABLE IF NOT EXISTS tblTipoTransferencia (
     idTipoTransferencia INT UNSIGNED NOT NULL PRIMARY KEY auto_increment,
@@ -311,6 +157,7 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuarioParcela(
     idTransferenciaUsuarioParcela INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
+    indice int unsigned not null,
     idTransferenciaUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_TransferenciaUsuario_TransferenciaUsuarioParcela FOREIGN KEY (idTransferenciaUsuario)
         REFERENCES tblTransferenciaUsuario (idTransferenciaUsuario),
@@ -403,9 +250,254 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcela(
     idTransferenciaGrupoParcela INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,
     data DATE NOT NULL,
+    indice int unsigned not null,
     idTransferenciaGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_TransferenciaGrupo_TransferenciaGrupoParcela FOREIGN KEY (idTransferenciaGrupo)
         REFERENCES tblTransferenciaGrupo (idTransferenciaGrupo),
+    idGrupo INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_Grupo_TransferenciaGrupoParcela FOREIGN KEY (idGrupo)
+        REFERENCES tblGrupo (idGrupo),
     UNIQUE INDEX (idTransferenciaGrupoParcela)
 );
 
+-- procedure pra cadastrar transferenciausuario
+DELIMITER $$
+create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in nomeFrequencia varchar(10), in parcelas int unsigned)
+BEGIN
+	declare id int unsigned;
+SELECT 
+    IFNULL(MAX(idTransferenciaUsuario), 0)
+INTO id FROM
+    tblTransferenciaUsuario;
+	set id = id + 1;
+    
+	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario) 
+    VALUES (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, id );
+
+	if parcelada then
+    begin
+		declare diferenca int unsigned default (abs(valor * 100) % (parcelas * 100)) / 100;
+		declare valorparcela decimal(14, 2);
+        declare valordiferenca decimal(14, 2);
+        declare iterator int unsigned default 0;
+        
+        if valor < 0 then
+			set valorparcela = -floor((abs(valor) * 100)/ parcelas) / 100;
+			set valordiferenca = -0.01;
+        else
+			set valorparcela = floor((abs(valor) * 100)/ parcelas) / 100;
+            set valordiferenca = 0.01;
+        end if;
+        
+        while iterator < parcelas do
+        begin
+			
+			if diferenca > 0 then
+				set diferenca = diferenca - 1;
+                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario, indice) 
+                values(
+					valorparcela + valordiferenca,
+					somar_tempo(data, iterator, nomeFrequencia),
+					id,
+                    idUsuario,
+                    iterator
+                );
+			else 
+                insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario, indice) 
+                values(
+					valorparcela,
+					somar_tempo(data, iterator, nomeFrequencia),
+					id,
+                    idUsuario,
+                    iterator
+                );
+            end if;
+            
+            set iterator = iterator + 1; 
+		end;
+        end while;
+        
+    end;
+    end if;
+
+	
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure despesa_geral(in id int unsigned)
+BEGIN
+	SELECT -ifnull(sum(valor), 0) as valor 
+    FROM tblTransferenciaUsuario 
+    WHERE idUsuario = id AND valor < 0;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure despesa_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano;
+
+    select -(retorno + ifnull(sum(valor), 0)) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor < 0 AND year(data) = ano ;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure despesa_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano AND month(data) = mes;
+
+    select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor < 0 AND year(data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_geral(in id int unsigned)
+BEGIN
+	SELECT ifnull(sum(valor), 0) as valor
+    FROM tblTransferenciaUsuario
+    WHERE idusuario = id AND valor > 0;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor > 0 AND year(data) = ano;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano AND month(data) = mes;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor > 0 AND year(data) = ano AND month(data) = mes;
+END $$
+DELIMITER ; 
+
+DELIMITER $$
+create procedure despesa_liquida_geral(in id int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now();
+
+    select -(retorno + ifnull(sum(valor), 0)) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor < 0 AND data <= now();
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure despesa_liquida_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now() AND year(data) = ano;
+
+    select -(retorno + ifnull(sum(valor), 0)) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor < 0 AND data <= now() AND year(data) = ano ;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure despesa_liquida_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
+
+    select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor < 0 AND data <= now() AND year(data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_liquida_geral(in id int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now();
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor > 0 AND data <= now();
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_liquida_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now() AND year(data) = ano;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor > 0 AND data <= now() AND year(data) = ano;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure receita_liquida_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND valor > 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
+END $$
+DELIMITER ;

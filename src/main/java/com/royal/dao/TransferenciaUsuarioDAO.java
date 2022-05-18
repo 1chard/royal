@@ -1,5 +1,6 @@
 package com.royal.dao;
 
+import com.royal.Pair;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.Sistema;
 import com.royal.model.Frequencia;
@@ -133,6 +134,96 @@ public class TransferenciaUsuarioDAO {
 			throw new RuntimeException(ex);
 		}
 	}
+	
+		public static BigDecimal despesaLiquidaGeral(int quem) {
+		try {
+			var query = Sistema.BANCO.query("call despesa_liquida_geral(?);",
+					quem
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public static BigDecimal receitaLiquidaGeral(int quem) {
+		try {
+			var query = Sistema.BANCO.query("call receita_liquida_   geral(?);",
+					quem
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public static BigDecimal despesaLiquidaMensal(int quem, int ano, int mes) {
+		try {
+			var query = Sistema.BANCO.query("call despesa_liquida_mensal(?, ?, ?);",
+					quem,
+					ano,
+					mes
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static BigDecimal receitaLiquidaMensal(int quem, int ano, int mes) {
+		try {
+			var query = Sistema.BANCO.query("call receita_liquida_mensal(?, ?, ?);",
+					quem,
+					ano,
+					mes
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public static BigDecimal despesaLiquidaAnual(int quem, int ano) {
+		try {
+			var query = Sistema.BANCO.query("call despesa_liquida_anual(?, ?);",
+					quem,
+					ano
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static BigDecimal receitaLiquidaAnual(int quem, int ano) {
+		try {
+			var query = Sistema.BANCO.query("call receita_liquida_anual(?, ?);",
+					quem,
+					ano
+			);
+
+			query.next();
+
+			return query.getBigDecimal("valor");
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
 	public static List<TransferenciaUsuario> despesaListarPorMes(int quem, int ano, int mes) {
 		return despesaListarPorMes(quem, ano, mes, new String[]{});
@@ -143,7 +234,7 @@ public class TransferenciaUsuarioDAO {
 
 			final String extra = idcategorias.length > 0 ? " AND idcategoria IN (" + String.join(",", idcategorias) + ");" : ";";
 
-			return queryTratador(Sistema.BANCO.query("" + extra, quem, ano, mes));
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND valor < 0 AND year(data) = ? AND month(data) = ?" + extra, quem, ano, mes));
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
@@ -225,9 +316,9 @@ public class TransferenciaUsuarioDAO {
 		}
 	}
 
-	public static List<TransferenciaUsuario> favoritos(int quem) {
+	public static List<Pair<TransferenciaUsuario, Integer>> favoritos(int quem) {
 		try {
-			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? and favorito = true;", quem));
+			return queryTratadorComParcelas(Sistema.BANCO.query("SELECT *, (select count(*) from tblTransferenciaUsuarioParcela where idTransferenciaUsuario = tblTransferenciaUsuario.idTransferenciaUsuario) as parcelas FROM tblTransferenciaUsuario WHERE idusuario = ?;", quem));
 
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
@@ -270,6 +361,36 @@ public class TransferenciaUsuarioDAO {
 					query.getString("anexo"),
 					query.getString("observacao"),
 					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+			)
+			);
+		}
+		
+		return list;
+	}
+	
+	private static List<Pair<TransferenciaUsuario, Integer>> queryTratadorComParcelas(ResultSet query) throws SQLException {
+	    var list = new ArrayList<Pair<TransferenciaUsuario, Integer>>();
+	    
+		while (query.next()) {
+			String nomeFrequencia = query.getString("frequencia");
+
+			list.add(
+			Pair.of(
+				new TransferenciaUsuario(
+					query.getBigDecimal("valor"),
+					query.getDate("data"),
+					query.getString("descricao"),
+					query.getBoolean("favorito"),
+					query.getBoolean("parcelada"),
+					query.getBoolean("fixa"),
+					query.getInt("idUsuario"),
+					query.getInt("idCategoria"),
+					query.getObject("idTransferenciaUsuario", Integer.class),
+					query.getString("anexo"),
+					query.getString("observacao"),
+					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+				),
+				query.getInt("parcelas")
 			)
 			);
 		}
