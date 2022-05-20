@@ -318,7 +318,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static List<Pair<TransferenciaUsuario, Integer>> favoritos(int quem) {
 		try {
-			return queryTratadorComParcelas(Sistema.BANCO.query("SELECT *, (select count(*) from tblTransferenciaUsuarioParcela where idTransferenciaUsuario = tblTransferenciaUsuario.idTransferenciaUsuario) as parcelas FROM tblTransferenciaUsuario WHERE idusuario = ?;", quem));
+			return queryTratadorComParcelas(Sistema.BANCO.query("SELECT *, (select count(*) from tblTransferenciaUsuarioParcela where idTransferenciaUsuario = tblTransferenciaUsuario.idTransferenciaUsuario) as parcelas FROM tblTransferenciaUsuario WHERE idusuario = ? AND favorito = true;", quem));
 
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
