@@ -151,7 +151,7 @@ public class TransferenciaUsuarioDAO {
 
 	public static BigDecimal receitaLiquidaGeral(int quem) {
 		try {
-			var query = Sistema.BANCO.query("call receita_liquida_   geral(?);",
+			var query = Sistema.BANCO.query("call receita_liquida_geral(?);",
 					quem
 			);
 

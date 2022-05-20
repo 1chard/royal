@@ -21,7 +21,7 @@ public class MariaDB extends SQL {
 			throw new SQLException(e);
 		}
 		
-		connection = DriverManager.getConnection("jdbc:" + "mariadb" + "://" + url + "/" + database, user, pass);
+		connection = DriverManager.getConnection("jdbc:" + "mariadb" + "://" + url + "/" + database + "?autoReconnect=true", user, pass);
     }
     
     @Override

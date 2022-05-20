@@ -23,7 +23,7 @@ public class NewServlet extends HttpServlet {
 			throws ServletException, IOException {
 		try ( PrintWriter out = response.getWriter()) {
 			/* TODO output your page here. You may use following sample code. */
-			out.println(Sistema.PESSOAS);
+			out.println(System.getProperty("user.name"));
 		}
 	}
 

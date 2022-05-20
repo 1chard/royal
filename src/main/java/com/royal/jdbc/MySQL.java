@@ -18,7 +18,7 @@ public class MySQL extends SQL {
 		} catch (ClassNotFoundException e) {
 			throw new SQLException(e);
 		}
-		connection = DriverManager.getConnection("jdbc:" + "mysql" + "://" + url + "/" + database, user, pass);
+		connection = DriverManager.getConnection("jdbc:" + "mysql" + "://" + url + "/" + database + "?autoReconnect=true", user, pass);
 
 	}
 

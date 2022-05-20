@@ -52,15 +52,12 @@ public class Sistema{
 				PASSWORD = "12345678";
 				CHAVE = "cumonista";
 			}
-			case "SERVIÇO LOCAL" ->  {
-				HOST = "localhost:3308";
+			default ->  {
+				HOST = "10.5.60.39:3306";
 				DATABASE = "royal";
 				USER = "royal";
 				PASSWORD = "royal";
 				CHAVE = "alemanhaSemprePerde";
-			}
-			default -> {
-				throw new RuntimeException();
 			}
 		}
 		
