@@ -43,9 +43,9 @@ public class ReceitaTratador {
 				null,
 				null,
 				json.get("observacao").asString(),
-				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null
-			),
+				nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null,
 				json.get("totalParcelas").asInt()
+			)
 		);
 		
 		var calendario = new GregorianCalendar();

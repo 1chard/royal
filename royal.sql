@@ -94,7 +94,7 @@ INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Casa', 
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Restaurante', 'D11B1B', 'storefront', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Serviço', '3C6E10', 'home_repair_service', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Alimentação', '6B3528', 'restaurant_menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Cuidados pessoais', '58C91A', 'volunteer activism',(select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Cuidados pessoais', '58C91A', 'volunteer_activism',(select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Empréstimos', '0AF57B', 'real_estate_agent', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Educação', 'C88DF2', 'school', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Família', 'EB8F05', 'family_restroom', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
@@ -143,7 +143,8 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuario (
     favorito BOOLEAN NOT NULL,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
-    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS') NOT NULL,
+    parcelas INT UNSIGNED NOT NULL,
     idUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Usuario_TransferenciaUsuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
@@ -236,7 +237,8 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupo (
     favorito BOOLEAN NOT NULL,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
-    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS') NOT NULL ,
+	parcelas INT UNSIGNED NOT NULL,
     idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Grupo_TransferenciaGrupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
@@ -262,7 +264,7 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcela(
 
 -- procedure pra cadastrar transferenciausuario
 DELIMITER $$
-create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in nomeFrequencia varchar(10), in parcelas int unsigned)
+create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in frequencia varchar(10), in parcelas int unsigned)
 BEGIN
 	declare id int unsigned;
 SELECT 
@@ -271,8 +273,8 @@ INTO id FROM
     tblTransferenciaUsuario;
 	set id = id + 1;
     
-	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario) 
-    VALUES (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, id );
+	INSERT INTO tblTransferenciaUsuario (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, idTransferenciaUsuario, parcelas) 
+    VALUES (valor, data, anexo, descricao, observacao, favorito, parcelada, fixa, frequencia, idUsuario, idCategoria, id, parcelas);
 
 	if parcelada then
     begin
@@ -297,7 +299,7 @@ INTO id FROM
                 insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario, indice) 
                 values(
 					valorparcela + valordiferenca,
-					somar_tempo(data, iterator, nomeFrequencia),
+					somar_tempo(data, iterator, frequencia),
 					id,
                     idUsuario,
                     iterator
@@ -306,7 +308,7 @@ INTO id FROM
                 insert into tblTransferenciaUsuarioParcela(valor, data, idTransferenciaUsuario, idUsuario, indice) 
                 values(
 					valorparcela,
-					somar_tempo(data, iterator, nomeFrequencia),
+					somar_tempo(data, iterator, frequencia),
 					id,
                     idUsuario,
                     iterator
@@ -318,6 +320,7 @@ INTO id FROM
         end while;
         
     end;
+    
     end if;
 
 	
@@ -501,3 +504,94 @@ BEGIN
     where idUsuario = id AND valor > 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
 END $$
 DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_geral(in id int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE 
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND year(data) = ano
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND year(data) = ano AND month(data) = mes
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+

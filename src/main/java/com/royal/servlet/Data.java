@@ -114,19 +114,14 @@ public class Data extends HttpServlet {
 			var ano = Integer.parseInt(req.getParameter("ano"));
 			var categorias = Extra.orDefault(req.getParameterValues("cat"), new String[0]);
 
-			TransferenciaUsuarioDAO.despesaListarPorMes(pessoa.id, ano, mes, categorias).forEach(despesa -> lista.add(
+			TransferenciaUsuarioDAO.listarMensal(pessoa.id, ano, mes).forEach(despesa -> lista.add(
 				new JsonObject()
 					.add("data", despesa.data)
 					.add("valor", despesa.valor)
 					.add("categoria", despesa.idCategoria)
 					.add("descricao", despesa.descricao)
-			));
-			TransferenciaUsuarioDAO.receitaListarPorMes(pessoa.id, ano, mes, categorias).forEach(despesa -> lista.add(
-				new JsonObject()
-					.add("data", despesa.data)
-					.add("valor", despesa.valor)
-					.add("categoria", despesa.idCategoria)
-					.add("descricao", despesa.descricao)
+					.add("indice", despesa.indice)
+					.add("parcelas", despesa.parcelas)
 			));
 			Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((java.sql.Date) o1.get("data"))));
 

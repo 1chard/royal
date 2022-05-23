@@ -4,6 +4,7 @@ import com.royal.Pair;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.Sistema;
 import com.royal.model.Frequencia;
+import com.royal.model.TransferenciaUsuarioBase;
 import com.royal.model.TransferenciaUsuarioParcela;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -17,11 +18,7 @@ import java.util.List;
  */
 public class TransferenciaUsuarioDAO {
 
-	public static boolean gravar(TransferenciaUsuario transferenciaUsuario, Integer parcelas) {
-		
-		System.out.println(transferenciaUsuario.parcelada);
-		System.out.println(parcelas);
-		
+	public static boolean gravar(TransferenciaUsuario transferenciaUsuario) {
 		try {
 			Sistema.BANCO.run("call inserir_transferencia_usuario(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
 					transferenciaUsuario.valor,
@@ -35,7 +32,7 @@ public class TransferenciaUsuarioDAO {
 					transferenciaUsuario.anexo,
 					transferenciaUsuario.observacao,
 					transferenciaUsuario.frequencia != null ? transferenciaUsuario.frequencia.toString() : null,
-					parcelas
+					transferenciaUsuario.parcelas 
 			);
 			
 
@@ -315,6 +312,33 @@ public class TransferenciaUsuarioDAO {
 			throw new RuntimeException(ex);
 		}
 	}
+	
+	public static List<TransferenciaUsuarioBase> listar(int quem) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_geral(?);", quem));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarAnual(int quem, int ano) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_anual(?, ?);", quem, ano));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarMensal(int quem, int ano, int mes) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_mensal(?, ?, ?);", quem, ano, mes));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
 	public static List<Pair<TransferenciaUsuario, Integer>> favoritos(int quem) {
 		try {
@@ -325,6 +349,25 @@ public class TransferenciaUsuarioDAO {
 		}
 	}
 
+	private static List<TransferenciaUsuarioBase> queryTratadorBase(ResultSet query) throws SQLException {
+	    var list = new ArrayList<TransferenciaUsuarioBase>();
+	    
+		while (query.next()) {
+
+			list.add(new TransferenciaUsuarioBase(
+					query.getBigDecimal("valor"),
+					query.getDate("data"),
+					query.getString("descricao"),
+					query.getInt("idCategoria"),
+					query.getInt("parcelas"),
+					query.getObject("indice", Integer.class),
+					query.getObject("idTransferenciaPai", Integer.class)
+			));
+		}
+		
+		return list;
+	}
+	
 	private static List<TransferenciaUsuarioParcela> queryTratadorParcela(ResultSet query) throws SQLException {
 	    var list = new ArrayList<TransferenciaUsuarioParcela>();
 	    
@@ -360,7 +403,8 @@ public class TransferenciaUsuarioDAO {
 					query.getObject("idTransferenciaUsuario", Integer.class),
 					query.getString("anexo"),
 					query.getString("observacao"),
-					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null,
+					query.getInt("parcelas")
 			)
 			);
 		}
@@ -388,7 +432,8 @@ public class TransferenciaUsuarioDAO {
 					query.getObject("idTransferenciaUsuario", Integer.class),
 					query.getString("anexo"),
 					query.getString("observacao"),
-					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null
+					nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null,
+					query.getInt("parcelas")
 				),
 				query.getInt("parcelas")
 			)

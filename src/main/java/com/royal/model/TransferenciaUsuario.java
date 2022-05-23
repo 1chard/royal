@@ -21,6 +21,7 @@ public class TransferenciaUsuario {
 	public Frequencia frequencia;
 	public int idUsuario;
 	public int idCategoria;
+	public int parcelas;
 
 	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria) {
 		this.valor = valor;
@@ -33,7 +34,7 @@ public class TransferenciaUsuario {
 		this.idCategoria = idCategoria;
 	}
 
-	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria, Integer idTransferenciaUsuario, String anexo, String observacao, Frequencia frequencia) {
+	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria, Integer idTransferenciaUsuario, String anexo, String observacao, Frequencia frequencia, int parcelas) {
 		this.idTransferenciaUsuario = idTransferenciaUsuario;
 		this.valor = valor;
 		this.data = data;
@@ -46,7 +47,7 @@ public class TransferenciaUsuario {
 		this.frequencia = frequencia;
 		this.idUsuario = idUsuario;
 		this.idCategoria = idCategoria;
-
+		this.parcelas = parcelas;
 	}
 	
 	public boolean isDespesa(){
@@ -63,6 +64,7 @@ public class TransferenciaUsuario {
 		private final BigDecimal valor;
 		private final Date data;
 		private String anexo;
+		private int parcelas;
 		private final String descricao;
 		private String observacao;
 		private final boolean favorito;
@@ -102,9 +104,14 @@ public class TransferenciaUsuario {
 			this.frequencia = frequencia;
 			return this;
 		}
+		
+		public Builder setParcelas(int parcelas) {
+			this.parcelas = parcelas;
+			return this;
+		}
 
 		public TransferenciaUsuario build() {
-			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, frequencia);
+			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, frequencia, parcelas);
 		}
 
 	}
