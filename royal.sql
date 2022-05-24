@@ -16,6 +16,15 @@ CREATE TABLE IF NOT EXISTS tblUsuario (
     UNIQUE INDEX (idUsuario)
 );
 
+CREATE TABLE IF NOT EXISTS autoLogin (
+	idAutoLogin int UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    token text not null,
+    idUsuario INT UNSIGNED NOT NULL,
+    CONSTRAINT FK_AutoLogin_Recuperacao FOREIGN KEY (idUsuario)
+        REFERENCES tblUsuario (idUsuario),
+    UNIQUE INDEX (idAutoLogin)
+);
+
 -- criação da tabela recuperação
 CREATE TABLE IF NOT EXISTS tblRecuperacao (
     idRecuperacao INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -143,8 +152,8 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuario (
     favorito BOOLEAN NOT NULL,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
-    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS') NOT NULL,
-    parcelas INT UNSIGNED NOT NULL,
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+    parcelas INT UNSIGNED,
     idUsuario INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Usuario_TransferenciaUsuario FOREIGN KEY (idUsuario)
         REFERENCES tblUsuario (idUsuario),
@@ -237,8 +246,8 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupo (
     favorito BOOLEAN NOT NULL,
     parcelada BOOLEAN NOT NULL,
     fixa BOOLEAN NOT NULL,
-    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS') NOT NULL ,
-	parcelas INT UNSIGNED NOT NULL,
+    frequencia ENUM('DIAS', 'SEMANAS', 'QUINZENAS', 'MESES', 'BIMESTRES', 'TRIMESTRES', 'SEMESTRES', 'ANOS'),
+	parcelas INT UNSIGNED,
     idGrupo INT UNSIGNED NOT NULL,
     CONSTRAINT FK_Grupo_TransferenciaGrupo FOREIGN KEY (idGrupo)
         REFERENCES tblGrupo (idGrupo),
@@ -621,7 +630,7 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor > 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
 
@@ -651,7 +660,7 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
 
@@ -681,7 +690,7 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
 
@@ -712,7 +721,7 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor < 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
 
@@ -742,7 +751,7 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
 
@@ -772,6 +781,6 @@ UNION ALL SELECT
 FROM
     tblTransferenciaUsuarioParcela
         INNER JOIN
-    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
