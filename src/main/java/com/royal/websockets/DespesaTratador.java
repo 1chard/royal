@@ -54,7 +54,7 @@ public class DespesaTratador {
 				calendario.setTime(data);
 
 				Dashboard.enviar(token, JsonStream.serialize(
-						Map.of("metodo", "despesa", "arg", "remover", "valor", valor.doubleValue(), "mes", calendario.get(Calendar.MONTH) + 1, "ano", calendario.get(Calendar.YEAR))
+						Map.of("metodo", "despesa", "arg", "remover")
 				));
 			}
 

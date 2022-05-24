@@ -51,7 +51,9 @@ public class ReceitaTratador {
 		var calendario = new GregorianCalendar();
 		calendario.setTime(data);
 
-		Dashboard.enviar(token, JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar", "valor", valor.doubleValue(), "mes", calendario.get(Calendar.MONTH) + 1, "ano", calendario.get(Calendar.YEAR))));
+		Dashboard.enviar(token, JsonStream.serialize(
+				Map.of("metodo", "receita", "arg", "adicionar")
+		));
 	    }
 	}
     }
