@@ -339,6 +339,61 @@ public class TransferenciaUsuarioDAO {
 			throw new RuntimeException(ex);
 		}
 	}
+	
+		
+	public static List<TransferenciaUsuarioBase> listarReceitas(int quem) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_receita_geral(?);", quem));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarReceitasAnual(int quem, int ano) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_receita_anual(?, ?);", quem, ano));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarReceitasMensal(int quem, int ano, int mes) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_receita_mensal(?, ?, ?);", quem, ano, mes));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarDespesas(int quem) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_despesa_geral(?);", quem));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarDespesasAnual(int quem, int ano) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_despesa_anual(?, ?);", quem, ano));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public static List<TransferenciaUsuarioBase> listarDespesasMensal(int quem, int ano, int mes) {
+		try {
+			return queryTratadorBase(Sistema.BANCO.query("call extrato_despesa_mensal(?, ?, ?);", quem, ano, mes));
+
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
 	public static List<Pair<TransferenciaUsuario, Integer>> favoritos(int quem) {
 		try {

@@ -595,3 +595,183 @@ FROM
 END $$
 DELIMITER ;
 
+DELIMITER $$
+create procedure extrato_receita_geral(in id int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor > 0
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_receita_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor > 0 AND year(data) = ano
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_receita_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor > 0 AND year(data) = ano AND month(data) = mes
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor > 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+create procedure extrato_despesa_geral(in id int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor < 0
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_despesa_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor < 0 AND year(data) = ano
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure extrato_despesa_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	SELECT 
+    valor,
+    data,
+    descricao,
+    idcategoria,
+    NULL AS indice,
+    NULL AS idTransferenciaPai,
+    parcelas
+FROM
+    tblTransferenciaUsuario
+WHERE
+    idUsuario = id AND parcelada = FALSE AND valor < 0 AND year(data) = ano AND month(data) = mes
+UNION ALL SELECT 
+    tblTransferenciaUsuarioParcela.valor,
+    tblTransferenciaUsuarioParcela.data,
+    tblTransferenciaUsuario.descricao,
+    tblTransferenciaUsuario.idCategoria,
+    tblTransferenciaUsuarioParcela.indice,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuario.parcelas
+FROM
+    tblTransferenciaUsuarioParcela
+        INNER JOIN
+    tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
+END $$
+DELIMITER ;

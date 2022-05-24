@@ -6,6 +6,7 @@ import com.royal.Extra;
 import com.royal.Sistema;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.model.TransferenciaUsuario;
+import com.royal.model.TransferenciaUsuarioBase;
 import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -52,7 +53,7 @@ public class Grafico extends HttpServlet {
 
 	private static String despesaTrata(HttpServletRequest req, Usuario usuario) {
 		var json = new HashMap<String, BigDecimal>();
-		final List<TransferenciaUsuario> lista;
+		final List<TransferenciaUsuarioBase> lista;
 
 		var ano = Extra.parseInteger(req.getParameter("ano"));
 
@@ -62,15 +63,15 @@ public class Grafico extends HttpServlet {
 
 			if (mes != null) {
 
-				lista = TransferenciaUsuarioDAO.despesaListarPorMes(usuario.id, ano, mes);
+				lista = TransferenciaUsuarioDAO.listarDespesasMensal(usuario.id, ano, mes);
 
 			} else {
 
-				lista = TransferenciaUsuarioDAO.despesaListarPorAno(usuario.id, ano);
+				lista = TransferenciaUsuarioDAO.listarDespesasAnual(usuario.id, ano);
 
 			}
 		} else {
-			lista = TransferenciaUsuarioDAO.despesaListar(usuario.id);
+			lista = TransferenciaUsuarioDAO.listarDespesas(usuario.id);
 		}
 
 		lista.forEach(despesa -> {
@@ -86,7 +87,7 @@ public class Grafico extends HttpServlet {
 
 	private static String receitaTrata(HttpServletRequest req, Usuario usuario) {
 		var json = new HashMap<String, BigDecimal>();
-		final List<TransferenciaUsuario> lista;
+		final List<TransferenciaUsuarioBase> lista;
 
 		var ano = Extra.parseInteger(req.getParameter("ano"));
 
@@ -96,15 +97,15 @@ public class Grafico extends HttpServlet {
 
 			if (mes != null) {
 
-				lista = TransferenciaUsuarioDAO.receitaListarPorMes(usuario.id, ano, mes);
+				lista = TransferenciaUsuarioDAO.listarReceitasMensal(usuario.id, ano, mes);
 
 			} else {
 
-				lista = TransferenciaUsuarioDAO.receitaListarPorAno(usuario.id, ano);
+				lista = TransferenciaUsuarioDAO.listarReceitasAnual(usuario.id, ano);
 
 			}
 		} else {
-			lista = TransferenciaUsuarioDAO.receitaListar(usuario.id);
+			lista = TransferenciaUsuarioDAO.listarReceitas(usuario.id);
 		}
 
 		lista.forEach(receita -> {

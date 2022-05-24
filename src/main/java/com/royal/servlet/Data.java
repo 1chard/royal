@@ -112,7 +112,7 @@ public class Data extends HttpServlet {
 
 			var mes = Integer.parseInt(req.getParameter("mes"));
 			var ano = Integer.parseInt(req.getParameter("ano"));
-			var categorias = Extra.orDefault(req.getParameterValues("cat"), new String[0]);
+//			var categorias = Extra.orDefault(req.getParameterValues("cat"), new String[0]);
 
 			TransferenciaUsuarioDAO.listarMensal(pessoa.id, ano, mes).forEach(despesa -> lista.add(
 				new JsonObject()
