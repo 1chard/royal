@@ -76,6 +76,27 @@ public class UsuarioDAO {
 
     }
     
+    public static Usuario buscar(int id){
+
+	try {
+	    var set = Sistema.BANCO.query("SELECT * from tblUsuario where idUsuario = ?;", id);
+	    
+	    return set.next() ?
+		    new Usuario(
+			    Sistema.DESENCRIPTA.decrypt(set.getString("nome")),
+			    Sistema.DESENCRIPTA.decrypt(set.getString("email")),
+			    Sistema.DESENCRIPTA.decrypt(set.getString("senha")), 
+			    set.getBoolean("duasetapas"),
+			    set.getString("foto"),
+			    set.getInt("idUsuario")
+		    ):
+		    null;
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
+
+    }
+    
     public static boolean editarSenha(String email, String novaSenha){
 	try {
 	    Sistema.BANCO.run("UPDATE tblUsuario SET senha=? where email=?;", 

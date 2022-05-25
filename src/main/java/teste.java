@@ -1,6 +1,7 @@
 
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Random;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -12,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 public class teste{
     public static void main(String[] args) {
-	System.out.println("http?//".substring(2));
+	
     }
 }
 

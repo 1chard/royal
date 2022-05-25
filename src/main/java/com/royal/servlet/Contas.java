@@ -38,9 +38,6 @@ public class Contas extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	resp.setContentType("application/json");
-	resp.setHeader("Access-Control-Allow-Origin", "*");
-	
 	int httpStatus;
 	Status status;
 	var response = new HashMap<String, Object>();
@@ -48,12 +45,13 @@ public class Contas extends HttpServlet {
 	try {
 	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 	    
-	    final var email = json.get("email");
-	    final var senha = json.get("senha");
-	    final var manterConectado = json.get("manter");
+	    final var email = json.get("email").mustBe(ValueType.STRING).asString();
+	    final var senha = json.get("senha").mustBe(ValueType.STRING).asString();
+	    final var manterConectado = json.get("manter").mustBe(ValueType.BOOLEAN).asBoolean();
 	    
-	    if(email.valueType() == ValueType.STRING && senha.valueType() == ValueType.STRING && manterConectado.valueType() == ValueType.BOOLEAN){
-		final var pessoa = UsuarioDAO.buscar(email.asString(), senha.asString());		
+	   
+		final var pessoa = UsuarioDAO.buscar(email, senha);
+		
 		
 		if(pessoa != null){
 		    
@@ -68,11 +66,14 @@ public class Contas extends HttpServlet {
 		    sessao.sessoes.add(req.getSession(true));
 		    sessao.usuario = pessoa;
 		    
+		    Sistema.PESSOAS.put(token, sessao);
+		    
 		    response.put("found", true);
 		    response.put("token", token);
 		    
-		Sistema.PESSOAS.put(token, sessao);
-		    
+		    if(manterConectado){
+			AutoLogin.ativarAutoLogin(token, pessoa.id);
+		    }
 		    
 		    httpStatus = 200;
 		} else {
@@ -82,10 +83,10 @@ public class Contas extends HttpServlet {
 		
 		
 		status = Status.OK;
-	    } else {
-		httpStatus = 400;
-		status = Status.CAMPO_INVALIDO;
-	    }
+
+//		httpStatus = 400;
+//		status = Status.CAMPO_INVALIDO;
+	    
 	    
 	} catch (JsonException e) {
 	    status = Status.JSON_INVALIDO;

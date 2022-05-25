@@ -42,7 +42,7 @@ public class DespesaTratador {
 								usuario.id,
 								json.get("idCategoria").mustBe(ValueType.NUMBER).asInt(),
 								null,
-								null,
+								json.get("anexo").asString(),
 								json.get("observacao").asString(),
 								nomeFrequenciaString != null ? Frequencia.valueOf(nomeFrequenciaString) : null,
 								json.get("totalParcelas").asInt()
