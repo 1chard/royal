@@ -13,15 +13,11 @@ import java.util.Objects;
  * @author richard
  */
 public abstract class SQL implements AutoCloseable {
-	protected abstract Connection connection();
-	
-	public synchronized boolean run(String sql, Object... fields) throws SQLException {
-			var stmt = connection().prepareStatement(sql);
-			
-			SQLHelperTreatMethods.marks(stmt, fields);
-
-			return stmt.execute();
+	@Override
+	public synchronized void close() throws Exception {
+		connection().close();
 	}
+	
 	
 	public synchronized ResultSet query(String sql, Object... fields) throws SQLException {
 			var stmt = connection().prepareStatement(sql);
@@ -29,6 +25,13 @@ public abstract class SQL implements AutoCloseable {
 			SQLHelperTreatMethods.marks(stmt, fields);
 
 			return stmt.executeQuery();
+	}
+	public synchronized boolean run(String sql, Object... fields) throws SQLException {
+		var stmt = connection().prepareStatement(sql);
+		
+		SQLHelperTreatMethods.marks(stmt, fields);
+		
+		return stmt.execute();
 	}
 	
 	public synchronized int update(String sql, Object... fields) throws SQLException {
@@ -39,11 +42,7 @@ public abstract class SQL implements AutoCloseable {
 			return stmt.executeUpdate();
 
 	}
-
-	@Override
-	public synchronized void close() throws Exception {
-		connection().close();
-	}
+	protected abstract Connection connection();
 
 	private static class SQLHelperTreatMethods {
 
@@ -51,36 +50,39 @@ public abstract class SQL implements AutoCloseable {
 			for (int i = 0, length = fields.length; i < length;) {
 				final Object obj = fields[i++];
 
-				if (obj instanceof String) {
-					stmt.setString(i, (String) obj);
-				} else if (obj instanceof Double) {
-					stmt.setDouble(i, (Double) obj);
-				} else if (obj instanceof Float) {
-					stmt.setFloat(i, (Float) obj);
-				} else if (obj instanceof Integer) {
-					stmt.setInt(i, (Integer) obj);
-				} else if (obj instanceof Long) {
-					stmt.setLong(i, (Long) obj);
-				} else if (obj instanceof Byte) {
-					stmt.setByte(i, (Byte) obj);
-				} else if (obj instanceof Short) {
-					stmt.setShort(i, (Short) obj);
-				} else if (obj instanceof Boolean) {
-					stmt.setBoolean(i, (Boolean) obj);
-				} else if (obj instanceof java.sql.Time) {
-					stmt.setTime(i, (java.sql.Time) obj);
-				} else if (obj instanceof java.sql.Timestamp) {
-					stmt.setTimestamp(i, (java.sql.Timestamp) obj);
-				} else if (obj instanceof java.sql.Date) {
-					stmt.setDate(i, (java.sql.Date) obj);
-				} else if (obj instanceof BigDecimal) {
-					stmt.setBigDecimal(i, (BigDecimal) obj);
+				if (obj instanceof String string) {
+					stmt.setString(i, string);
+				} else if (obj instanceof Double double1) {
+					stmt.setDouble(i, double1);
+				} else if (obj instanceof Float float1) {
+					stmt.setFloat(i, float1);
+				} else if (obj instanceof Integer integer) {
+					stmt.setInt(i, integer);
+				} else if (obj instanceof Long long1) {
+					stmt.setLong(i, long1);
+				} else if (obj instanceof Byte byte1) {
+					stmt.setByte(i, byte1);
+				} else if (obj instanceof Short short1) {
+					stmt.setShort(i, short1);
+				} else if (obj instanceof Boolean boolean1) {
+					stmt.setBoolean(i, boolean1);
+				} else if (obj instanceof java.sql.Time time) {
+					stmt.setTime(i, time);
+				} else if (obj instanceof java.sql.Timestamp timestamp) {
+					stmt.setTimestamp(i, timestamp);
+				} else if (obj instanceof java.sql.Date date) {
+					stmt.setDate(i, date);
+				} else if (obj instanceof BigDecimal bigDecimal) {
+					stmt.setBigDecimal(i, bigDecimal);
 				} else if (obj == null) {
 					stmt.setObject(i, null);
 				} else {
 					throw new RuntimeException("WTF: tipo " + obj.getClass().getName() + ": não aceito essa porra");
 				}
 			}
+		}
+
+		private SQLHelperTreatMethods() {
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.royal;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  * @author suporte
  */
 public class MapBuilder {
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
     
     public MapBuilder add(String key, Object value){
 	map.put(key, value);
@@ -16,7 +17,7 @@ public class MapBuilder {
     }
     
     public Map<String, Object> build(){
-	return map;
+	return Collections.unmodifiableMap(map);
     }
 }
 

@@ -34,8 +34,8 @@ import java.util.regex.Pattern;
  */
 @WebServlet(name = "Resetar", urlPatterns = {"/resetar"})
 public class Resetar extends HttpServlet {
-    private final static NumberFormat FORMATTER = new DecimalFormat("000000");
     private final static Set<String> EMAILS_ATIVOS = Collections.synchronizedSet(new HashSet<>());
+	private final static NumberFormat FORMATTER = new DecimalFormat("000000");
     private final static Pattern PADRAO = Pattern.compile("^[\\w\\d]+@.+$");
 
     @Override

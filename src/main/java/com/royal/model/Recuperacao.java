@@ -7,10 +7,10 @@ import java.sql.Timestamp;
  * @author suporte
  */
 public class Recuperacao {
-    public Integer idRecuperacao;
     public int codigo;
-    public int idUsuario;
     public java.sql.Timestamp data;
+	public Integer idRecuperacao;
+	public int idUsuario;
 
     public Recuperacao( int codigo, int idUsuario, Timestamp data, Integer idRecuperacao) {
 	this.idRecuperacao = idRecuperacao;

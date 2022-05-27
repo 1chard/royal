@@ -31,10 +31,6 @@ import java.util.logging.Logger;
  */
 @WebServlet(name = "Contas", urlPatterns = {"/contas"})
 public class Contas extends HttpServlet {
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -97,6 +93,10 @@ public class Contas extends HttpServlet {
 	response.put("status", status.codigo);
 	JsonStream.serialize(response, resp.getOutputStream());
     }
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	}
     
     
     

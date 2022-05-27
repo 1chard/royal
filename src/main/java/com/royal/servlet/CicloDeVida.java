@@ -16,9 +16,6 @@ import java.io.PrintWriter;
 
 public class CicloDeVida extends HttpServlet {
 
-    @Override
-    public void init() throws ServletException {
-    }
     
     
     @Override
@@ -30,4 +27,7 @@ public class CicloDeVida extends HttpServlet {
 	}
 
     }
+	@Override
+	public void init() throws ServletException {
+	}
 }

@@ -60,4 +60,7 @@ public class DespesaTratador {
 
 		}
 	}
+
+	private DespesaTratador() {
+	}
 }

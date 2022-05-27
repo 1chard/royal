@@ -71,4 +71,7 @@ public class Mail {
 			}
 		});
 	}
+
+	private Mail() {
+	}
 }

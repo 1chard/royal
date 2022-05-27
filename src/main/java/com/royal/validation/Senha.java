@@ -3,10 +3,7 @@ package com.royal.validation;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-/**
- *
- * @author richard
- */
+
 public class Senha {
 	public static boolean valida(String senha){
 		return (senha.length() >= 8) && Arrays.asList(charValidos).containsAll(Arrays.asList(senha.toCharArray()));
@@ -84,5 +81,8 @@ public class Senha {
 	
 	public static boolean isCaractereEspecial(char ch){
 		return ch == ' ' || ch == '!'|| ch == '"'|| ch == '#'|| ch == '$'|| ch == '%'|| ch == '&'|| ch == '\''|| ch == '('|| ch == ')'|| ch == '*'|| ch == '+'|| ch == ','|| ch == '-'|| ch == '.'|| ch == '/'|| ch == ':'|| ch == ';'|| ch == '<'|| ch == '='|| ch == '>'|| ch == '?'|| ch == '@'|| ch == '['|| ch == '\\'|| ch == ']'|| ch == '^'|| ch == '_'|| ch == '{'|| ch == '|'|| ch == '}'|| ch == '~'|| ch == '|'|| ch == '¨'|| ch == '°'|| ch == '“'|| ch == '”';
+	}
+
+	private Senha() {
 	}
 }

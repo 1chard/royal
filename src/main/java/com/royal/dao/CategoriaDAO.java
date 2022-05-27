@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class CategoriaDAO {
 
-	private CategoriaDAO() {
-	}
 
 	public static boolean inserir(Categoria categoria) {
 	    try {
@@ -59,6 +57,8 @@ public class CategoriaDAO {
 	    } catch (SQLException ex) {
 		throw new RuntimeException(ex);
 	    }
+	}
+	private CategoriaDAO() {
 	}
 
 }

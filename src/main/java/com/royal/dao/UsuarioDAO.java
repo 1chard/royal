@@ -9,10 +9,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author suporte
- */
+
 public class UsuarioDAO {
     public static boolean gravar(Usuario user){
 	try {
@@ -108,4 +105,7 @@ public class UsuarioDAO {
 	    throw new RuntimeException(ex);
 	}
     }
+
+	private UsuarioDAO() {
+	}
 }

@@ -11,9 +11,12 @@ import java.util.Objects;
  */
 
 public class Usuario {
-    public String nome, email, senha, foto;
     public boolean duasetapas;
+	public String email;
+	public String foto;
     public Integer id;
+	public String nome;
+	public String senha;
 
     public Usuario(String nome, String email, String senha, boolean duasetapas, String foto, Integer id) {
 	this.nome = nome;

@@ -8,20 +8,19 @@ import java.sql.Date;
  * @author suporte
  */
 public class TransferenciaUsuario {
-
-	public Integer idTransferenciaUsuario;
-	public BigDecimal valor;
-	public java.sql.Date data;
 	public String anexo;
+	public java.sql.Date data;
 	public String descricao;
-	public String observacao;
 	public boolean favorito;
-	public boolean parcelada;
 	public boolean fixa;
 	public Frequencia frequencia;
-	public int idUsuario;
 	public int idCategoria;
+	public Integer idTransferenciaUsuario;
+	public int idUsuario;
+	public String observacao;
+	public boolean parcelada;
 	public int parcelas;
+	public BigDecimal valor;
 
 	public TransferenciaUsuario(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria) {
 		this.valor = valor;
@@ -59,20 +58,19 @@ public class TransferenciaUsuario {
 	}
 
 	public static class Builder {
-
-		private Integer idTransferenciaUsuario;
-		private final BigDecimal valor;
-		private final Date data;
 		private String anexo;
-		private int parcelas;
+		private final Date data;
 		private final String descricao;
-		private String observacao;
 		private final boolean favorito;
 		private final boolean fixa;
 		private Frequencia frequencia;
-		private final int idUsuario;
 		private final int idCategoria;
+		private Integer idTransferenciaUsuario;
+		private final int idUsuario;
+		private String observacao;
 		private final boolean parcelada;
+		private int parcelas;
+		private final BigDecimal valor;
 
 		public Builder(BigDecimal valor, Date data, String descricao, boolean favorito, boolean parcelada, boolean fixa, int idUsuario, int idCategoria) {
 			this.valor = valor;
@@ -84,10 +82,8 @@ public class TransferenciaUsuario {
 			this.idUsuario = idUsuario;
 			this.idCategoria = idCategoria;
 		}
-
-		public Builder setIdTransferenciaUsuario(Integer idTransferenciaUsuario) {
-			this.idTransferenciaUsuario = idTransferenciaUsuario;
-			return this;
+		public TransferenciaUsuario build() {
+			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, frequencia, parcelas);
 		}
 
 		public Builder setAnexo(String anexo) {
@@ -95,13 +91,17 @@ public class TransferenciaUsuario {
 			return this;
 		}
 
-		public Builder setObservacao(String observacao) {
-			this.observacao = observacao;
-			return this;
-		}
 
 		public Builder setFrequencia(Frequencia frequencia) {
 			this.frequencia = frequencia;
+			return this;
+		}
+		public Builder setIdTransferenciaUsuario(Integer idTransferenciaUsuario) {
+			this.idTransferenciaUsuario = idTransferenciaUsuario;
+			return this;
+		}
+		public Builder setObservacao(String observacao) {
+			this.observacao = observacao;
 			return this;
 		}
 		
@@ -110,9 +110,6 @@ public class TransferenciaUsuario {
 			return this;
 		}
 
-		public TransferenciaUsuario build() {
-			return new TransferenciaUsuario(valor, data, descricao, favorito, parcelada, fixa, idUsuario, idCategoria, idTransferenciaUsuario, anexo, observacao, frequencia, parcelas);
-		}
 
 	}
 

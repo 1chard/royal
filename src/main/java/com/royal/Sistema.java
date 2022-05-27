@@ -23,10 +23,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author richard
- */
+
 @WebServlet(loadOnStartup = 1)
 public class Sistema{
 
@@ -81,7 +78,10 @@ public class Sistema{
     
     public static class Sessao {
 	public Map<String, Object> objetos = new HashMap<>();
-	public Usuario usuario;
 	public List<jakarta.servlet.http.HttpSession> sessoes = new ArrayList<>();
+	public Usuario usuario;
     }
+
+	private Sistema() {
+	}
 }

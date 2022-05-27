@@ -8,11 +8,11 @@ import java.sql.Date;
  * @author richard
  */
 public class TransferenciaUsuarioParcela {
-	public Integer idTransferenciaUsuarioParcela;
-	public BigDecimal valor;
 	public java.sql.Date data;
 	public int idTransferenciaUsuario;
+	public Integer idTransferenciaUsuarioParcela;
 	public int idUsuario;
+	public BigDecimal valor;
 
 	public TransferenciaUsuarioParcela(Integer idTransferenciaUsuarioParcela, BigDecimal valor, Date data, int idTransferenciaUsuario, int idUsuario) {
 		this.idTransferenciaUsuarioParcela = idTransferenciaUsuarioParcela;

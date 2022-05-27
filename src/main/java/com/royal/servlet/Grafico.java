@@ -27,29 +27,6 @@ import java.util.List;
 @WebServlet(name = "Grafico", urlPatterns = {"/grafico/*"})
 public class Grafico extends HttpServlet {
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var args = API.parameters(req);
-
-		String token;
-		if (args.length > 0 && Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
-			var point = Sistema.PESSOAS.get(token);
-
-			resp.getWriter().append(switch (args[0]) {
-				case "despesa" ->
-					despesaTrata(req, point.usuario);
-				case "receita" ->
-					receitaTrata(req, point.usuario);
-				default -> {
-					resp.sendError(400);
-					yield "";
-				}
-			}).flush();
-
-		} else {
-			resp.sendError(404);
-		}
-	}
 
 	private static String despesaTrata(HttpServletRequest req, Usuario usuario) {
 		var json = new HashMap<String, BigDecimal>();
@@ -117,6 +94,29 @@ public class Grafico extends HttpServlet {
 		});
 
 		return JsonStream.serialize(json);
+	}
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var args = API.parameters(req);
+		
+		String token;
+		if (args.length > 0 && Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
+			var point = Sistema.PESSOAS.get(token);
+			
+			resp.getWriter().append(switch (args[0]) {
+				case "despesa" ->
+						despesaTrata(req, point.usuario);
+				case "receita" ->
+						receitaTrata(req, point.usuario);
+				default -> {
+					resp.sendError(400);
+					yield "";
+				}
+			}).flush();
+			
+		} else {
+			resp.sendError(404);
+		}
 	}
 
 }

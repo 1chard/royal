@@ -57,4 +57,7 @@ public class ReceitaTratador {
 	    }
 	}
     }
+
+	private ReceitaTratador() {
+	}
 }

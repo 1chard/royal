@@ -515,6 +515,54 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
+create procedure saldo_liquido_geral(in id int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND data <= now();
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND data <= now();
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure saldo_liquido_anual(in id int unsigned, in ano int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND data <= now() AND year(data) = ano;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND data <= now() AND year(data) = ano;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+create procedure saldo_liquido_mensal(in id int unsigned, in ano int unsigned, in mes int unsigned)
+BEGIN
+	declare retorno DECIMAL(14 , 2 );
+
+	 SELECT ifnull(sum(valor), 0)
+     INTO retorno
+     FROM tblTransferenciaUsuario 
+     WHERE idUsuario = id AND parcelada = false AND data <= now() AND year(data) = ano AND month(data) = mes;
+
+    select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
+    from tblTransferenciaUsuarioParcela
+    where idUsuario = id AND data <= now() AND year(data) = ano AND month(data) = mes;
+END $$
+DELIMITER ;
+
+DELIMITER $$
 create procedure extrato_geral(in id int unsigned)
 BEGIN
 	SELECT 

@@ -8,10 +8,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author suporte
- */
+
 public class RecuperacaoDAO {
     public static Integer pedir(String email){
 	try { 
@@ -57,4 +54,7 @@ public class RecuperacaoDAO {
 	    throw new RuntimeException(ex);
 	}
     }
+
+	private RecuperacaoDAO() {
+	}
 }

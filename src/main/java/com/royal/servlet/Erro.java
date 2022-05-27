@@ -18,11 +18,6 @@ import java.io.StringWriter;
 @WebServlet(name = "Erro", urlPatterns = {"/erro"})
 public class Erro extends HttpServlet {
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
-		resp.getWriter().append(string).flush();
-	}
 
 	public static String enviador(Throwable t) {
 		StringWriter sw = new StringWriter();
@@ -33,6 +28,11 @@ public class Erro extends HttpServlet {
 		Mail.enviar(t.getClass().getName(), pst, "richardcutrim01@gmail.com");
 
 		return pst;
+	}
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
+		resp.getWriter().append(string).flush();
 	}
 
 }

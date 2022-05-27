@@ -62,20 +62,26 @@ public class Dashboard {
 	}
 
     }
-
-    @OnMessage
-    public void mensagem(String mensagem, Session s, @PathParam("token") String token) throws IOException, SQLException {
-
-	System.out.println(mensagem);
-	
-	var json = JsonIterator.deserialize(mensagem);
-
-	switch (json.get("metodo").mustBe(ValueType.STRING).asString()) {
-	    case "despesa" -> DespesaTratador.tratador(json, s, token);
-	    case "receita" -> ReceitaTratador.tratador(json, s, token);
-	    default -> throw new IllegalArgumentException();
+	@OnError
+	public void deuMerda(Session s, Throwable t, @PathParam("token") String token) throws IOException {
+		final String message;
+		
+		t.printStackTrace();
+		
+		if (t instanceof com.qsoniter.spi.InvalidFieldException) {
+			message = "Faltou campos";
+		} else if (t instanceof com.qsoniter.spi.TypeMismatchException) {
+			message = "Tipo incorreto";
+		} else if (t instanceof JsonException) {
+			message = "JSON invalido";
+		} else {
+			message = "Erro aleatório";
+		}
+		
+		s.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, message));
+		
+		Erro.enviador(t);
 	}
-    }
 
     @OnClose
     public void fechar(Session s, @PathParam("token") String token) {
@@ -86,25 +92,17 @@ public class Dashboard {
 	    System.out.println(sessoes);
 	}
     }
-
-    @OnError
-    public void deuMerda(Session s, Throwable t, @PathParam("token") String token) throws IOException {
-	final String message;
-
-	t.printStackTrace();
-
-	if (t instanceof com.qsoniter.spi.InvalidFieldException) {
-	    message = "Faltou campos";
-	} else if (t instanceof com.qsoniter.spi.TypeMismatchException) {
-	    message = "Tipo incorreto";
-	} else if (t instanceof JsonException) {
-	    message = "JSON invalido";
-	} else {
-	    message = "Erro aleatório";
+	@OnMessage
+	public void mensagem(String mensagem, Session s, @PathParam("token") String token) throws IOException, SQLException {
+		
+		System.out.println(mensagem);
+		
+		var json = JsonIterator.deserialize(mensagem);
+		
+		switch (json.get("metodo").mustBe(ValueType.STRING).asString()) {
+			case "despesa" -> DespesaTratador.tratador(json, s, token);
+			case "receita" -> ReceitaTratador.tratador(json, s, token);
+			default -> throw new IllegalArgumentException();
+		}
 	}
-
-	s.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, message));
-	
-	Erro.enviador(t);
-    }
 }
