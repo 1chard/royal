@@ -1,5 +1,6 @@
 package com.royal.servlet;
 
+import com.royal.API;
 import com.royal.Sistema;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -16,8 +17,7 @@ import java.nio.file.Paths;
  *
  * @author suporte
  */
-@WebServlet(name = "Upload", urlPatterns = {"/upload"})
-@MultipartConfig(fileSizeThreshold = 0, maxFileSize = 1024, maxRequestSize = 1024)
+@WebServlet(name = "Upload", urlPatterns = {"/upload/*"})
 public class Upload extends HttpServlet {
 
     @Override
@@ -43,5 +43,18 @@ public class Upload extends HttpServlet {
 	    resp.sendError(404);
 	}
     }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	var args = API.parameters(req);
+	
+	if(args.length > 0){
+	    Files.copy(Paths.get("/Users/suporte/Desktop/imagem", args[0]), resp.getOutputStream());
+	}
+	
+	
+    }
+    
+    
 
 }

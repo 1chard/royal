@@ -96,11 +96,22 @@ public class UsuarioDAO {
     
     public static boolean editarSenha(String email, String novaSenha){
 	try {
-	    Sistema.BANCO.run("UPDATE tblUsuario SET senha=? where email=?;", 
+	    return Sistema.BANCO.update("UPDATE tblUsuario SET senha=? where email=?;", 
 		    Sistema.ENCRIPTA.encrypt(novaSenha),
 		    Sistema.ENCRIPTA.encrypt(email)
-	    );
-	    return true;
+	    ) > 0;
+	} catch (SQLException ex) {
+	    throw new RuntimeException(ex);
+	}
+    }
+    
+    public static boolean editarNomeDuasEtapas(int idusuario, String nome, boolean duasetapas){
+	try {
+	    return Sistema.BANCO.update("UPDATE tblUsuario SET nome=?, duasetapas=? where idUsuario=?;", 
+		    Sistema.ENCRIPTA.encrypt(nome),
+		    duasetapas,
+		    idusuario
+	    ) > 0;
 	} catch (SQLException ex) {
 	    throw new RuntimeException(ex);
 	}

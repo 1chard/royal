@@ -832,3 +832,4 @@ FROM
     tblTransferenciaUsuario ON tblTransferenciaUsuarioParcela.idUsuario = id AND tblTransferenciaUsuarioParcela.valor < 0 AND year(tblTransferenciaUsuarioParcela.data) = ano AND month(tblTransferenciaUsuarioParcela.data) = mes AND tblTransferenciaUsuario.idTransferenciaUsuario = tblTransferenciaUsuarioParcela.idTransferenciaUsuario; 
 END $$
 DELIMITER ;
+

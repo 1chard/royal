@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Mac;
 
 /**
  *
@@ -39,7 +40,7 @@ public class AutoLogin extends HttpServlet {
 	
 	static{
 		try {
-			var query = Sistema.BANCO.query("select * from token,idUsuario from autoLogin;");
+			var query = Sistema.BANCO.query("select token, idUsuario from autoLogin;");
 			
 			while (query.next()) {
 				MAP_MAP.put(query.getString("token"), query.getInt("idUsuario"));	
@@ -54,7 +55,10 @@ public class AutoLogin extends HttpServlet {
 	public static void ativarAutoLogin(String token, int idUsuario){
 	    try {
 		Sistema.BANCO.run("INSERT INTO autoLogin(token, idUsuario) values(?, ?);", token, idUsuario);
-		MAP_MAP.put(token, idUsuario);
+		
+		synchronized (AutoLogin.class) {
+		    MAP_MAP.put(token, idUsuario);
+		}
 	    } catch (SQLException ex) {
 		throw new RuntimeException(ex);
 	    }
@@ -65,8 +69,11 @@ public class AutoLogin extends HttpServlet {
 		Status status;
 		var resposta = new JsonObject();
 		
+		   System.out.println(MAP_MAP);
+		
 		try{
 			var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
+			
 			
 			
 			String token = json.get("token").mustBe(ValueType.STRING).asString();
@@ -99,7 +106,8 @@ public class AutoLogin extends HttpServlet {
 		
 		resp.setStatus(httpStatus);
 		resposta.put("status", status.codigo);
-		JsonStream.serialize(resposta, resp.getOutputStream());
+		
+		resp.getWriter().append(JsonStream.serialize(resposta)).flush();
 	}
 
 	

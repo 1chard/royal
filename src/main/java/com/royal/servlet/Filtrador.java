@@ -34,7 +34,6 @@ public class Filtrador implements Filter {
 	res.setHeader("Access-Control-Allow-Headers", "*");
 	
 	if (semaforo.tryAcquire()) {
-		res.setHeader("Content-Type", "application/json");
 		
 	    System.out.println(semaforo.availablePermits());
 	    System.out.println(req.getRequestURL());
