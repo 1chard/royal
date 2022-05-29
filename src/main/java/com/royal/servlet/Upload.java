@@ -32,7 +32,7 @@ public class Upload extends HttpServlet {
 
 	    do {
 		nome = nome.substring(0, nome.lastIndexOf('_')) + "_" + i;
-		path = Paths.get("/Users/suporte/Desktop/imagem", nome);
+		path = Paths.get(Sistema.PASTA, nome);
 	    } while (Files.isRegularFile(path));
 
 	    Files.copy(input, path);
@@ -49,7 +49,7 @@ public class Upload extends HttpServlet {
 	var args = API.parameters(req);
 	
 	if(args.length > 0){
-	    Files.copy(Paths.get("/Users/suporte/Desktop/imagem", args[0]), resp.getOutputStream());
+	    Files.copy(Paths.get(Sistema.PASTA, args[0]), resp.getOutputStream());
 	}
 	
 	

@@ -32,6 +32,7 @@ public class Sistema{
     private static final String USER;
     private static final String PASSWORD;
     private static final String CHAVE;
+    public static final String PASTA;
 	
 	static {
 		switch (System.getProperty("user.name")){
@@ -41,6 +42,7 @@ public class Sistema{
 				USER = "richard";
 				PASSWORD = "123";
 				CHAVE = "pOrQuEaTeRrAéPlAnA";
+				PASTA = "/home/richard/Área de trabalho/imagem2";
 			}
 			case "suporte" ->  {
 				HOST = "localhost:3306";
@@ -48,6 +50,7 @@ public class Sistema{
 				USER = "root";
 				PASSWORD = "12345678";
 				CHAVE = "cumonista";
+				PASTA = "/Users/suporte/Desktop/imagem";
 			}
 			default ->  {
 				HOST = "10.5.60.39:3306";
@@ -55,6 +58,7 @@ public class Sistema{
 				USER = "royal";
 				PASSWORD = "royal";
 				CHAVE = "alemanhaSemprePerde";
+				PASTA = null;
 			}
 		}
 		
