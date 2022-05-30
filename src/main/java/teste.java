@@ -1,4 +1,5 @@
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.Random;
@@ -13,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 
 public class teste{
     public static void main(String[] args) {
-	
+	System.out.println(new BigDecimal(2.58f).toString());
     }
 }
 

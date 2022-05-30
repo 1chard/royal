@@ -19,7 +19,7 @@ import java.util.List;
 public class TransferenciaUsuarioDAO {
 	public static boolean desfavoritar(int id) {
 		try {
-			return Sistema.BANCO.update("update tblTransferenciaUsuario SET favorito = false WHERE idTransferenciaUsuario",
+			return Sistema.BANCO.update("update tblTransferenciaUsuario SET favorito = false WHERE idTransferenciaUsuario = ?;",
 				id
 			) > 0;
 			
