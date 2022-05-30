@@ -34,175 +34,190 @@ import java.util.Date;
 @WebServlet(name = "Dashboard", urlPatterns = {"/data/*"})
 public class Data extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	var args = API.parameters(req);
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var args = API.parameters(req);
 
-	String token;
+		String token;
 
-	if (Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
-	    var pessoa = Sistema.PESSOAS.get(token).usuario;
+		if (Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
+			var pessoa = Sistema.PESSOAS.get(token).usuario;
 
-	    var retornos = new Object[args.length];
+			var retornos = new Object[args.length];
 
-	    for (int i = 0, length = args.length; i < length; i++) {
-		final Object json;
+			for (int i = 0, length = args.length; i < length; i++) {
+				final Object json;
 
-		switch (args[i]) {
-		    case "saldo" -> {
-			final BigDecimal despesa;
-			final BigDecimal receita;
+				switch (args[i]) {
+					case "saldo" -> {
+						final BigDecimal despesa;
+						final BigDecimal receita;
 
-			var ano = Extra.parseInteger(req.getParameter("ano"));
+						var ano = Extra.parseInteger(req.getParameter("ano"));
 
-			if (ano != null) {
+						if (ano != null) {
 
-			    var mes = Extra.parseInteger(req.getParameter("mes"));
+							var mes = Extra.parseInteger(req.getParameter("mes"));
 
-			    if (mes != null) {
-				despesa = TransferenciaUsuarioDAO.despesaLiquidaMensal(pessoa.id, ano, mes);
-				receita = TransferenciaUsuarioDAO.receitaLiquidaMensal(pessoa.id, ano, mes);
-			    } else {
-				despesa = TransferenciaUsuarioDAO.despesaLiquidaAnual(pessoa.id, ano);
-				receita = TransferenciaUsuarioDAO.receitaLiquidaAnual(pessoa.id, ano);
-			    }
-			} else {
-			    despesa = TransferenciaUsuarioDAO.despesaLiquidaGeral(pessoa.id);
-			    receita = TransferenciaUsuarioDAO.receitaLiquidaGeral(pessoa.id);
-			}
+							if (mes != null) {
+								despesa = TransferenciaUsuarioDAO.despesaLiquidaMensal(pessoa.id, ano, mes);
+								receita = TransferenciaUsuarioDAO.receitaLiquidaMensal(pessoa.id, ano, mes);
+							} else {
+								despesa = TransferenciaUsuarioDAO.despesaLiquidaAnual(pessoa.id, ano);
+								receita = TransferenciaUsuarioDAO.receitaLiquidaAnual(pessoa.id, ano);
+							}
+						} else {
+							despesa = TransferenciaUsuarioDAO.despesaLiquidaGeral(pessoa.id);
+							receita = TransferenciaUsuarioDAO.receitaLiquidaGeral(pessoa.id);
+						}
 
-			json = new JsonObject().add("despesa", despesa)
-				.add("receita", receita)
-				.add("saldo", receita.subtract(despesa));
-		    }
-		    case "saldo-geral" -> {
-			json = TransferenciaUsuarioDAO.saldoLiquidoGeral(pessoa.id);
-		    }
-		    case "categorias" -> {
-			var objeto = new JsonObject();
+						json = new JsonObject().add("despesa", despesa)
+								.add("receita", receita)
+								.add("saldo", receita.subtract(despesa));
+					}
+					case "saldo-geral" -> {
+						json = TransferenciaUsuarioDAO.saldoLiquidoGeral(pessoa.id);
+					}
+					case "categorias" -> {
+						var objeto = new JsonObject();
 
-			objeto.add("despesas", Categoria.DESPESAS);
-			objeto.add("receitas", Categoria.RECEITAS);
+						objeto.add("despesas", Categoria.DESPESAS);
+						objeto.add("receitas", Categoria.RECEITAS);
 
-			json = objeto;
-		    }
-		    case "favorito" -> {
-			var lista = new JsonArray();
+						json = objeto;
+					}
+					case "favorito" -> {
+						var lista = new JsonArray();
 
-			TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesaP -> {
-			    var despesa = despesaP.first;
+						TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesaP -> {
+							var despesa = despesaP.first;
 
-			    lista.add(
-				    new JsonObject()
-					    .add("valor", despesa.valor)
-					    .add("data", despesa.data.toString())
-					    .add("anexo", despesa.anexo)
-					    .add("descricao", despesa.descricao)
-					    .add("observacao", despesa.observacao)
-					    .add("parcelada", despesa.parcelada)
-					    .add("fixa", despesa.fixa)
-					    .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
-					    .add("categoria", despesa.idCategoria)
-					    .add("parcelas", despesaP.second)
-			    );
-			});
+							lista.add(
+									new JsonObject()
+											.add("valor", despesa.valor)
+											.add("data", despesa.data.toString())
+											.add("anexo", despesa.anexo)
+											.add("descricao", despesa.descricao)
+											.add("observacao", despesa.observacao)
+											.add("parcelada", despesa.parcelada)
+											.add("fixa", despesa.fixa)
+											.add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
+											.add("categoria", despesa.idCategoria)
+											.add("parcelas", despesaP.second)
+							);
+						});
 
-			json = lista;
-		    }
-		    case "perfil" -> {
-			json = new JsonObject()
-				.add("nome", pessoa.nome)
-				.add("email", pessoa.email)
-				.add("duasetapas", pessoa.duasetapas)
-				.add("foto", pessoa.foto);
-		    }
-		    case "extrato-mes" -> {
-			var lista = new ArrayList<JsonObject>();
+						json = lista;
+					}
+					case "perfil" -> {
+						json = new JsonObject()
+								.add("nome", pessoa.nome)
+								.add("email", pessoa.email)
+								.add("duasetapas", pessoa.duasetapas)
+								.add("foto", pessoa.foto);
+					}
+					case "extrato-mes" -> {
+						var lista = new ArrayList<JsonObject>();
 
-			var mes = Integer.parseInt(req.getParameter("mes"));
-			var ano = Integer.parseInt(req.getParameter("ano"));
+						var mes = Integer.parseInt(req.getParameter("mes"));
+						var ano = Integer.parseInt(req.getParameter("ano"));
 //			var categorias = Extra.orDefault(req.getParameterValues("cat"), new String[0]);
 
-			TransferenciaUsuarioDAO.listarMensal(pessoa.id, ano, mes).forEach(despesa -> lista.add(
-				new JsonObject()
-					.add("data", despesa.data)
-					.add("valor", despesa.valor)
-					.add("categoria", despesa.idCategoria)
-					.add("descricao", despesa.descricao)
-					.add("indice", despesa.indice)
-					.add("parcelas", despesa.parcelas)
-			));
-			Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((Date) o1.get("data"))));
+						TransferenciaUsuarioDAO.listarMensal(pessoa.id, ano, mes).forEach(despesa -> lista.add(
+								new JsonObject()
+										.add("data", despesa.data)
+										.add("valor", despesa.valor)
+										.add("categoria", despesa.idCategoria)
+										.add("descricao", despesa.descricao)
+										.add("indice", despesa.indice)
+										.add("parcelas", despesa.parcelas)
+						));
+						Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((Date) o1.get("data"))));
 
-			lista.forEach(mapa -> {
-			    mapa.put("data", mapa.get("data").toString());
-			});
+						lista.forEach(mapa -> {
+							mapa.put("data", mapa.get("data").toString());
+						});
 
-			json = lista;
-		    }
-		    default -> {
-			resp.sendError(400);
-			return;
-		    }
+						json = lista;
+					}
+					default -> {
+						resp.sendError(400);
+						return;
+					}
+				}
+
+				retornos[i] = json;
+			}
+
+			if (retornos.length == 1) {
+				resp.getWriter().append(retornos[0].toString()).flush();
+			} else {
+				resp.getWriter().append(Arrays.toString(retornos)).flush();
+			}
+		} else {
+			resp.sendError(404);
 		}
-
-		retornos[i] = json;
-	    }
-
-	    if (retornos.length == 1) {
-		resp.getWriter().append(retornos[0].toString()).flush();
-	    } else {
-		resp.getWriter().append(Arrays.toString(retornos)).flush();
-	    }
-	} else {
-	    resp.sendError(404);
 	}
-    }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	var args = API.parameters(req);
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		var args = API.parameters(req);
 
-	String token;
+		String token;
 
-	if (Sistema.PESSOAS.containsKey((token = req.getParameter("k"))) && args.length > 0) {
+		if (Sistema.PESSOAS.containsKey((token = req.getParameter("k"))) && args.length > 0) {
 
-	    var pessoa = Sistema.PESSOAS.get(token).usuario;
-	    var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
+			var pessoa = Sistema.PESSOAS.get(token).usuario;
+			var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 
-	    var mensagem = new JsonObject();
-	    Status status;
-	    int httpStatus;
+			var mensagem = new JsonObject();
+			Status status;
+			int httpStatus;
 
-	    try {
-		switch (args[0]) {
-		    case "data" -> {
-			UsuarioDAO.editarNomeDuasEtapas(pessoa.id, json.get("nome").mustBe(ValueType.STRING).asString(), json.get("duasetapas").mustBe(ValueType.BOOLEAN).asBoolean());
-			    
-			status = Status.OK;
-			httpStatus = 200;
-		    }
-		    default -> {
-			status = Status.REQUISICAO_INVALIDA;
-			httpStatus = 200;
-		    }
+			try {
+				switch (args[0]) {
+					case "perfil" -> {
+						String nome = json.get("nome").mustBe(ValueType.STRING).asString();
+						boolean duasetapas = json.get("duasetapas").mustBe(ValueType.BOOLEAN).asBoolean();
+						String foto = json.get("foto").asString();
+
+						UsuarioDAO.editarNomeDuasEtapasFoto(
+								pessoa.id,
+								nome,
+								duasetapas,
+								foto
+						);
+
+						synchronized (pessoa) {
+							pessoa.nome = nome;
+							pessoa.duasetapas = duasetapas;
+							pessoa.foto = foto;
+						}
+
+						status = Status.OK;
+						httpStatus = 200;
+					}
+					default -> {
+						status = Status.REQUISICAO_INVALIDA;
+						httpStatus = 200;
+					}
+				}
+			} catch (TypeMismatchException e) {
+				status = Status.CAMPO_TIPO_INCORRETO;
+				httpStatus = 400;
+			} catch (JsonException e) {
+				status = Status.JSON_INVALIDO;
+				httpStatus = 400;
+			}
+
+			resp.setStatus(httpStatus);
+			mensagem.add("status", status.codigo);
+
+			resp.getWriter().append(mensagem.toString()).flush();
+
+		} else {
+			resp.sendError(404);
 		}
-	    } catch (TypeMismatchException e) {
-		status = Status.CAMPO_TIPO_INCORRETO;
-		httpStatus = 400;
-	    } catch (JsonException e) {
-		status = Status.JSON_INVALIDO;
-		httpStatus = 400;
-	    }
-	    
-	    resp.setStatus(httpStatus);
-	    mensagem.add("status", status.codigo);
-	    
-	    resp.getWriter().append(mensagem.toString()).flush();
-
-	} else {
-	    resp.sendError(404);
 	}
-    }
 
 }

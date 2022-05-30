@@ -105,10 +105,11 @@ public class UsuarioDAO {
 	}
     }
     
-    public static boolean editarNomeDuasEtapas(int idusuario, String nome, boolean duasetapas){
+    public static boolean editarNomeDuasEtapasFoto(int idusuario, String nome, boolean duasetapas, String foto){
 	try {
-	    return Sistema.BANCO.update("UPDATE tblUsuario SET nome=?, duasetapas=? where idUsuario=?;", 
+	    return Sistema.BANCO.update("UPDATE tblUsuario SET nome=?, foto=?, duasetapas=? where idUsuario=?;", 
 		    Sistema.ENCRIPTA.encrypt(nome),
+			foto,
 		    duasetapas,
 		    idusuario
 	    ) > 0;
