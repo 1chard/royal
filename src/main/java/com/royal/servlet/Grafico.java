@@ -104,10 +104,8 @@ public class Grafico extends HttpServlet {
 			var point = Sistema.PESSOAS.get(token);
 			
 			resp.getWriter().append(switch (args[0]) {
-				case "despesa" ->
-						despesaTrata(req, point.usuario);
-				case "receita" ->
-						receitaTrata(req, point.usuario);
+				case "despesa" -> despesaTrata(req, point.usuario);
+				case "receita" -> receitaTrata(req, point.usuario);
 				default -> {
 					resp.sendError(400);
 					yield "";

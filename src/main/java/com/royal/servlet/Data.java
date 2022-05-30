@@ -14,6 +14,7 @@ import com.royal.Status;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.model.Categoria;
+import com.royal.model.TransferenciaUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -197,9 +198,18 @@ public class Data extends HttpServlet {
 						status = Status.OK;
 						httpStatus = 200;
 					}
+					case "desfavoritar" -> {
+					    if(TransferenciaUsuarioDAO.desfavoritar(json.get("id").mustBe(ValueType.NUMBER).asInt())){
+						status = Status.OK;
+						httpStatus = 200;
+					    } else {
+						status = Status.CAMPO_INVALIDO;
+						httpStatus = 204;
+					    }
+					}
 					default -> {
 						status = Status.REQUISICAO_INVALIDA;
-						httpStatus = 200;
+						httpStatus = 400;
 					}
 				}
 			} catch (TypeMismatchException e) {

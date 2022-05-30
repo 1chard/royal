@@ -17,6 +17,17 @@ import java.util.List;
  * @author suporte
  */
 public class TransferenciaUsuarioDAO {
+	public static boolean desfavoritar(int id) {
+		try {
+			return Sistema.BANCO.update("update tblTransferenciaUsuario SET favorito = false WHERE idTransferenciaUsuario",
+				id
+			) > 0;
+			
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+    
 	public static BigDecimal despesaAnual(int quem, int ano) {
 		try {
 			var query = Sistema.BANCO.query("call despesa_anual(?, ?);",
