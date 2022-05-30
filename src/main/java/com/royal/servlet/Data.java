@@ -95,6 +95,7 @@ public class Data extends HttpServlet {
 
 							lista.add(
 									new JsonObject()
+											.add("id", despesa.idUsuario)
 											.add("valor", despesa.valor)
 											.add("data", despesa.data.toString())
 											.add("anexo", despesa.anexo)

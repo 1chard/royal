@@ -74,7 +74,7 @@ public class Contas extends HttpServlet {
 		    httpStatus = 200;
 		} else {
 		    response.put("found", false);
-		    httpStatus = 202;
+		    httpStatus = 204;
 		}
 		
 		
