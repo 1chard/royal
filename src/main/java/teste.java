@@ -1,6 +1,8 @@
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Random;
 import javax.mail.Message;
@@ -14,7 +16,11 @@ import javax.mail.internet.MimeMessage;
 
 public class teste{
     public static void main(String[] args) {
-	System.out.println(new BigDecimal(2.58f).toString());
+		var cal = Calendar.getInstance();
+		
+		
+		
+		System.out.println(new GregorianCalendar(2022, 9, 1).getActualMaximum(Calendar.WEEK_OF_MONTH));
     }
 }
 
