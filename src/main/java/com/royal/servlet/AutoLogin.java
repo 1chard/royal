@@ -76,7 +76,7 @@ public class AutoLogin extends HttpServlet {
 			
 			
 			
-			String token = json.get("token").mustBe(ValueType.STRING).asString();
+			String token = json.get("token").asString();
 			Integer id;
 			
 			if((id = MAP_MAP.get(token)) != null){

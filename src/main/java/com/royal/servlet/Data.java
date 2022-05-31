@@ -90,8 +90,7 @@ public class Data extends HttpServlet {
 					case "favorito" -> {
 						var lista = new JsonArray();
 
-						TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesaP -> {
-							var despesa = despesaP.first;
+						TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> {
 
 							lista.add(
 									new JsonObject()
@@ -105,7 +104,7 @@ public class Data extends HttpServlet {
 											.add("fixa", despesa.fixa)
 											.add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
 											.add("categoria", despesa.idCategoria)
-											.add("parcelas", despesaP.second)
+											.add("parcelas", despesa.parcelas)
 							);
 						});
 

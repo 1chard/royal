@@ -159,9 +159,9 @@ public class TransferenciaUsuarioDAO {
 			throw new RuntimeException(ex);
 		}
 	}
-	public static List<Pair<TransferenciaUsuario, Integer>> favoritos(int quem) {
+	public static List<TransferenciaUsuario> favoritos(int quem) {
 		try {
-			return queryTratadorComParcelas(Sistema.BANCO.query("SELECT *, (select count(*) from tblTransferenciaUsuarioParcela where idTransferenciaUsuario = tblTransferenciaUsuario.idTransferenciaUsuario) as parcelas FROM tblTransferenciaUsuario WHERE idusuario = ? AND favorito = true;", quem));
+			return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND favorito = true;", quem));
 			
 		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
