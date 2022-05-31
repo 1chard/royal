@@ -50,7 +50,7 @@ public class Data extends HttpServlet {
 				final Object json;
 
 				switch (args[i]) {
-					case "saldo" -> {
+					case "saldo", "liquido" -> {
 						final BigDecimal despesa;
 						final BigDecimal receita;
 
@@ -76,9 +76,34 @@ public class Data extends HttpServlet {
 								.add("receita", receita)
 								.add("saldo", receita.subtract(despesa));
 					}
-					case "saldo-geral" -> {
-						json = TransferenciaUsuarioDAO.saldoLiquidoGeral(pessoa.id);
+					case "bruto", "saldo-bruto" -> {
+						final BigDecimal despesa;
+						final BigDecimal receita;
+
+						var ano = Extra.parseInteger(req.getParameter("ano"));
+
+						if (ano != null) {
+
+							var mes = Extra.parseInteger(req.getParameter("mes"));
+
+							if (mes != null) {
+								despesa = TransferenciaUsuarioDAO.despesaMensal(pessoa.id, ano, mes);
+								receita = TransferenciaUsuarioDAO.receitaMensal(pessoa.id, ano, mes);
+							} else {
+								despesa = TransferenciaUsuarioDAO.despesaAnual(pessoa.id, ano);
+								receita = TransferenciaUsuarioDAO.receitaAnual(pessoa.id, ano);
+							}
+						} else {
+							despesa = TransferenciaUsuarioDAO.despesaGeral(pessoa.id);
+							receita = TransferenciaUsuarioDAO.receitaGeral(pessoa.id);
+						}
+
+						json = new JsonObject().add("despesa", despesa)
+								.add("receita", receita)
+								.add("saldo", receita.subtract(despesa));
 					}
+					case "saldo-geral" -> json = TransferenciaUsuarioDAO.saldoLiquidoGeral(pessoa.id);
+
 					case "categorias" -> {
 						var objeto = new JsonObject();
 

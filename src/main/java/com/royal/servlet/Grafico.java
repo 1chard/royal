@@ -90,7 +90,10 @@ public class Grafico extends HttpServlet {
 				}
 				default -> {
 					resp.sendError(400);
+					System.out.println("testess");
+						
 					return;
+					
 				}
 			}
 			
@@ -112,11 +115,9 @@ public class Grafico extends HttpServlet {
 						case "lista" -> {
 							final String periodo = req.getParameter("periodo");
 							
-							final Calendar calendarioMagico = new GregorianCalendar();
-//							final java.util.Date dataInicio;
 							final java.util.Date dataFim;
 							
-							final List<BigDecimal> dados = new ArrayList<>();
+							final List<BigDecimal> dados;
 							
 							//torna mais rapido de procurar, teoricamente
 							Collections.sort(lista, (o1, o2) -> {
@@ -124,54 +125,34 @@ public class Grafico extends HttpServlet {
 							});
 							
 							
-							switch (periodo){
-								case "diario" -> {
+							yield JsonStream.serialize(switch (periodo){
+								case "dia-mes" -> {
 									assert ano != null;
 									assert mes != null;
 									
-									dataFim = new GregorianCalendar(ano, mes, 1).getTime();
+									yield tratador(new GregorianCalendar(ano, mes - 1, 1), new GregorianCalendar(ano, mes, 1), Calendar.DAY_OF_MONTH, algoritmo, lista);		
+								}
+								case "semana-mes" -> {
+									assert ano != null;
+									assert mes != null;
 									
-									calendarioMagico.set(Calendar.YEAR, ano);
-									calendarioMagico.set(Calendar.MONTH, mes - 1);
-									calendarioMagico.set(Calendar.DATE, 1);
+									yield tratador(new GregorianCalendar(ano, mes - 1, 1), new GregorianCalendar(ano, mes, 1), Calendar.WEEK_OF_MONTH, algoritmo, lista);	
+								}
+								case "mes-ano" -> {
+									assert ano != null;
 									
-									
-									int indexTransferencia = 0;
-										
-									for(; calendarioMagico.getTime().before(dataFim); calendarioMagico.add(Calendar.DATE, 1)){
-										BigDecimal atual = BigDecimal.ZERO;
-										
-										var diaDoAnoAtual = calendarioMagico.get(Calendar.DAY_OF_YEAR);
-										
-										
-										
-										while(indexTransferencia < lista.size()){
-											var calendarioTransferencia = new GregorianCalendar(0, 0, 0);
-											var transf = lista.get(indexTransferencia);
-											
-											calendarioTransferencia.setTime(transf.data);
-											
-											System.out.println(ano == calendarioTransferencia.get(Calendar.YEAR) && diaDoAnoAtual == calendarioTransferencia.get(Calendar.DAY_OF_YEAR));
-											
-											if(ano == calendarioTransferencia.get(Calendar.YEAR) && diaDoAnoAtual == calendarioTransferencia.get(Calendar.DAY_OF_YEAR)){
-												atual = algoritmo.apply(atual, transf.valor);
-												indexTransferencia++;
-											} else {
-												break; // n vai ter nenhum transf nesse dia
-											}
-										}
-										
-										dados.add(atual);
-									}
+									yield tratador(new GregorianCalendar(ano, 0, 1), new GregorianCalendar(ano + 1, 0, 1), Calendar.MONTH, algoritmo, lista);	
 								}
 								default -> {
+								    System.out.println("teste");
 									resp.sendError(400);
+									yield "";
 								}
-							}
-							
-							yield JsonStream.serialize(dados);
+							});
 						}
 						default -> {
+						    
+								    System.out.println("teste432");
 							resp.sendError(400);
 							yield "";
 						}
@@ -181,6 +162,36 @@ public class Grafico extends HttpServlet {
 		} else {
 			resp.sendError(404);
 		}
+	}
+	
+	public static List<BigDecimal> tratador(GregorianCalendar inicio, GregorianCalendar fim, int tipoDado, BiFunction<BigDecimal,BigDecimal,BigDecimal> algoritmo, List<TransferenciaUsuarioBase> lista){
+	    var retorno = new ArrayList<BigDecimal>();
+	    
+	    int indexTransferencia = 0;
+										
+									for(; inicio.before(fim); inicio.add(tipoDado, 1)){
+										BigDecimal atual = BigDecimal.ZERO;
+										
+										var argumentoData = inicio.get(tipoDado);
+										
+										while(indexTransferencia < lista.size()){
+											var calendarioTransferencia = new GregorianCalendar(0, Calendar.JANUARY, 1);
+											var transf = lista.get(indexTransferencia);
+											
+											calendarioTransferencia.setTime(transf.data);
+											
+											if(argumentoData == calendarioTransferencia.get(tipoDado)){
+												atual = algoritmo.apply(atual, transf.valor);
+												indexTransferencia++;
+											} else {
+												break; // n vai ter nenhum transf nesse dia
+											}
+										}
+										
+										retorno.add(atual);
+									}
+									
+									return retorno;
 	}
 
 }
