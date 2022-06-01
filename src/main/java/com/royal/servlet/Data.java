@@ -42,6 +42,8 @@ public class Data extends HttpServlet {
 		String token;
 
 		if (Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
+		    
+
 			var pessoa = Sistema.PESSOAS.get(token).usuario;
 
 			var retornos = new Object[args.length];

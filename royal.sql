@@ -118,7 +118,8 @@ INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Saúde'
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Salário', 'A607B8', ' work', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Transporte', '322AD1', 'directions_bus', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
 INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Viagem', '2AB5D1', 'flight', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
-INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Outros', '919191', 'menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Outras despesas', '919191', 'menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'DESPESA'));
+INSERT INTO tblCategoria(nome, cor, icone, idTipoTransferencia) VALUES ('Outras receitas', '919191', 'menu', (select idTipoTransferencia from tblTipoTransferencia where nome = 'RECEITA'));
 
 -- criação da tabela MetaUsuario
 CREATE TABLE IF NOT EXISTS tblMetaUsuario (
