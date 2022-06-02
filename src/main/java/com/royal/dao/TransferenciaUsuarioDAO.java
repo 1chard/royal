@@ -460,6 +460,28 @@ public class TransferenciaUsuarioDAO {
             throw new RuntimeException(ex);
         }
     }
+    
+    public static TransferenciaUsuario buscarId(int quem, int id) {
+        try {
+
+            var lista = queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario = ?;", quem, id));
+	    
+	    return lista.isEmpty()? null : lista.get(id);
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+    
+    public static List<TransferenciaUsuario> buscarIds(int quem, String... ids) {
+        try {
+	    System.out.println("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario IN(" + String.join(",", ids) + ");");
+	    
+            return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario IN(" + String.join(",", ids) + ");", quem));
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     private static List<TransferenciaUsuario> queryTratador(ResultSet query) throws SQLException {
         var list = new ArrayList<TransferenciaUsuario>();
@@ -500,39 +522,8 @@ public class TransferenciaUsuarioDAO {
                     query.getInt("idCategoria"),
                     query.getInt("parcelas"),
                     query.getObject("indice", Integer.class),
-                    query.getObject("idTransferenciaPai", Integer.class)
+                    query.getInt("idTransferenciaUsuario")
             ));
-        }
-
-        return list;
-    }
-
-    private static List<Pair<TransferenciaUsuario, Integer>> queryTratadorComParcelas(ResultSet query) throws SQLException {
-        var list = new ArrayList<Pair<TransferenciaUsuario, Integer>>();
-
-        while (query.next()) {
-            String nomeFrequencia = query.getString("frequencia");
-
-            list.add(
-                    Pair.of(
-                            new TransferenciaUsuario(
-                                    query.getBigDecimal("valor"),
-                                    query.getDate("data"),
-                                    query.getString("descricao"),
-                                    query.getBoolean("favorito"),
-                                    query.getBoolean("parcelada"),
-                                    query.getBoolean("fixa"),
-                                    query.getInt("idUsuario"),
-                                    query.getInt("idCategoria"),
-                                    query.getObject("idTransferenciaUsuario", Integer.class),
-                                    query.getString("anexo"),
-                                    query.getString("observacao"),
-                                    nomeFrequencia != null ? Frequencia.valueOf(nomeFrequencia) : null,
-                                    query.getInt("parcelas")
-                            ),
-                            query.getInt("parcelas")
-                    )
-            );
         }
 
         return list;
@@ -542,7 +533,6 @@ public class TransferenciaUsuarioDAO {
         var list = new ArrayList<TransferenciaUsuarioParcela>();
 
         while (query.next()) {
-
             list.add(new TransferenciaUsuarioParcela(
                     query.getInt("idTransferenciaUsuarioParcela"),
                     query.getBigDecimal("valor"),

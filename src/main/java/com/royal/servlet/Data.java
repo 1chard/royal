@@ -13,6 +13,7 @@ import com.royal.Status;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.model.Categoria;
+import com.royal.model.TransferenciaUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -118,7 +119,7 @@ public class Data extends HttpServlet {
 
                             lista.add(
                                     new JsonObject()
-                                            .add("id", despesa.idUsuario)
+                                            .add("id", despesa.idTransferenciaUsuario)
                                             .add("valor", despesa.valor)
                                             .add("data", despesa.data.toString())
                                             .add("anexo", despesa.anexo)
@@ -134,6 +135,32 @@ public class Data extends HttpServlet {
 
                         json = lista;
                     }
+		    case "transferencia" -> {
+			var ids = Extra.orDefault(req.getParameterValues("id"), new String[0]);
+			
+			  
+			    var lista = new JsonArray();
+			    
+			    TransferenciaUsuarioDAO.buscarIds(pessoa.id, ids).forEach(despesa -> {
+				lista.add(
+                                    new JsonObject()
+                                            .add("id", despesa.idTransferenciaUsuario)
+                                            .add("valor", despesa.valor)
+                                            .add("data", despesa.data.toString())
+                                            .add("anexo", despesa.anexo)
+                                            .add("descricao", despesa.descricao)
+                                            .add("observacao", despesa.observacao)
+                                            .add("parcelada", despesa.parcelada)
+                                            .add("fixa", despesa.fixa)
+                                            .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
+                                            .add("categoria", despesa.idCategoria)
+                                            .add("parcelas", despesa.parcelas)
+				);
+			    });
+			    
+			    json = lista;
+			
+		    }
                     case "perfil" -> {
                         json = new JsonObject()
                                 .add("nome", pessoa.nome)
@@ -150,6 +177,7 @@ public class Data extends HttpServlet {
 
                         TransferenciaUsuarioDAO.listarMensal(pessoa.id, ano, mes).forEach(despesa -> lista.add(
                                 new JsonObject()
+                                        .add("id", despesa.idTransferenciaUsuario)
                                         .add("data", despesa.data)
                                         .add("valor", despesa.valor)
                                         .add("categoria", despesa.idCategoria)
@@ -157,6 +185,7 @@ public class Data extends HttpServlet {
                                         .add("indice", despesa.indice)
                                         .add("parcelas", despesa.parcelas)
                         ));
+			
                         Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((Date) o1.get("data"))));
 
                         lista.forEach(mapa -> {

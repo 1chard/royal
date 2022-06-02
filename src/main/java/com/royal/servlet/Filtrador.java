@@ -27,16 +27,17 @@ public class Filtrador implements Filter {
         res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
         res.setHeader("Access-Control-Allow-Headers", "*");
 
-        if (semaforo.tryAcquire()) {
+//        if (semaforo.tryAcquire()) {
 
             System.out.println(semaforo.availablePermits());
-            System.out.println(req.getRequestURL());
+	    
+            System.out.println(req.getRequestURL().append(req.getQueryString()));
 
             fc.doFilter(sr, sr1);
-            semaforo.release();
-        } else {
-            res.sendError(429);
-        }
+//            semaforo.release();
+//        } else {
+//            res.sendError(429);
+//        }
 
     }
 

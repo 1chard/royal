@@ -81,7 +81,6 @@ public class Dashboard {
 
         if (sessoes != null) {
             sessoes.remove(s);
-            System.out.println(sessoes);
         }
     }
 
