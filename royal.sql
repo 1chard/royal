@@ -572,7 +572,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -584,7 +584,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -602,7 +602,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -614,7 +614,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -632,7 +632,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -644,7 +644,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -662,7 +662,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -674,7 +674,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -692,7 +692,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -704,7 +704,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -722,7 +722,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -734,7 +734,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -753,7 +753,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -765,7 +765,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -783,7 +783,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -795,7 +795,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
@@ -813,7 +813,7 @@ BEGIN
     descricao,
     idcategoria,
     NULL AS indice,
-    NULL AS idTransferenciaPai,
+    idTransferenciaUsuario,
     parcelas
 FROM
     tblTransferenciaUsuario
@@ -825,7 +825,7 @@ UNION ALL SELECT
     tblTransferenciaUsuario.descricao,
     tblTransferenciaUsuario.idCategoria,
     tblTransferenciaUsuarioParcela.indice,
-    tblTransferenciaUsuarioParcela.idTransferenciaUsuario AS idTransferenciaPai,
+    tblTransferenciaUsuarioParcela.idTransferenciaUsuario,
     tblTransferenciaUsuario.parcelas
 FROM
     tblTransferenciaUsuarioParcela
