@@ -1,10 +1,6 @@
 package com.royal.model;
 
-import java.util.Date;
-import java.util.function.BiFunction;
-
 /**
- *
  * @author suporte
  */
 public enum Frequencia {
@@ -15,7 +11,7 @@ public enum Frequencia {
     BIMESTRES,
     TRIMESTRES,
     SEMESTRES,
-    ANOS;
+    ANOS
 }
 
 
