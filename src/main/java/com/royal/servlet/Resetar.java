@@ -91,7 +91,7 @@ public class Resetar extends HttpServlet {
                             status = Status.OK;
                             httpStatus = 200;
 
-                            UsuarioDAO.editarSenha(email, senha);
+                            UsuarioDAO.editarSenhaPorEmail(email, senha);
                             EMAILS_ATIVOS.remove(email);
                         } else {
                             status = Status.REQUISICAO_INVALIDA;

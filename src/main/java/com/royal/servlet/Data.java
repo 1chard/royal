@@ -256,9 +256,28 @@ public class Data extends HttpServlet {
                             status = Status.OK;
                             httpStatus = 200;
                         } else {
-                            status = Status.CAMPO_INVALIDO;
-                            httpStatus = 204;
+                            status = Status.REQUISICAO_INVALIDA;
+                            httpStatus = 400;
                         }
+                    }
+		    case "senha" -> {
+			var novaSenha = json.get("nova").mustBe(ValueType.STRING).asString();
+			var antigaSenha = json.get("antiga").mustBe(ValueType.STRING).asString();
+			
+                        if (pessoa.senha.equals(antigaSenha)) {
+			    
+			    if(UsuarioDAO.editarSenhaPorId(pessoa.id, novaSenha)){                            
+				httpStatus = 200;
+				status = Status.OK;
+ 			    } else {
+				status = Status.REQUISICAO_INVALIDA;
+				httpStatus = 400;
+			    }
+			    
+                        } else {
+			    status = Status.SENHA_INCORRETA;
+                            httpStatus = 204;
+			}
                     }
                     default -> {
                         status = Status.REQUISICAO_INVALIDA;

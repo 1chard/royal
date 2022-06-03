@@ -13,6 +13,7 @@ public enum Status {
     CAMPO_TIPO_INCORRETO(24),
     JSON_INVALIDO(43),
     SENHA_IDIOTA(3),
+    SENHA_INCORRETA(17),
     REQUISICAO_INVALIDA(69);
 
     public final int codigo;
