@@ -27,6 +27,7 @@ public final class Categoria {
     public Integer idCategoria;
     public String nome;
     public TipoTransferencia tipoTransferencia;
+
     public Categoria(Integer idCategoria, String nome, String cor, String icone, TipoTransferencia tipoTransferencia) {
         this.idCategoria = idCategoria;
         this.nome = nome;
@@ -36,9 +37,7 @@ public final class Categoria {
     }
 
     public static Categoria despesaPorId(int id) {
-        for (int i = 0; i < DESPESAS.size(); i++) {
-            var despesa = DESPESAS.get(i);
-
+        for (Categoria despesa : DESPESAS) {
             if (despesa.idCategoria == id) {
                 return despesa;
             }
@@ -48,9 +47,7 @@ public final class Categoria {
     }
 
     public static Categoria receitaPorId(int id) {
-        for (int i = 0; i < RECEITAS.size(); i++) {
-            var receita = RECEITAS.get(i);
-
+        for (Categoria receita : RECEITAS) {
             if (receita.idCategoria == id) {
                 return receita;
             }

@@ -104,7 +104,7 @@ public class UsuarioDAO {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public static boolean editarSenhaPorId(int idusuario, String senha) {
         try {
             return Sistema.BANCO.update("UPDATE tblUsuario SET senha=? where idUsuario=?;",

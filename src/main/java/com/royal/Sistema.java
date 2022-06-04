@@ -11,11 +11,16 @@ import java.util.*;
 
 @WebServlet(loadOnStartup = 1)
 public class Sistema {
+    public static final String PASTA;
+    public static final SQL BANCO;
+    public static final Map<String, Sessao> PESSOAS = Collections.synchronizedMap(new HashMap<>());
+    public static final Calendar CALENDARIO = GregorianCalendar.getInstance();
     private static final String HOST;
     private static final String DATABASE;
     private static final String USER;
     private static final String PASSWORD;
-
+    private static final String CHAVE;
+    private static final long serialVersionUID = 1L;
 
     static {
         switch (System.getProperty("user.name")) {
@@ -51,24 +56,27 @@ public class Sistema {
             throw new RuntimeException(e);
         }
     }
-    public static final String PASTA;
-    public static final SQL BANCO;
-    public static final Map<String, Sessao> PESSOAS = Collections.synchronizedMap(new HashMap<>());
-    public static final Calendar CALENDARIO = GregorianCalendar.getInstance();
-    private static final String CHAVE;
+
     public static final Cripto ENCRIPTA = Cripto.Encrypter.of(CHAVE);
     public static final Cripto DESENCRIPTA = Cripto.Decrypter.of(CHAVE);
-    private static final long serialVersionUID = 1L;
-
-
-
 
     private Sistema() {
     }
 
     public static class Sessao {
-        public Map<String, Object> objetos = new HashMap<>();
-//        public List<jakarta.servlet.http.HttpSession> sessoes = new ArrayList<>();
+        //        public Map<String, Object> objetos = new HashMap<>();
         public Usuario usuario;
+        private Date ultimaConexao = new Date();
+
+        /**
+         * Retorna se passou um dia ou mais, atualizando a ultima conexao
+         */
+        public boolean atualizarUltimaConexao() {
+            var novo = new Date();
+            int dias = (int) (novo.getTime() / 86400000L - ultimaConexao.getTime() / 86400000L);
+            ultimaConexao = novo;
+
+            return dias > 0;
+        }
     }
 }
