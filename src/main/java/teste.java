@@ -20,8 +20,9 @@ public class teste{
     public static void main(String[] args) {
 		//1 ano = 31536000000L
 		//1 dia = 86400000L
+        System.out.println((true ^ true) == (true && !true));
 		
-		System.out.println(new Date().getTime() / 86400000l);
+		System.out.println(new Date(86400000L).getTime() / 86400000L - new Date(86300000L).getTime() / 86400000L);
     }
 }
 

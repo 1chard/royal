@@ -7,6 +7,7 @@ import com.qsoniter.spi.JsonException;
 import com.qsoniter.spi.TypeMismatchException;
 import com.royal.Sistema;
 import com.royal.Status;
+import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -65,10 +66,18 @@ public class AutoLogin extends HttpServlet {
 
 
             String token = json.get("token").asString();
-            Integer id;
 
-            if ((id = MAP_MAP.get(token)) != null) {
+            Integer id;
+            synchronized (AutoLogin.class) {
+                id = MAP_MAP.get(token);
+            }
+
+            if (id != null) {
+
+
+
                 var usuario = UsuarioDAO.buscar(id);
+                TransferenciaUsuarioDAO.atualizarFixas(id);
 
                 var sessao = new Sistema.Sessao();
 

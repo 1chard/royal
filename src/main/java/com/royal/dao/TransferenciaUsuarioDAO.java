@@ -1,6 +1,5 @@
 package com.royal.dao;
 
-import com.royal.Pair;
 import com.royal.Sistema;
 import com.royal.model.Frequencia;
 import com.royal.model.TransferenciaUsuario;
@@ -18,6 +17,18 @@ import java.util.List;
  */
 public class TransferenciaUsuarioDAO {
     private TransferenciaUsuarioDAO() {
+    }
+
+    public static boolean atualizarFixas(int quem) {
+        try {
+            Sistema.BANCO.run("call atualizar_parcelas_fixas(?);",
+                    quem
+            );
+
+            return true;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public static boolean desfavoritar(int id) {
@@ -460,23 +471,23 @@ public class TransferenciaUsuarioDAO {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public static TransferenciaUsuario buscarId(int quem, int id) {
         try {
 
             var lista = queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario = ?;", quem, id));
-	    
-	    return lista.isEmpty()? null : lista.get(id);
+
+            return lista.isEmpty() ? null : lista.get(id);
 
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
     public static List<TransferenciaUsuario> buscarIds(int quem, String... ids) {
         try {
-	    System.out.println("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario IN(" + String.join(",", ids) + ");");
-	    
+            System.out.println("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario IN(" + String.join(",", ids) + ");");
+
             return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND idTransferenciaUsuario IN(" + String.join(",", ids) + ");", quem));
         } catch (SQLException ex) {
             throw new RuntimeException(ex);

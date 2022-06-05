@@ -6,6 +6,7 @@ import com.qsoniter.output.JsonStream;
 import com.qsoniter.spi.JsonException;
 import com.royal.Sistema;
 import com.royal.Status;
+import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -46,27 +47,28 @@ public class Contas extends HttpServlet {
 //				if(pessoa.duasetapas){
 //
 //				} else {
-					//instancia tudo
-					var sessao = new Sistema.Sessao();
-					String token = UUID.nameUUIDFromBytes(
-							Sistema.ENCRIPTA.encrypt(
-									Integer.toOctalString(pessoa.id)
-							).getBytes(StandardCharsets.ISO_8859_1)
-					).toString();
+                //instancia tudo
+                TransferenciaUsuarioDAO.atualizarFixas(pessoa.id);
+                var sessao = new Sistema.Sessao();
+
+                String token = UUID.nameUUIDFromBytes(
+                        Sistema.ENCRIPTA.encrypt(
+                                Integer.toOctalString(pessoa.id)
+                        ).getBytes(StandardCharsets.ISO_8859_1)
+                ).toString();
 
 
-					sessao.usuario = pessoa;
+                sessao.usuario = pessoa;
 
-					Sistema.PESSOAS.put(token, sessao);
+                Sistema.PESSOAS.put(token, sessao);
 
-					response.put("found", true);
-					response.put("token", token);
+                response.put("found", true);
+                response.put("token", token);
 
-					if (manterConectado) {
-						AutoLogin.ativarAutoLogin(token, pessoa.id);
-					}
+                if (manterConectado) {
+                    AutoLogin.ativarAutoLogin(token, pessoa.id);
+                }
 //				}
-
 
 
                 httpStatus = 200;

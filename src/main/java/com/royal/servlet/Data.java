@@ -13,7 +13,6 @@ import com.royal.Status;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import com.royal.model.Categoria;
-import com.royal.model.TransferenciaUsuario;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,7 +23,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -42,7 +40,12 @@ public class Data extends HttpServlet {
         if (Sistema.PESSOAS.containsKey((token = req.getParameter("k")))) {
 
 
-            var pessoa = Sistema.PESSOAS.get(token).usuario;
+            var sessao = Sistema.PESSOAS.get(token);
+            var pessoa = sessao.usuario;
+
+            if(sessao.atualizarUltimaConexao()){
+                TransferenciaUsuarioDAO.atualizarFixas(pessoa.id);
+            }
 
             var retornos = new Object[args.length];
 
@@ -115,59 +118,52 @@ public class Data extends HttpServlet {
                     case "favorito" -> {
                         var lista = new JsonArray();
 
-                        TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> {
-
-                            lista.add(
-                                    new JsonObject()
-                                            .add("id", despesa.idTransferenciaUsuario)
-                                            .add("valor", despesa.valor)
-                                            .add("data", despesa.data.toString())
-                                            .add("anexo", despesa.anexo)
-                                            .add("descricao", despesa.descricao)
-                                            .add("observacao", despesa.observacao)
-                                            .add("parcelada", despesa.parcelada)
-                                            .add("fixa", despesa.fixa)
-                                            .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
-                                            .add("categoria", despesa.idCategoria)
-                                            .add("parcelas", despesa.parcelas)
-                            );
-                        });
+                        TransferenciaUsuarioDAO.favoritos(pessoa.id).forEach(despesa -> lista.add(
+                                new JsonObject()
+                                        .add("id", despesa.idTransferenciaUsuario)
+                                        .add("valor", despesa.valor)
+                                        .add("data", despesa.data.toString())
+                                        .add("anexo", despesa.anexo)
+                                        .add("descricao", despesa.descricao)
+                                        .add("observacao", despesa.observacao)
+                                        .add("parcelada", despesa.parcelada)
+                                        .add("fixa", despesa.fixa)
+                                        .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
+                                        .add("categoria", despesa.idCategoria)
+                                        .add("parcelas", despesa.parcelas)
+                        ));
 
                         json = lista;
                     }
-		    case "transferencia" -> {
-			var ids = Extra.orDefault(req.getParameterValues("id"), new String[0]);
-			
-			  
-			    var lista = new JsonArray();
-			    
-			    TransferenciaUsuarioDAO.buscarIds(pessoa.id, ids).forEach(despesa -> {
-				lista.add(
-                                    new JsonObject()
-                                            .add("id", despesa.idTransferenciaUsuario)
-                                            .add("valor", despesa.valor)
-                                            .add("data", despesa.data.toString())
-                                            .add("anexo", despesa.anexo)
-                                            .add("descricao", despesa.descricao)
-                                            .add("observacao", despesa.observacao)
-                                            .add("parcelada", despesa.parcelada)
-                                            .add("fixa", despesa.fixa)
-                                            .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
-                                            .add("categoria", despesa.idCategoria)
-                                            .add("parcelas", despesa.parcelas)
-				);
-			    });
-			    
-			    json = lista;
-			
-		    }
-                    case "perfil" -> {
-                        json = new JsonObject()
-                                .add("nome", pessoa.nome)
-                                .add("email", pessoa.email)
-                                .add("duasetapas", pessoa.duasetapas)
-                                .add("foto", pessoa.foto);
+                    case "transferencia" -> {
+                        var ids = Extra.orDefault(req.getParameterValues("id"), new String[0]);
+
+
+                        var lista = new JsonArray();
+
+                        TransferenciaUsuarioDAO.buscarIds(pessoa.id, ids).forEach(despesa -> lista.add(
+                                new JsonObject()
+                                        .add("id", despesa.idTransferenciaUsuario)
+                                        .add("valor", despesa.valor)
+                                        .add("data", despesa.data.toString())
+                                        .add("anexo", despesa.anexo)
+                                        .add("descricao", despesa.descricao)
+                                        .add("observacao", despesa.observacao)
+                                        .add("parcelada", despesa.parcelada)
+                                        .add("fixa", despesa.fixa)
+                                        .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
+                                        .add("categoria", despesa.idCategoria)
+                                        .add("parcelas", despesa.parcelas)
+                        ));
+
+                        json = lista;
+
                     }
+                    case "perfil" -> json = new JsonObject()
+                            .add("nome", pessoa.nome)
+                            .add("email", pessoa.email)
+                            .add("duasetapas", pessoa.duasetapas)
+                            .add("foto", pessoa.foto);
                     case "extrato-mes" -> {
                         var lista = new ArrayList<JsonObject>();
 
@@ -185,12 +181,11 @@ public class Data extends HttpServlet {
                                         .add("indice", despesa.indice)
                                         .add("parcelas", despesa.parcelas)
                         ));
-			
-                        Collections.sort(lista, (o1, o2) -> ((java.sql.Date) o2.get("data")).compareTo(((Date) o1.get("data"))));
 
-                        lista.forEach(mapa -> {
-                            mapa.put("data", mapa.get("data").toString());
-                        });
+
+                        lista.sort((o1, o2) -> ((Date) o2.get("data")).compareTo(((Date) o1.get("data"))));
+
+                        lista.forEach(mapa -> mapa.put("data", mapa.get("data").toString()));
 
                         json = lista;
                     }
@@ -260,24 +255,30 @@ public class Data extends HttpServlet {
                             httpStatus = 400;
                         }
                     }
-		    case "senha" -> {
-			var novaSenha = json.get("nova").mustBe(ValueType.STRING).asString();
-			var antigaSenha = json.get("antiga").mustBe(ValueType.STRING).asString();
-			
+                    case "senha" -> {
+                        var novaSenha = json.get("nova").mustBe(ValueType.STRING).asString();
+                        var antigaSenha = json.get("antiga").mustBe(ValueType.STRING).asString();
+
                         if (pessoa.senha.equals(antigaSenha)) {
-			    
-			    if(UsuarioDAO.editarSenhaPorId(pessoa.id, novaSenha)){                            
-				httpStatus = 200;
-				status = Status.OK;
- 			    } else {
-				status = Status.REQUISICAO_INVALIDA;
-				httpStatus = 400;
-			    }
-			    
+
+                            if (UsuarioDAO.editarSenhaPorId(pessoa.id, novaSenha)) {
+                                httpStatus = 200;
+                                status = Status.OK;
+                            } else {
+                                status = Status.REQUISICAO_INVALIDA;
+                                httpStatus = 400;
+                            }
+
                         } else {
+<<<<<<< HEAD
 			    status = Status.SENHA_INCORRETA;
                             httpStatus = 400;
 			}
+=======
+                            status = Status.SENHA_INCORRETA;
+                            httpStatus = 204;
+                        }
+>>>>>>> e7b64a68dc8573413779deb1d9232a4f23347aac
                     }
                     default -> {
                         status = Status.REQUISICAO_INVALIDA;

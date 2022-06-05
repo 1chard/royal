@@ -1,7 +1,5 @@
 package com.royal;
 
-import java.util.stream.Stream;
-
 /**
  * @author suporte
  */
@@ -21,10 +19,4 @@ public enum Status {
     Status(int codigo) {
         this.codigo = codigo;
     }
-
-    public static Status porCodigo(int codigo) {
-        return Stream.of(Status.values()).filter(status -> status.codigo == codigo).findAny().orElse(null);
-    }
-
-
 }

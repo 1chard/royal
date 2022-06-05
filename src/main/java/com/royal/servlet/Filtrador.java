@@ -29,11 +29,11 @@ public class Filtrador implements Filter {
 
 //        if (semaforo.tryAcquire()) {
 
-            System.out.println(semaforo.availablePermits());
-	    
-            System.out.println(req.getRequestURL().append(req.getQueryString()));
+        System.out.println(semaforo.availablePermits());
 
-            fc.doFilter(sr, sr1);
+        System.out.println(req.getRequestURL().append(req.getQueryString()));
+
+        fc.doFilter(sr, sr1);
 //            semaforo.release();
 //        } else {
 //            res.sendError(429);

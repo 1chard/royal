@@ -1,6 +1,6 @@
 package com.royal.validation;
 
-import java.util.Arrays;
+import java.util.List;
 
 
 public class Senha {
@@ -10,7 +10,7 @@ public class Senha {
     }
 
     public static boolean valida(String senha) {
-        return (senha.length() >= 8) && Arrays.asList(charValidos).containsAll(Arrays.asList(senha.toCharArray()));
+        return (senha.length() >= 8) && List.of(charValidos).containsAll(List.of(senha.toCharArray()));
     }
 
     public static int forca(String senha) {
@@ -82,6 +82,6 @@ public class Senha {
     }
 
     public static boolean isCaractereEspecial(char ch) {
-        return ch == ' ' || ch == '!' || ch == '"' || ch == '#' || ch == '$' || ch == '%' || ch == '&' || ch == '\'' || ch == '(' || ch == ')' || ch == '*' || ch == '+' || ch == ',' || ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == ';' || ch == '<' || ch == '=' || ch == '>' || ch == '?' || ch == '@' || ch == '[' || ch == '\\' || ch == ']' || ch == '^' || ch == '_' || ch == '{' || ch == '|' || ch == '}' || ch == '~' || ch == '|' || ch == '¨' || ch == '°' || ch == '“' || ch == '”';
+        return ch == ' ' || ch == '!' || ch == '"' || ch == '#' || ch == '$' || ch == '%' || ch == '&' || ch == '\'' || ch == '(' || ch == ')' || ch == '*' || ch == '+' || ch == ',' || ch == '-' || ch == '.' || ch == '/' || ch == ':' || ch == ';' || ch == '<' || ch == '=' || ch == '>' || ch == '?' || ch == '@' || ch == '[' || ch == '\\' || ch == ']' || ch == '^' || ch == '_' || ch == '{' || ch == '|' || ch == '}' || ch == '~' || ch == '¨' || ch == '°' || ch == '“' || ch == '”';
     }
 }

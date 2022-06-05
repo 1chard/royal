@@ -135,9 +135,7 @@ public class Grafico extends HttpServlet {
                             final List<BigDecimal> dados;
 
                             //torna mais rapido de procurar, teoricamente
-                            Collections.sort(lista, (o1, o2) -> {
-                                return o1.data.compareTo(o2.data);
-                            });
+                            lista.sort(Comparator.comparing(o -> o.data));
 
 
                             yield JsonStream.serialize(switch (periodo) {
@@ -175,6 +173,7 @@ public class Grafico extends HttpServlet {
             ).flush();
 
         } else {
+            System.out.println("feio");
             resp.sendError(404);
         }
     }
