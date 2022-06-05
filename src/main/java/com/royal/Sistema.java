@@ -35,6 +35,14 @@ public class Sistema {
                 CHAVE = "cumonista";
                 PASTA = "/Users/suporte/Desktop/imagem";
             }
+            case "thime" -> {
+                HOST = "localhost:3306";
+                DATABASE = "royal";
+                USER = "root";
+                PASSWORD = "bcd127";
+                CHAVE = "cumonista";
+                PASTA = "C:\\Users\\thime\\OneDrive\\Área de Trabalho\\senai\\TCC\\backend\\royal-master\\imagens";
+            }
             default -> {
                 HOST = "10.5.60.39:3306";
                 DATABASE = "royal";

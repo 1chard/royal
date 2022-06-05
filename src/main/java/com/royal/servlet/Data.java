@@ -276,7 +276,7 @@ public class Data extends HttpServlet {
 			    
                         } else {
 			    status = Status.SENHA_INCORRETA;
-                            httpStatus = 204;
+                            httpStatus = 400;
 			}
                     }
                     default -> {
