@@ -135,6 +135,26 @@ public class Data extends HttpServlet {
 
                         json = lista;
                     }
+                    case "fixa" -> {
+                        var lista = new JsonArray();
+
+                        TransferenciaUsuarioDAO.fixos(pessoa.id).forEach(despesa -> lista.add(
+                                new JsonObject()
+                                        .add("id", despesa.idTransferenciaUsuario)
+                                        .add("valor", despesa.valor)
+                                        .add("data", despesa.data.toString())
+                                        .add("anexo", despesa.anexo)
+                                        .add("descricao", despesa.descricao)
+                                        .add("observacao", despesa.observacao)
+                                        .add("parcelada", despesa.parcelada)
+                                        .add("fixa", despesa.fixa)
+                                        .add("nomeFrequencia", despesa.frequencia != null ? despesa.frequencia.toString() : null)
+                                        .add("categoria", despesa.idCategoria)
+                                        .add("parcelas", despesa.parcelas)
+                        ));
+
+                        json = lista;
+                    }
                     case "transferencia" -> {
                         var ids = Extra.orDefault(req.getParameterValues("id"), new String[0]);
 
@@ -255,6 +275,7 @@ public class Data extends HttpServlet {
                             httpStatus = 400;
                         }
                     }
+
                     case "senha" -> {
                         var novaSenha = json.get("nova").mustBe(ValueType.STRING).asString();
                         var antigaSenha = json.get("antiga").mustBe(ValueType.STRING).asString();

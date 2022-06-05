@@ -48,6 +48,17 @@ public class Grafico extends HttpServlet {
         }
     }
 
+    private static List<TransferenciaUsuarioBase> tratadorAnoMesListaTudo(int id, Integer ano, Integer mes) {
+        if (ano != null) {
+            if (mes != null) {
+                return TransferenciaUsuarioDAO.listarMensal(id, ano, mes);
+            } else {
+                return TransferenciaUsuarioDAO.listarAnual(id, ano);
+            }
+        } else {
+            return TransferenciaUsuarioDAO.listar(id);
+        }
+    }
     public static List<BigDecimal> tratador(GregorianCalendar inicio, GregorianCalendar fim, int tipoDado, BiFunction<BigDecimal, BigDecimal, BigDecimal> algoritmo, List<TransferenciaUsuarioBase> lista) {
         var retorno = new ArrayList<BigDecimal>();
 
@@ -91,7 +102,7 @@ public class Grafico extends HttpServlet {
             var ano = Extra.parseInteger(req.getParameter("ano"));
             var mes = Extra.parseInteger(req.getParameter("mes"));
 
-            final List<TransferenciaUsuarioBase> lista;
+            List<TransferenciaUsuarioBase> lista;
             final BiFunction<BigDecimal, BigDecimal, BigDecimal> algoritmo;
 
             switch (args[0]) {
@@ -103,14 +114,27 @@ public class Grafico extends HttpServlet {
                     algoritmo = BigDecimal::add;
                     lista = tratadorAnoMesListaReceita(point.usuario.id, ano, mes);
                 }
+                case "tudo" -> {
+                    algoritmo = BigDecimal::add;
+                    lista = tratadorAnoMesListaTudo(point.usuario.id, ano, mes);
+                }
+
                 default -> {
                     resp.sendError(400);
                     System.out.println("testess");
-
                     return;
-
                 }
             }
+			
+			List<String> cats = Arrays.asList(Extra.orDefault(req.getParameterValues("cat"), new String[0]));
+
+            if(!cats.isEmpty()){
+                List<Integer> box = cats.stream().map(Integer::parseInt).toList();
+
+                lista = lista.stream().filter(trans -> box.contains(trans.idCategoria)).toList();
+            }
+
+
 
             resp.getWriter().append(
                     switch (modo) {

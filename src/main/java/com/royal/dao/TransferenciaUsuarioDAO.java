@@ -177,6 +177,15 @@ public class TransferenciaUsuarioDAO {
         }
     }
 
+    public static List<TransferenciaUsuario> fixos(int quem) {
+        try {
+            return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND fixa = true;", quem));
+
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public static List<TransferenciaUsuario> favoritos(int quem) {
         try {
             return queryTratador(Sistema.BANCO.query("SELECT * FROM tblTransferenciaUsuario WHERE idusuario = ? AND favorito = true;", quem));
