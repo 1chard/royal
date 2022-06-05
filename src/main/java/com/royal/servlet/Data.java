@@ -270,15 +270,9 @@ public class Data extends HttpServlet {
                             }
 
                         } else {
-<<<<<<< HEAD
 			    status = Status.SENHA_INCORRETA;
                             httpStatus = 400;
 			}
-=======
-                            status = Status.SENHA_INCORRETA;
-                            httpStatus = 204;
-                        }
->>>>>>> e7b64a68dc8573413779deb1d9232a4f23347aac
                     }
                     default -> {
                         status = Status.REQUISICAO_INVALIDA;
