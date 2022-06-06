@@ -272,6 +272,13 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaGrupoParcela(
     UNIQUE INDEX (idTransferenciaGrupoParcela)
 );
 
+DELIMITER $$
+create procedure desfixar(in idTransferencia int unsigned)
+BEGIN
+	update tblTransferenciaUsuario set fixa = false, parcelada = true, valor = valor * parcelas where idTransferenciaUsuario = idTransferencia; 
+END $$;
+DELIMITER ;
+
 -- procedure pra cadastrar transferenciausuario
 DELIMITER $$
 create procedure inserir_transferencia_usuario(IN valor DECIMAL(14 , 2 ), in data date, in descricao TEXT, IN favorito boolean, IN parcelada boolean, IN fixa boolean, in idusuario int unsigned, in idcategoria int unsigned, in anexo TEXT, in observacao TEXT, in frequencia varchar(10), in parcelas int unsigned)

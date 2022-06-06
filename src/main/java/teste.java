@@ -1,4 +1,5 @@
 
+import com.royal.external.Mail;
 import com.royal.model.TransferenciaUsuario;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -17,12 +19,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class teste{
-    public static void main(String[] args) {
-		//1 ano = 31536000000L
-		//1 dia = 86400000L
-        System.out.println((true ^ true) == (true && !true));
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+		System.out.println("teste");
+		Mail.enviar("teste", "pato no clash", "thimendonca44@gmail.com").get();
 		
-		System.out.println(new Date(86400000L).getTime() / 86400000L - new Date(86300000L).getTime() / 86400000L);
     }
 }
 

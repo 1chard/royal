@@ -275,6 +275,15 @@ public class Data extends HttpServlet {
                             httpStatus = 400;
                         }
                     }
+                    case "desfixar" -> {
+                        if (TransferenciaUsuarioDAO.desfavoritar(json.get("id").mustBe(ValueType.NUMBER).asInt())) {
+                            status = Status.OK;
+                            httpStatus = 200;
+                        } else {
+                            status = Status.REQUISICAO_INVALIDA;
+                            httpStatus = 400;
+                        }
+                    }
 
                     case "senha" -> {
                         var novaSenha = json.get("nova").mustBe(ValueType.STRING).asString();

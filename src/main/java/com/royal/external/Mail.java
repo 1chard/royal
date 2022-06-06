@@ -11,8 +11,8 @@ import java.util.concurrent.Future;
 public class Mail {
 
     private final static Session SESSION;
-    private final static String EMAIL = "totesfokes@gmail.com";
-    private final static String SENHA = "qweruiop";
+    private final static String EMAIL = "royalfinanca@gmail.com";
+    private final static String SENHA = "vhdniwxvadivxtsu";
     private final static InternetAddress INTERNET_ADDRESS;
 
     static {
