@@ -48,6 +48,12 @@ public class TransferenciaUsuario {
         this.parcelas = parcelas;
     }
 
+    @Override
+    public String toString() {
+	return "TransferenciaUsuario{" + "anexo=" + anexo + ", data=" + data + ", descricao=" + descricao + ", favorito=" + favorito + ", fixa=" + fixa + ", frequencia=" + frequencia + ", idCategoria=" + idCategoria + ", idTransferenciaUsuario=" + idTransferenciaUsuario + ", idUsuario=" + idUsuario + ", observacao=" + observacao + ", parcelada=" + parcelada + ", parcelas=" + parcelas + ", valor=" + valor + '}';
+    }
+    
+
     public boolean isDespesa() {
         return valor.compareTo(BigDecimal.ZERO) < 0;
     }
