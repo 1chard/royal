@@ -86,7 +86,6 @@ public class Data extends HttpServlet {
                         var ano = Extra.parseInteger(req.getParameter("ano"));
 
                         if (ano != null) {
-
                             var mes = Extra.parseInteger(req.getParameter("mes"));
 
                             if (mes != null) {
@@ -292,6 +291,8 @@ public class Data extends HttpServlet {
                         if (pessoa.senha.equals(antigaSenha)) {
 
                             if (UsuarioDAO.editarSenhaPorId(pessoa.id, novaSenha)) {
+				pessoa.senha = novaSenha;
+				
                                 httpStatus = 200;
                                 status = Status.OK;
                             } else {

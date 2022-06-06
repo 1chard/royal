@@ -21,7 +21,7 @@ import javax.mail.internet.MimeMessage;
 public class teste{
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 		System.out.println("teste");
-		Mail.enviar("teste", "pato no clash", "thimendonca44@gmail.com").get();
+		Mail.enviar("teste", "lenda no clash", "richardcutrim01@gmail.com").get();
 		
     }
 }

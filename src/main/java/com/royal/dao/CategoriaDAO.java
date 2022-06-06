@@ -33,6 +33,29 @@ public class CategoriaDAO {
         }
 
     }
+    
+    public static Categoria buscarNome(String nome) {
+        try {
+
+            var query = Sistema.BANCO.query("SELECT"
+                    + " tblCategoria.idcategoria, tblCategoria.nome, tblCategoria.cor, tblCategoria.icone, tblTipoTransferencia.nome as tipo"
+                    + " FROM tblCategoria inner join tblTipoTransferencia on tblCategoria.nome = ? AND tblTipoTransferencia.idTipoTransferencia = tblCategoria.idTipoTransferencia;", nome);
+	    
+	    if(query.next()){
+		return new Categoria(
+                                query.getInt("idcategoria"),
+                                query.getString("nome"),
+                                query.getString("cor"),
+                                query.getString("icone"),
+                                TipoTransferencia.valueOf(query.getString("tipo"))
+                        );
+	    } else {
+		return null;
+	    }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     public static List<Categoria> listar() {
         try {
