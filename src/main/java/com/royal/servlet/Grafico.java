@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author suporte
@@ -131,7 +132,7 @@ public class Grafico extends HttpServlet {
             if(!cats.isEmpty()){
                 List<Integer> box = cats.stream().map(Integer::parseInt).toList();
 
-                lista = lista.stream().filter(trans -> box.contains(trans.idCategoria)).toList();
+                lista = lista.stream().filter(trans -> box.contains(trans.idCategoria)).collect(Collectors.toCollection(ArrayList::new));
             }
 
 
@@ -159,7 +160,7 @@ public class Grafico extends HttpServlet {
                             final List<BigDecimal> dados;
 
                             //torna mais rapido de procurar, teoricamente
-                            lista.sort(Comparator.comparing(o -> o.data));
+                            lista.sort(Comparator.comparing(d -> d.data));
 
 
                             yield JsonStream.serialize(switch (periodo) {

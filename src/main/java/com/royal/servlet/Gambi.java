@@ -51,8 +51,14 @@ public class Gambi extends HttpServlet {
 		    new TransferenciaUsuario.Builder(new BigDecimal("1205.32"), Date.valueOf("2022-06-02"), "Pagamento Extra", true, false, false, usuario.id, CategoriaDAO.buscarNome("Outras receitas").idCategoria).setObservacao("Recebimento do pagamento extra de alguém").build()
 	    );
 	    
+	    TransferenciaUsuarioDAO.gravar(
+		    new TransferenciaUsuario.Builder(new BigDecimal("1205.32"), Date.valueOf("2022-06-02"), "Pagamento Extra", true, false, false, usuario.id, CategoriaDAO.buscarNome("Outras receitas").idCategoria).setObservacao("Recebimento do pagamento extra de alguém").build()
+	    );
+	    
 	    resp.getWriter().print(true);
-	} 
+	}  else {
+	    resp.getWriter().print(false);
+	}
     }
 
 

@@ -27,7 +27,7 @@ public class Filtrador implements Filter {
         res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
         res.setHeader("Access-Control-Allow-Headers", "*");
 
-	System.out.println("teste");
+	System.out.println(req.getRequestURL() + "?" + req.getQueryString());
 	
         fc.doFilter(sr, sr1);
 

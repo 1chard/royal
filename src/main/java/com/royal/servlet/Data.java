@@ -241,6 +241,8 @@ public class Data extends HttpServlet {
             var mensagem = new JsonObject();
             Status status;
             int httpStatus;
+	    
+	    System.out.println(json.toString());
 
             try {
                 switch (args[0]) {
@@ -302,7 +304,7 @@ public class Data extends HttpServlet {
 
                         } else {
 			    status = Status.SENHA_INCORRETA;
-                            httpStatus = 400;
+                            httpStatus = 200;
 			}
                     }
                     default -> {

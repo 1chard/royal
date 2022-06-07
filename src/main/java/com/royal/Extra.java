@@ -1,5 +1,7 @@
 package com.royal;
 
+import java.math.BigDecimal;
+
 /**
  * @author suporte
  */
@@ -18,5 +20,14 @@ public class Extra {
             return null;
         }
     }
+
+    public static BigDecimal parseBigDecimal(String string) {
+        try {
+            return new BigDecimal(string);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
 
 }
