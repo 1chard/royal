@@ -71,13 +71,12 @@ public class Contas extends HttpServlet {
 //				}
 
 
-                httpStatus = 200;
             } else {
                 response.put("found", false);
-                httpStatus = 400;
             }
-
-
+			
+			
+            httpStatus = 200;
             status = Status.OK;
 
         } catch (JsonException e) {

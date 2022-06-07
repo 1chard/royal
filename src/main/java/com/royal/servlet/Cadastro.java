@@ -49,12 +49,13 @@ public final class Cadastro extends HttpServlet {
                                 null
                         )
                 )) {
-                    httpStatus = 200;
+                    
                     status = Status.OK;
                 } else {
                     status = Status.EMAIL_REPETIDO;
-                    httpStatus = 400;
                 }
+				
+				httpStatus = 200;
             } else {
                 status = Status.CAMPO_INVALIDO;
                 httpStatus = 400;

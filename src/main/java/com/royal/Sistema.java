@@ -54,7 +54,7 @@ public class Sistema {
                 USER = "royal";
                 PASSWORD = "royal";
                 CHAVE = "alemanhaSemprePerde";
-                PASTA = null;
+                PASTA = "/home/royal";
             }
         }
 
