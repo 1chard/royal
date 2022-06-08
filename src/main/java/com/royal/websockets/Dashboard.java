@@ -70,7 +70,7 @@ public class Dashboard {
             message = "Erro aleatório";
         }
 
-        s.close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, message));
+		fechar(s, token);
 
         Erro.enviador(t);
     }
