@@ -56,19 +56,7 @@ public class Dashboard {
 
     @OnError
     public void deuMerda(Session s, Throwable t, @PathParam("token") String token) throws IOException {
-        final String message;
-
         t.printStackTrace();
-
-        if (t instanceof com.qsoniter.spi.InvalidFieldException) {
-            message = "Faltou campos";
-        } else if (t instanceof com.qsoniter.spi.TypeMismatchException) {
-            message = "Tipo incorreto";
-        } else if (t instanceof JsonException) {
-            message = "JSON invalido";
-        } else {
-            message = "Erro aleatório";
-        }
 
 		fechar(s, token);
 
