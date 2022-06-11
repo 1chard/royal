@@ -59,8 +59,6 @@ public class AutoLogin extends HttpServlet {
         Status status;
         var resposta = new JsonObject();
 
-        System.out.println(MAP_MAP);
-
         try {
             var json = JsonIterator.deserialize(req.getInputStream().readAllBytes());
 

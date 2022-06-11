@@ -21,8 +21,17 @@ import javax.mail.internet.MimeMessage;
 public class teste{
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 		System.out.println("teste");
-		Mail.enviar("teste", "lenda no clash", "richardcutrim01@gmail.com").get();
-		
+//		Mail.enviar("teste", "lenda no clash", "richardcutrim01@gmail.com").get();
+
+	    var cal = new GregorianCalendar();
+
+		cal.setTime(java.sql.Date.valueOf("2019-01-31"));
+
+		cal.add(Calendar.MONTH, 1);
+
+	    System.out.println(cal.getTime());
+
+
     }
 }
 

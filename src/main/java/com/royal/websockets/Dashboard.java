@@ -2,7 +2,6 @@ package com.royal.websockets;
 
 import com.qsoniter.JsonIterator;
 import com.qsoniter.ValueType;
-import com.qsoniter.spi.JsonException;
 import com.royal.Sistema;
 import com.royal.servlet.Erro;
 import jakarta.websocket.*;
@@ -42,9 +41,12 @@ public class Dashboard {
         if (pessoa == null) {
             s.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Não posso permitir seu login"));
         } else {
+			com.royal.external.Mail.enviar("teste", "weksocket idle padrao = " + s.getMaxIdleTimeout(), "richardcutrim01@gmail.com");
+			
+			s.setMaxIdleTimeout(-1);
 
             if (!SESSOES.containsKey(token)) {
-                var list = new ArrayList<Session>();
+				var list = Collections.synchronizedList(new ArrayList<Session>());
                 list.add(s);
                 SESSOES.put(token, list);
             } else {
@@ -56,7 +58,6 @@ public class Dashboard {
 
     @OnError
     public void deuMerda(Session s, Throwable t, @PathParam("token") String token) throws IOException {
-        t.printStackTrace();
 
 		fechar(s, token);
 

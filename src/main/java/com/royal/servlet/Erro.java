@@ -30,9 +30,13 @@ public class Erro extends HttpServlet {
         return pst;
     }
 
+	
+	
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/plain");
+		
+		var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
         resp.getWriter().append(string).flush();
     }
 

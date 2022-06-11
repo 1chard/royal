@@ -88,11 +88,4 @@ public class Contas extends HttpServlet {
         response.put("status", status.codigo);
         JsonStream.serialize(response, resp.getOutputStream());
     }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-
 }

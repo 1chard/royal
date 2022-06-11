@@ -5,6 +5,7 @@ package com.royal;
  */
 public enum Status {
     OK(0),
+    NAO_ENCONTRADO(404),
     EMAIL_REPETIDO(1062),
     CAMPO_VAZIO_OU_GRANDE(1),
     CAMPO_INVALIDO(2),
