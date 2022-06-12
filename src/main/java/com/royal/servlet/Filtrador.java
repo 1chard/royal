@@ -20,6 +20,8 @@ public class Filtrador implements Filter {
 		var res = (HttpServletResponse) sr1;
 
 		res.setHeader("Access-Control-Allow-Origin", "*");
+		res.setHeader("Access-Control-Max-Age", "86400");
+		res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
 		res.setHeader("Access-Control-Allow-Headers", "*");
 		res.setContentType("application/json");
 
