@@ -36,13 +36,9 @@ public class Dashboard {
 	public void abrir(Session s, @PathParam("token") String token) throws IOException {
 		var pessoa = Sistema.PESSOAS.get(token);
 
-		System.out.println(token);
-
 		if (pessoa == null) {
 			s.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Não posso permitir seu login"));
 		} else {
-			com.royal.external.Mail.enviar("teste", "weksocket idle padrao = " + s.getMaxIdleTimeout(), "richardcutrim01@gmail.com");
-
 			s.setMaxIdleTimeout(-1);
 
 			if (!SESSOES.containsKey(token)) {
