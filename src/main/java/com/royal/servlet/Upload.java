@@ -18,42 +18,42 @@ import java.nio.file.Paths;
  */
 @WebServlet(name = "Upload", urlPatterns = {"/upload/*"})
 public class Upload extends HttpServlet {
-    public static final int TAMANHO = 1024 * 1024 * 5;
+	public static final int TAMANHO = 1024 * 1024 * 5;
 
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (Sistema.PESSOAS.containsKey(req.getParameter("k"))) {
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		var args = API.parameters(req);
 
-            var input = req.getInputStream().readNBytes(TAMANHO);
-
-            var nome = System.currentTimeMillis() + "_" + System.nanoTime() + "_";
-            Path path;
-            int i = 0;
-
-            do {
-                nome = nome.substring(0, nome.lastIndexOf('_')) + "_" + i;
-                path = Paths.get(Sistema.PASTA, nome);
-            } while (Files.isRegularFile(path));
-
-            Files.write(Files.createFile(path), input);
-
-            resp.getWriter().append(nome);
-
-        } else {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var args = API.parameters(req);
-
-        if (args.length > 0) {
-            Files.copy(Paths.get(Sistema.PASTA, args[0]), resp.getOutputStream());
-        }
+		if (args.length > 0) {
+			Files.copy(Paths.get(Sistema.PASTA, args[0]), resp.getOutputStream());
+		}
 
 
-    }
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		if (Sistema.PESSOAS.containsKey(req.getParameter("k"))) {
+
+			var input = req.getInputStream().readNBytes(TAMANHO);
+
+			var nome = System.currentTimeMillis() + "_" + System.nanoTime() + "_";
+			Path path;
+			int i = 0;
+
+			do {
+				nome = nome.substring(0, nome.lastIndexOf('_')) + "_" + i;
+				path = Paths.get(Sistema.PASTA, nome);
+			} while (Files.isRegularFile(path));
+
+			Files.write(Files.createFile(path), input);
+
+			resp.getWriter().append(nome);
+
+		} else {
+			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+		}
+	}
 
 
 }

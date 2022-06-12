@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>royal</groupId>
 	<artifactId>royal</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 	<packaging>war</packaging>
 	<name>royal</name>
     
@@ -33,13 +33,13 @@
 		<dependency>
 			<groupId>jakarta.platform</groupId>
 			<artifactId>jakarta.jakartaee-api</artifactId>
-			<version>9.0.0</version>
+			<version>9.1.0</version>
 		 <type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.28</version>
+			<version>8.0.29</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.mail</groupId>

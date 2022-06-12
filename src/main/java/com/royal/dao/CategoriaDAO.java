@@ -14,74 +14,74 @@ import java.util.List;
 public class CategoriaDAO {
 
 
-    private CategoriaDAO() {
-    }
+	public static boolean inserir(Categoria categoria) {
+		try {
+			Sistema.BANCO.run("INSERT INTO tblCategoria (nome,cor,icone,idTipoTransferencia) VALUES (?,?,?,("
+							+ "select idTipoTransferencia from tblTipoTransferencia where nome = ?"
+							+ "));",
+					categoria.nome,
+					categoria.cor,
+					categoria.icone,
+					categoria.tipoTransferencia.toString()
+			);
+			return true;
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
 
-    public static boolean inserir(Categoria categoria) {
-        try {
-            Sistema.BANCO.run("INSERT INTO tblCategoria (nome,cor,icone,idTipoTransferencia) VALUES (?,?,?,("
-                            + "select idTipoTransferencia from tblTipoTransferencia where nome = ?"
-                            + "));",
-                    categoria.nome,
-                    categoria.cor,
-                    categoria.icone,
-                    categoria.tipoTransferencia.toString()
-            );
-            return true;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
+	}
 
-    }
-    
-    public static Categoria buscarNome(String nome) {
-        try {
+	public static Categoria buscarNome(String nome) {
+		try {
 
-            var query = Sistema.BANCO.query("SELECT"
-                    + " tblCategoria.idcategoria, tblCategoria.nome, tblCategoria.cor, tblCategoria.icone, tblTipoTransferencia.nome as tipo"
-                    + " FROM tblCategoria inner join tblTipoTransferencia on tblCategoria.nome = ? AND tblTipoTransferencia.idTipoTransferencia = tblCategoria.idTipoTransferencia;", nome);
-	    
-	    if(query.next()){
-		return new Categoria(
-                                query.getInt("idcategoria"),
-                                query.getString("nome"),
-                                query.getString("cor"),
-                                query.getString("icone"),
-                                TipoTransferencia.valueOf(query.getString("tipo"))
-                        );
-	    } else {
-		return null;
-	    }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+			var query = Sistema.BANCO.query("SELECT"
+					+ " tblCategoria.idcategoria, tblCategoria.nome, tblCategoria.cor, tblCategoria.icone, tblTipoTransferencia.nome as tipo"
+					+ " FROM tblCategoria inner join tblTipoTransferencia on tblCategoria.nome = ? AND tblTipoTransferencia.idTipoTransferencia = tblCategoria.idTipoTransferencia;", nome);
 
-    public static List<Categoria> listar() {
-        try {
-            var list = new ArrayList<Categoria>();
+			if (query.next()) {
+				return new Categoria(
+						query.getInt("idcategoria"),
+						query.getString("nome"),
+						query.getString("cor"),
+						query.getString("icone"),
+						TipoTransferencia.valueOf(query.getString("tipo"))
+				);
+			} else {
+				return null;
+			}
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
 
-            var query = Sistema.BANCO.query("SELECT"
-                    + " tblCategoria.idcategoria, tblCategoria.nome, tblCategoria.cor, tblCategoria.icone, tblTipoTransferencia.nome as tipo"
-                    + " FROM tblCategoria inner join tblTipoTransferencia on tblTipoTransferencia.idTipoTransferencia = tblCategoria.idTipoTransferencia;");
+	public static List<Categoria> listar() {
+		try {
+			var list = new ArrayList<Categoria>();
+
+			var query = Sistema.BANCO.query("SELECT"
+					+ " tblCategoria.idcategoria, tblCategoria.nome, tblCategoria.cor, tblCategoria.icone, tblTipoTransferencia.nome as tipo"
+					+ " FROM tblCategoria inner join tblTipoTransferencia on tblTipoTransferencia.idTipoTransferencia = tblCategoria.idTipoTransferencia;");
 
 
-            while (query.next()) {
-                list.add(
-                        new Categoria(
-                                query.getInt("idcategoria"),
-                                query.getString("nome"),
-                                query.getString("cor"),
-                                query.getString("icone"),
-                                TipoTransferencia.valueOf(query.getString("tipo"))
-                        )
-                );
-            }
+			while (query.next()) {
+				list.add(
+						new Categoria(
+								query.getInt("idcategoria"),
+								query.getString("nome"),
+								query.getString("cor"),
+								query.getString("icone"),
+								TipoTransferencia.valueOf(query.getString("tipo"))
+						)
+				);
+			}
 
-            return list;
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
+			return list;
+		} catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
+	private CategoriaDAO() {
+	}
 
 }

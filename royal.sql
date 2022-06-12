@@ -164,6 +164,8 @@ CREATE TABLE IF NOT EXISTS tblTransferenciaUsuario (
     UNIQUE INDEX (idTransferenciaUsuario)
 );
 
+-- idUsuario = id AND parcelada = false AND valor < 0
+
 CREATE TABLE IF NOT EXISTS tblTransferenciaUsuarioParcela(
     idTransferenciaUsuarioParcela INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     valor DECIMAL(14 , 2 ) NOT NULL,

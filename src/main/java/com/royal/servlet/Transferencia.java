@@ -1,33 +1,28 @@
 package com.royal.servlet;
 
 import com.qsoniter.JsonIterator;
-import com.qsoniter.JsonObject;
 import com.qsoniter.ValueType;
-import com.royal.Sistema;
-import com.royal.websockets.DespesaTratador;
-import com.royal.websockets.ReceitaTratador;
-import java.io.IOException;
-import java.io.PrintWriter;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import com.qsoniter.any.Any;
 import com.qsoniter.output.JsonStream;
 import com.qsoniter.spi.JsonException;
+import com.royal.Sistema;
 import com.royal.Status;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.model.Frequencia;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.websockets.Dashboard;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 
 /**
- *
  * @author richard
  */
 @WebServlet(name = "Transferencia", urlPatterns = {"/transferencia"})
@@ -36,7 +31,7 @@ public class Transferencia extends HttpServlet {
 	private static final String RECEITA_RESPOSTA = JsonStream.serialize(Map.of("metodo", "receita", "arg", "adicionar"));
 
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		int httpStatus;
 		Status status;

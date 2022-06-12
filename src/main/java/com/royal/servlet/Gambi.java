@@ -22,7 +22,7 @@ import java.sql.Date;
 public class Gambi extends HttpServlet {
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		if (UsuarioDAO.buscar("usuario@email.com") != null) {
 			Usuario usuario = new Usuario("Usuário", "usuario@email.com", "123", false);
 

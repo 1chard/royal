@@ -15,17 +15,17 @@ import static com.royal.Sistema.BANCO;
 public class CicloDeVida extends HttpServlet {
 
 
-    @Override
-    public void destroy() {
-        try {
-            BANCO.close();
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
+	@Override
+	public void destroy() {
+		try {
+			BANCO.close();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 
-    }
+	}
 
-    @Override
-    public void init() throws ServletException {
-    }
+	@Override
+	public void init() {
+	}
 }

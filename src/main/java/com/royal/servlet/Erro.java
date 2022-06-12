@@ -19,25 +19,23 @@ import java.io.StringWriter;
 public class Erro extends HttpServlet {
 
 
-    public static String enviador(Throwable t) {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        t.printStackTrace(pw);
-        String pst = sw.toString();
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		resp.setContentType("text/plain");
 
-        Mail.enviar(t.getClass().getName(), pst, "richardcutrim01@gmail.com");
-
-        return pst;
-    }
-
-	
-	
-    @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/plain");
-		
 		var string = enviador((Throwable) req.getAttribute(RequestDispatcher.ERROR_EXCEPTION));
-        resp.getWriter().append(string).flush();
-    }
+		resp.getWriter().append(string).flush();
+	}
+
+	public static String enviador(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		String pst = sw.toString();
+
+		Mail.enviar(t.getClass().getName(), pst, "richardcutrim01@gmail.com");
+
+		return pst;
+	}
 
 }
