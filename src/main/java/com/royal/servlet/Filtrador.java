@@ -2,6 +2,7 @@ package com.royal.servlet;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ public class Filtrador implements Filter {
 	@Override
 	public void doFilter(ServletRequest sr, ServletResponse sr1, FilterChain fc) throws IOException, ServletException {
 		var res = (HttpServletResponse) sr1;
+		var req = (HttpServletRequest) sr;
 
 		res.setHeader("Access-Control-Allow-Origin", "*");
 		res.setHeader("Access-Control-Max-Age", "86400");
@@ -26,7 +28,7 @@ public class Filtrador implements Filter {
 		res.setContentType("application/json");
 
 
-//	    System.out.println(req.getMethod() + " - " + req.getRequestURL() + "?" + req.getQueryString());
+	    System.out.println(req.getMethod() + " - " + req.getRequestURL() + "?" + req.getQueryString());
 
 		fc.doFilter(sr, sr1);
 

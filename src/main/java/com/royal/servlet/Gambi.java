@@ -3,6 +3,7 @@ package com.royal.servlet;
 import com.royal.dao.CategoriaDAO;
 import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
+import com.royal.model.Frequencia;
 import com.royal.model.TransferenciaUsuario;
 import com.royal.model.Usuario;
 import jakarta.servlet.ServletException;
@@ -23,12 +24,12 @@ public class Gambi extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		if (UsuarioDAO.buscar("usuario@email.com") != null) {
-			Usuario usuario = new Usuario("Usuário", "usuario@email.com", "123", false);
+		if (UsuarioDAO.buscar("usuario@gmail.com") != null) {
+			Usuario usuario = new Usuario("Usuário", "usuario@gmail.com", "123", false);
 
 			UsuarioDAO.gravar(usuario);
 
-			usuario = UsuarioDAO.buscar("usuario@email.com");
+			usuario = UsuarioDAO.buscar("usuario@gmail.com");
 
 
 			//despesas
@@ -63,7 +64,7 @@ public class Gambi extends HttpServlet {
 			//receitas
 
 			TransferenciaUsuarioDAO.gravar(
-					new TransferenciaUsuario.Builder(new BigDecimal("10"), Date.valueOf("2022-03-04"), "Rendimento SELIC março", false, false, false, usuario.id, CategoriaDAO.buscarNome("Saúde").idCategoria).build()
+					new TransferenciaUsuario.Builder(new BigDecimal("10.13"), Date.valueOf("2022-03-04"), "Rendimento SELIC março", false, false, false, usuario.id, CategoriaDAO.buscarNome("Saúde").idCategoria).build()
 			);
 
 			TransferenciaUsuarioDAO.gravar(
@@ -85,6 +86,11 @@ public class Gambi extends HttpServlet {
 
 			TransferenciaUsuarioDAO.gravar(
 					new TransferenciaUsuario.Builder(new BigDecimal("120.32"), Date.valueOf("2022-06-02"), "Pagamento Extra", true, false, false, usuario.id, CategoriaDAO.buscarNome("Outras receitas").idCategoria).setObservacao("Recebimento do pagamento extra no serviço").build()
+			);
+			
+			// parcelada 
+			TransferenciaUsuarioDAO.gravar(
+					new TransferenciaUsuario.Builder(new BigDecimal("-1999.99"), Date.valueOf("2022-01-02"), "Celular", false, true, false, usuario.id, CategoriaDAO.buscarNome("Lazer").idCategoria).setObservacao("Meu celular").setParcelas(12).setFrequencia(Frequencia.MESES).build()
 			);
 
 			resp.getWriter().print(true);

@@ -39,8 +39,6 @@ public class Dashboard {
 		if (pessoa == null) {
 			s.close(new CloseReason(CloseReason.CloseCodes.VIOLATED_POLICY, "Não posso permitir seu login"));
 		} else {
-			s.setMaxIdleTimeout(-1);
-
 			if (!SESSOES.containsKey(token)) {
 				var list = Collections.synchronizedList(new ArrayList<Session>());
 				list.add(s);
