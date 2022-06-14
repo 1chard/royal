@@ -44,7 +44,7 @@ a despesa ou receita de acordo com a frequência especificada.
 ## Projetos relacionados
 
 - [Front-End Web](https://github.com/Thiago9x/Projeto-Financias-TCC)
-- [Front-End Android]()
+- [Front-End Android](https://github.com/thiagoJoseB/RoyalApp)
 
 ## Uso
 
