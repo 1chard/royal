@@ -63,6 +63,8 @@ rodando no Java 17, além de um banco de dados MySQL/MariaDB.
 - **MySQL Connector**: conector JDBC para o MySQL/MariaDB
 - [**qsoniter**](https://github.com/1chard/qsoniter): Biblioteca para trabalhar com JSON, autoria própria
 
+³ Java versão 17, apesar do cógido ser compatível com Java 16
+
 ## Licença
 
 Domínio público, todo cógido disponível neste repositório 
