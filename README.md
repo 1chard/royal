@@ -66,4 +66,4 @@ rodando no Java 17, além de um banco de dados MySQL/MariaDB.
 ## Licença
 
 Domínio público, todo cógido disponível neste repositório 
-pode ser utilizado em qualquer lugar, sem expressa permissão.
+pode ser utilizado em qualquer lugar.
