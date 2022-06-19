@@ -35,11 +35,11 @@ Algumas funcionalidades disponíveis no sistema:
 - Metas/limites para o saldo²
 - Contas em grupo²
 
-¹ Transferências fixas são aquelas que acontecem toda
+¹Transferências fixas são aquelas que acontecem toda
 dia, semana ou mês. O sistema cadastra automaticamente
 a despesa ou receita de acordo com a frequência especificada.
 
-² Funcionalidade parcialmente implementada.
+²Funcionalidade parcialmente implementada.
 
 ## Projetos relacionados
 
@@ -63,7 +63,7 @@ rodando no Java 17, além de um banco de dados MySQL/MariaDB.
 - **MySQL Connector**: conector JDBC para o MySQL/MariaDB
 - [**qsoniter**](https://github.com/1chard/qsoniter): Biblioteca para trabalhar com JSON, autoria própria
 
-³ Java versão 17, apesar do cógido ser compatível com Java 16
+³Java versão 17, apesar do cógido ser compatível com Java 14
 
 ## Licença
 
