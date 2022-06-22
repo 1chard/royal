@@ -378,7 +378,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND year(data) = ano;
 
     select -(retorno + ifnull(sum(valor), 0)) as valor
     from tblTransferenciaUsuarioParcela
@@ -394,7 +394,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND year(data) = ano AND month(data) = mes;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND year(data) = ano AND month(data) = mes;
 
     select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
     from tblTransferenciaUsuarioParcela
@@ -419,7 +419,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND year(data) = ano;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -435,7 +435,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND year(data) = ano AND month(data) = mes;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND year(data) = ano AND month(data) = mes;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -451,7 +451,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now();
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND data <= now();
 
     select -(retorno + ifnull(sum(valor), 0)) as valor
     from tblTransferenciaUsuarioParcela
@@ -467,7 +467,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now() AND year(data) = ano;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND data <= now() AND year(data) = ano;
 
     select -(retorno + ifnull(sum(valor), 0)) as valor
     from tblTransferenciaUsuarioParcela
@@ -483,7 +483,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor < 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
 
     select -(retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0)) as valor
     from tblTransferenciaUsuarioParcela
@@ -499,7 +499,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now();
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND data <= now();
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -515,7 +515,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now() AND year(data) = ano;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND data <= now() AND year(data) = ano;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -531,7 +531,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND valor > 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND data <= now() AND year(data) = ano AND month(data) = mes;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -547,7 +547,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND data <= now();
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND data <= now();
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -563,7 +563,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND data <= now() AND year(data) = ano;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND data <= now() AND year(data) = ano;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -579,7 +579,7 @@ BEGIN
 	 SELECT ifnull(sum(valor), 0)
      INTO retorno
      FROM tblTransferenciaUsuario 
-     WHERE idUsuario = id AND parcelada = false AND data <= now() AND year(data) = ano AND month(data) = mes;
+     WHERE idUsuario = id AND parcelada = false AND fixa = false AND data <= now() AND year(data) = ano AND month(data) = mes;
 
     select retorno + ifnull(sum(tblTransferenciaUsuarioParcela.valor), 0) as valor
     from tblTransferenciaUsuarioParcela
@@ -601,7 +601,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE 
+    idUsuario = id AND parcelada = false AND fixa = false 
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -631,7 +631,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND year(data) = ano
+    idUsuario = id AND parcelada = false AND fixa = false AND year(data) = ano
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -661,7 +661,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND year(data) = ano AND month(data) = mes
+    idUsuario = id AND parcelada = false AND fixa = false AND year(data) = ano AND month(data) = mes
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -691,7 +691,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor > 0
+    idUsuario = id AND parcelada = false AND fixa = false AND valor > 0
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -721,7 +721,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor > 0 AND year(data) = ano
+    idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND year(data) = ano
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -751,7 +751,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor > 0 AND year(data) = ano AND month(data) = mes
+    idUsuario = id AND parcelada = false AND fixa = false AND valor > 0 AND year(data) = ano AND month(data) = mes
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -782,7 +782,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor < 0
+    idUsuario = id AND parcelada = false AND fixa = false AND valor < 0
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -812,7 +812,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor < 0 AND year(data) = ano
+    idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND year(data) = ano
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,
@@ -842,7 +842,7 @@ BEGIN
 FROM
     tblTransferenciaUsuario
 WHERE
-    idUsuario = id AND parcelada = FALSE AND valor < 0 AND year(data) = ano AND month(data) = mes
+    idUsuario = id AND parcelada = false AND fixa = false AND valor < 0 AND year(data) = ano AND month(data) = mes
 UNION ALL SELECT 
     tblTransferenciaUsuarioParcela.valor,
     tblTransferenciaUsuarioParcela.data,

@@ -6,6 +6,7 @@ import com.qsoniter.output.JsonStream;
 import com.qsoniter.spi.JsonException;
 import com.royal.Sistema;
 import com.royal.Status;
+import com.royal.dao.TransferenciaUsuarioDAO;
 import com.royal.dao.UsuarioDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -47,7 +48,9 @@ public class Contas extends HttpServlet {
 //
 //				} else {
                 //instancia tudo
+                TransferenciaUsuarioDAO.atualizarFixas(pessoa.id);
                 var sessao = new Sistema.Sessao();
+
                 String token = UUID.nameUUIDFromBytes(
                         Sistema.ENCRIPTA.encrypt(
                                 Integer.toOctalString(pessoa.id)
