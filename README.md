@@ -1,5 +1,5 @@
 
-# Royal Finance
+# Royal Finance (branch antiga do SENAI)
 
 Um aplicativo multiplataforma 
 para o controle de financas pessoais,
